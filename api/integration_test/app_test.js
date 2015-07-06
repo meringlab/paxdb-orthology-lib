@@ -49,6 +49,23 @@ describe('server', function () {
                     done();
                 });
         })
+        it('should return orthologs at a given level for a selected tissue', function (done) {
+            superagent
+                //.get('localhost:' + port + '/protein/P12345')
+                .get('localhost:' + port + '/protein/9606.ENSP00000356969/ortholog_groups/cellular%20organisms/WHOLE_ORGANISM')
+                .accept('application/ld+json')
+                .end(function (error, res) {
+                    //assert(res.ok);
+                    should.not.exist(error);
+                    res.status.should.equal(200);
+                    res.should.be.json;
+                    res.type.should.equal("application/ld+json");
+                    ["@context", "@id", "@type", "taxonomicLevel","members"].forEach(function (prop) {
+                        expect(res.body).to.have.property(prop)
+                    });
+                    done();
+                });
+        })
     });
 
 
