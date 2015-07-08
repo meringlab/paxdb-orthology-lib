@@ -27,19 +27,30 @@ exports.import_proteins = function (proteins, abundances) {
             })
         }
     })
-
     txn.commit(function (err, results) {
         if (err) {
             var e = Error("TRANSACTION FAILED: " + err.message);
             e.results = results;
             d.reject(e);
+            return
         }
-        //console.log('all proteins saved, starting id: ' + results[0].id)
-        d.resolve();
-    });
+        //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
+        var indicesDeferred = when.defer()
+        db.index.create('Protein', 'iid', function (err, index) {
+            if (err) {
+                indicesDeferred.reject('failed to create iid index for Protein: ' + err)
+                return;
+            }
+            db.index.create('Protein', 'eid', function (err, index) {
+                if (err) indicesDeferred.reject('failed to create eid index for Protein: ' + err)
+                indicesDeferred.resolve()
+            });
+        })
+
+        d.resolve(indicesDeferred.promise);
+    })
     return d.promise
 }
-
 exports.count = function (label, callback) {
     var d = when.defer()
 
@@ -50,14 +61,3 @@ exports.count = function (label, callback) {
     });
     return d.promise
 }
-
-
-//db.save({name: "Test-Man", age: 40}, function (err, node) {
-//    if (err) throw err;
-//    console.log("Test-Man inserted.");
-//
-//    db.delete(node, function (err) {
-//        if (err) throw err;
-//        console.log("Test-Man away!");
-//    });
-//});
