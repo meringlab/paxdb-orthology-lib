@@ -30,7 +30,13 @@ var abundances = {
         {"dataset_id": 12, "tissue": "WHOLE_ORGANISM", value: 66, rank: "66/1111"}]
 }
 
+var nogs = [
+    {"id": 9443, "name": "NOG21051", "clade": "PRIMATES", "members": [1803841, 1854701]},
+    {"id": 9443, "name": "NOG21051", "clade": "SUPRAPRIMATES", "members": [1803841, 1854701, 2093738, 2117313]}
+]
+
 var neo4j = require('../storage/neo4j/index')
+
 neo4j.count('Protein')
     .then(function (num) {
         num.should.equal(0);
@@ -45,4 +51,8 @@ neo4j.count('Protein')
     })
     .then(function (num) {
         num.should.equal(proteins.length);
-    }).done()
+    })
+    .then(function () {
+        neo4j.import_orthgroups(nogs);
+    })
+    .done()
