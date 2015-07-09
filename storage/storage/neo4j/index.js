@@ -2,6 +2,8 @@
  * Created by milans on 07/07/15.
  */
 var when = require('when');
+var bunyan = require('bunyan');
+var log = bunyan.createLogger({name: "paxdb-API-orthologs", module: "storage/neo4j"});
 
 exports = module.exports = {}
 
@@ -12,9 +14,14 @@ var db = require("seraph")({
 });
 
 exports.import_proteins = function (proteins, abundances) {
-    var d = when.defer()
+    log.info('importing %s proteins and %s abundances', proteins.length, abundances.length)
 
-//TODO check if array or empty
+    var d = when.defer()
+    if (proteins.length === 0) {
+        log.info('no proteins to import')
+        d.resolve()
+        return d.promise
+    }
     var txn = db.batch();
     proteins.forEach(function (p) {
         var node = txn.save(p);
@@ -29,6 +36,7 @@ exports.import_proteins = function (proteins, abundances) {
     })
     txn.commit(function (err, results) {
         if (err) {
+            log.error(err, 'import_proteins - TRANSACTION FAILED')
             var e = Error("TRANSACTION FAILED: " + err.message);
             e.results = results;
             d.reject(e);
@@ -38,11 +46,15 @@ exports.import_proteins = function (proteins, abundances) {
         var indicesDeferred = when.defer()
         db.index.createIfNone('Protein', 'iid', function (err, index) {
             if (err) {
+                log.error(err, 'import_proteins - failed to create iid index for Protein')
                 indicesDeferred.reject('failed to create iid index for Protein: ' + err)
                 return;
             }
             db.index.createIfNone('Protein', 'eid', function (err, index) {
-                if (err) indicesDeferred.reject('failed to create eid index for Protein: ' + err)
+                if (err) {
+                    log.error(err, 'import_proteins - failed to create eid index for Protein')
+                    indicesDeferred.reject('failed to create eid index for Protein: ' + err)
+                }
                 indicesDeferred.resolve()
             });
         })
@@ -57,20 +69,30 @@ exports.count = function (label, callback) {
 
     var cypher = "MATCH (n:" + label + ") RETURN count(*)"
     db.queryRaw(cypher, function (err, result) {
-        if (err) throw new Error(err.message);
+        if (err) {
+            log.error(err, 'neo4j - failed to count %s', label)
+            throw new Error(err.message);
+        }
         d.resolve(result.data[0][0])
     });
     return d.promise
 }
 
 exports.import_orthgroups = function (groups) {
+    log.info('importing %s orthgroups', groups.length)
 
-//TODO check if array or empty
+    var d = when.defer()
+    if (groups.length === 0) {
+        log.info('no groups to import')
+        d.resolve()
+        return d.promise
+    }
+
     var deferredImport = when.defer()
     var txn = db.batch();
 
     function saveGroup(g) {
-        console.log('saving group ' + g.name + ' in ' + g.clade)
+        log.trace('saving group %s in %s', g.name, g.clade)
         var saved = when.defer()
 
         //{"id" :9443, "name": "NOG21051","clade": "PRIMATES", "members": [1803841, 1854701]},
@@ -79,7 +101,13 @@ exports.import_orthgroups = function (groups) {
 
         db.query("MATCH (p:Protein) WHERE p.iid IN [" + g.members + "] RETURN p.iid, id(p) ", function (err, results) {
             if (err) {
+                log.error(err, 'import_orthgroups(%s) - failed to find proteins %s,[%s]', g.name, g.members)
                 saved.reject(Error(g.name + ' - failed to find proteins ' + g.members + ': ' + err.message));
+                return
+            }
+            if (g.members.length !== results.length) {
+                log.error('import_orthgroups(%s) - failed to find all proteins %s, [%s], [%s]', g.name, g.members, results)
+                saved.reject(Error(g.name + ' - failed to find all proteins ' + g.members));
                 return
             }
             var byIid = {}
@@ -98,9 +126,10 @@ exports.import_orthgroups = function (groups) {
         return saveGroup(g)
     });
     when.all(taskPromises).then(function (not_used) {
-        console.log('committing transaction')
+        log.trace('committing transaction')
         txn.commit(function (err, results) {
             if (err) {
+                log.error(err, 'import_orthgroups - TRANSACTION FAILED')
                 var e = Error("TRANSACTION FAILED: " + err.message);
                 e.results = results;
                 deferredImport.reject(e);
@@ -108,9 +137,10 @@ exports.import_orthgroups = function (groups) {
             }
 
             deferredImport.resolve();
-            console.log('transaction completed')
+            log.trace('transaction completed')
         })
     }, function (err) {
+        log.error(err, 'import_orthgroups - failed to save one of the groups')
         var e = Error("failed to save one of the groups: " + err.message);
         e.results = results;
         deferredImport.reject(e);
