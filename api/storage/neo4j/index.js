@@ -13,7 +13,7 @@ var db = require("seraph")({
     pass: "t5y6u7i8"
 });
 
-exports.import_proteins = function (proteins, abundances) {
+exports.save_proteins = function (proteins, abundances) {
     log.info('importing %s proteins and %s abundances', proteins.length, abundances.length)
 
     var d = when.defer()
@@ -78,7 +78,7 @@ exports.count = function (label, callback) {
     return d.promise
 }
 
-exports.import_orthgroups = function (groups) {
+exports.save_orthgroups = function (groups) {
     log.info('importing %s orthgroups', groups.length)
 
     var d = when.defer()

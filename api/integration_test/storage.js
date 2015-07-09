@@ -42,7 +42,7 @@ neo4j.count('Protein')
         num.should.equal(0);
     })
     .then(function () {
-        return neo4j.import_proteins(proteins, abundances)
+        return neo4j.save_proteins(proteins, abundances)
     })
     .then(function () {
         return neo4j.count('Protein')
@@ -53,6 +53,6 @@ neo4j.count('Protein')
         num.should.equal(proteins.length);
     })
     .then(function () {
-        neo4j.import_orthgroups(nogs);
+        neo4j.save_orthgroups(nogs);
     })
     .done()
