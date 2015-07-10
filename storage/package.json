@@ -20,6 +20,7 @@
     "ejs": "~2.3.2",
     "express": "~4.13.0",
     "express-negotiate": "0.0.5",
+    "glob": "^5.0.13",
     "morgan": "~1.6.1",
     "seraph": "^0.13.1",
     "serve-favicon": "~2.3.0",
