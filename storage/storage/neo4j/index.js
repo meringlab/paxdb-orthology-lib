@@ -109,45 +109,58 @@ exports.save_proteins = function (proteins, abundances) {
         d.resolve()
         return d.promise
     }
-    var txn = db.batch();
-    proteins.forEach(function (p) {
-        var node = txn.save(p);
-        txn.label(node, "Protein");
-        if (abundances[p.eid] && abundances[p.eid].length > 0) {
-            abundances[p.eid].forEach(function (el) {
-                var abundance = txn.save({"value": el.value, "rank": el.rank});
-                txn.label(abundance, "Abundance");
-                txn.relate(node, el.tissue, abundance /*, isDefault : true|false*/);
-            })
-        }
-    })
-    txn.commit(function (err, results) {
-        if (err) {
-            log.error(err, 'import_proteins - TRANSACTION FAILED')
-            var e = Error("TRANSACTION FAILED: " + err.message);
-            e.results = results;
-            d.reject(e);
-            return
-        }
-        //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
-        var indicesDeferred = when.defer()
-        db.index.createIfNone('Protein', 'iid', function (err, index) {
-            if (err) {
-                log.error(err, 'import_proteins - failed to create iid index for Protein')
-                indicesDeferred.reject('failed to create iid index for Protein: ' + err)
-                return;
+    const chunk = 1000
+    var i, j, proteinBatch
+    var savedNodes = []
+    for (i = 0, j = proteins.length; i < j; i += chunk) {
+        log.debug("saving chunk [%s-%s]", i, i + chunk)
+        proteinBatch = proteins.slice(i, i + chunk);
+        var txn = db.batch();
+        var nodesBatch = []
+        proteinBatch.forEach(function (p) {
+            var node = txn.save(p);
+            nodesBatch.push(node)
+            txn.label(node, "Protein");
+            if (abundances[p.eid] && abundances[p.eid].length > 0) {
+                abundances[p.eid].forEach(function (el) {
+                    var abundance = txn.save({"value": el.value, "rank": el.rank});
+                    txn.label(abundance, "Abundance");
+                    txn.relate(node, el.tissue, abundance /*, isDefault : true|false*/);
+                })
             }
-            db.index.createIfNone('Protein', 'eid', function (err, index) {
-                if (err) {
-                    log.error(err, 'import_proteins - failed to create eid index for Protein')
-                    indicesDeferred.reject('failed to create eid index for Protein: ' + err)
-                }
-                indicesDeferred.resolve()
-            });
         })
+        txn.commit(function (err, results) {
+            if (err) {
+                log.error(err, 'import_proteins - FAILED, %s nodes will remain saved', savedNodes.length)
+                var e = Error("TRANSACTION FAILED: " + err.message);
+                e.results = results;
+                d.reject(e);
+                //TODO remove savedNodes
+                return
+            }
+            savedNodes.concat(nodesBatch)
+            //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
+            var indicesDeferred = when.defer()
+            db.index.createIfNone('Protein', 'iid', function (err, index) {
+                if (err) {
+                    log.error(err, 'import_proteins - failed to create iid index for Protein')
+                    indicesDeferred.reject('failed to create iid index for Protein: ' + err)
+                    return;
+                }
+                db.index.createIfNone('Protein', 'eid', function (err, index) {
+                    if (err) {
+                        log.error(err, 'import_proteins - failed to create eid index for Protein')
+                        indicesDeferred.reject('failed to create eid index for Protein: ' + err)
+                    }
+                    indicesDeferred.resolve()
+                });
+            })
 
-        d.resolve(indicesDeferred.promise);
-    })
+            d.resolve(indicesDeferred.promise);
+        })
+    }
+
+
     return d.promise
 }
 
