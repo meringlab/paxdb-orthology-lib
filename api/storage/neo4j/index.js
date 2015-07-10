@@ -1,20 +1,107 @@
 /**
  * Created by milans on 07/07/15.
  */
-var when = require('when');
-var bunyan = require('bunyan');
-var log = bunyan.createLogger({name: "paxdb-API-orthologs", module: "storage/neo4j"});
+const when = require('when');
+const bunyan = require('bunyan');
+const fs = require('fs');
+const glob = require("glob")
+
+const log = bunyan.createLogger({name: "paxdb-API-orthologs", module: "storage/neo4j"});
 
 exports = module.exports = {}
 
-var db = require("seraph")({
+const db = require("seraph")({
     server: "http://192.168.1.137:7474",
     user: "neo4j",
     pass: "t5y6u7i8"
 });
 
+function parseProteins(contents) {
+    var proteins = []
+    contents.split('\n').forEach(function (line) {
+        if (line.trim() == 0) {
+            return
+        }
+        var rec = line.split('\t');
+        proteins.push({"iid": parseInt(rec[0]), "eid": rec[1], "name": rec[2]})
+    })
+    return proteins
+}
+
+function parseDataset(contents) {
+    var dataset = {"abundances": []}
+    var records = contents.split('\n');
+    for (var i = 0; i < records.length && records[i].indexOf('#') == 0; i++) {
+        if (records[i].indexOf('organ:') != -1) {
+            dataset.organ = records[i].match(/organ\:\s+([A-Z_]+)/)[1]
+        }
+    }
+    for (/*i from previous loop*/; i < records.length; i++) {
+        var r = records[i].trim().split('\t');
+        if (r.length < 2) {
+            continue
+        }
+        dataset.abundances.push({iid: parseInt(r[0]), eid: r[1], value: parseFloat(r[2])})
+    }
+    dataset.numAbundances = dataset.abundances.length
+    return dataset
+}
+
+exports._internal = {parseDataset: parseDataset, parseProteins: parseProteins}
+
+function loadAbundances(speciesId, abundances_dir) {
+    var abundances = {}
+    var abundanceFiles = glob.sync(abundances_dir + '/' + speciesId + '-*.txt')
+    log.debug('abundance files found: %s', abundanceFiles)
+    abundanceFiles.forEach(function (datasetFile) {
+        log.info('reading %s abundances from %s', speciesId, datasetFile)
+        var dataset = parseDataset(fs.readFileSync(datasetFile, {'encoding': 'utf8'}));
+
+        //TODO refactor to appendAbundances(abundances, dataset.abundances)
+        var outOf = '/' + String(dataset.numAbundances);
+        for (var i = 0; i < dataset.abundances.length; i++) {
+            var p = dataset.abundances[i];
+            if (!abundances.hasOwnProperty(p.eid)) {
+                abundances[p.eid] = []
+            }
+            abundances[p.eid].push({"tissue": dataset.organ, value: p.value, rank: String(i + 1) + outOf})
+        }
+    })
+    return abundances;
+}
+function import_proteins_from_file(file, abundances_dir) {
+    log.info("proteins from %s", file);
+    var speciesId = /\/?(\d+)\-proteins.txt/.exec(file)[1]
+    log.info('species: %s', speciesId)
+    var proteins = parseProteins(fs.readFileSync(file, {'encoding': 'utf8'}));
+    log.debug('%s protein records from %s', proteins.length, file)
+    var abundances = loadAbundances(speciesId, abundances_dir);
+
+    return exports.save_proteins(proteins, abundances)
+}
+exports.import_proteins = function (proteins_dir, abundances_dir) {
+    //proteins_dir = proteins_dir || '../../data/v4.0/proteins'
+    //abundances_dir = abundances_dir || '../../data/v4.0/abundances'
+    log.info("importing proteins %s, %s", proteins_dir, abundances_dir)
+    glob(proteins_dir + "/*-proteins.txt", function (err, files) {
+        //chain promises in sequential order:
+        var link = function (prevPromise, currentFile) {
+            return prevPromise.then(function () {
+                log.info('calling import_proteins for %s', currentFile)
+                return import_proteins_from_file(currentFile, abundances_dir);
+                //return when('primise to import ' + currentFile)
+            })
+        };
+        files.reduce(link, when('starting promise')).then(function (res) {
+            log.info('proteins import complete')
+        }, function (err) {
+            log.error(err, 'failed to import')
+        })
+    })
+}
+
 exports.save_proteins = function (proteins, abundances) {
-    log.info('importing %s proteins and %s abundances', proteins.length, abundances.length)
+    log.info('importing %s proteins and %s abundances', proteins.length, Object.keys(abundances).length)
 
     var d = when.defer()
     if (proteins.length === 0) {
