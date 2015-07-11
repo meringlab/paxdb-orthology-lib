@@ -16,6 +16,7 @@ exports.save_proteins = save_proteins
 exports.save_orthgroups = save_orthgroups
 exports.import_proteins = import_proteins
 exports.import_orthgroups = import_orthgroups
+exports.create_schema = create_schema
 
 /**
  * just for unit testing
@@ -34,6 +35,35 @@ const db = require("seraph")({
     pass: "t5y6u7i8"
 });
 
+function create_schema() {
+    //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
+    var deferred = when.defer()
+    db.index.createIfNone('Protein', 'iid', function (err, index) {
+        if (err) {
+            log.error(err, 'create_schema - failed to create iid index for Protein')
+            deferred.reject('failed to create iid index for Protein: ' + err)
+            return;
+        }
+        db.index.createIfNone('Protein', 'eid', function (err, index) {
+            if (err) {
+                log.error(err, 'create_schema - failed to create eid index for Protein')
+                deferred.reject('failed to create eid index for Protein: ' + err)
+                return
+            }
+            db.constraints.uniqueness.createIfNone('Protein', 'iid', function (err, constraint) {
+                if (err) {
+                    log.error(err, 'create_schema - failed to create UNIQUE constraint on iid for Protein')
+                    deferred.reject('failed to create eid index for Protein: ' + err)
+                    return
+                }
+                deferred.resolve()
+            })
+
+        });
+    })
+    return deferred.promise
+}
+
 function save_proteins(proteins, abundances) {
     log.info('importing %s proteins and %s abundances', proteins.length, Object.keys(abundances).length)
 
@@ -43,58 +73,29 @@ function save_proteins(proteins, abundances) {
         d.resolve()
         return d.promise
     }
-    const chunk = 1000
-    var i, j, proteinBatch
-    var savedNodes = []
-    for (i = 0, j = proteins.length; i < j; i += chunk) {
-        log.debug("saving chunk [%s-%s]", i, i + chunk)
-        proteinBatch = proteins.slice(i, i + chunk);
-        var txn = db.batch();
-        var nodesBatch = []
-        proteinBatch.forEach(function (p) {
-            var node = txn.save(p);
-            nodesBatch.push(node)
-            txn.label(node, "Protein");
-            if (abundances[p.eid] && abundances[p.eid].length > 0) {
-                abundances[p.eid].forEach(function (el) {
-                    var abundance = txn.save({"value": el.value, "rank": el.rank});
-                    txn.label(abundance, "Abundance");
-                    txn.relate(node, el.tissue, abundance /*, isDefault : true|false*/);
-                })
-            }
-        })
-        txn.commit(function (err, results) {
-            if (err) {
-                log.error(err, 'import_proteins - FAILED, %s nodes will remain saved', savedNodes.length)
-                var e = Error("TRANSACTION FAILED: " + err.message);
-                e.results = results;
-                d.reject(e);
-                //TODO remove savedNodes
-                return
-            }
-            savedNodes.concat(nodesBatch)
-            //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
-            var indicesDeferred = when.defer()
-            db.index.createIfNone('Protein', 'iid', function (err, index) {
-                if (err) {
-                    log.error(err, 'import_proteins - failed to create iid index for Protein')
-                    indicesDeferred.reject('failed to create iid index for Protein: ' + err)
-                    return;
-                }
-                db.index.createIfNone('Protein', 'eid', function (err, index) {
-                    if (err) {
-                        log.error(err, 'import_proteins - failed to create eid index for Protein')
-                        indicesDeferred.reject('failed to create eid index for Protein: ' + err)
-                    }
-                    indicesDeferred.resolve()
-                });
+    var txn = db.batch();
+
+    proteins.forEach(function (p) {
+        var node = txn.save(p);
+        txn.label(node, "Protein");
+        if (abundances[p.eid] && abundances[p.eid].length > 0) {
+            abundances[p.eid].forEach(function (el) {
+                var abundance = txn.save({"value": el.value, "rank": el.rank});
+                txn.label(abundance, "Abundance");
+                txn.relate(node, el.tissue, abundance /*, isDefault : true|false*/);
             })
-
-            d.resolve(indicesDeferred.promise);
-        })
-    }
-
-
+        }
+    })
+    txn.commit(function (err, results) {
+        if (err) {
+            log.error(err, 'import_proteins - FAILED, %s nodes will remain saved', savedNodes.length)
+            var e = Error("TRANSACTION FAILED: " + err.message);
+            e.results = results;
+            d.reject(e);
+            return
+        }
+        d.resolve();
+    })
     return d.promise
 }
 
@@ -150,6 +151,7 @@ function loadAbundances(speciesId, abundances_dir) {
     log.debug('abundance files found: %s', abundanceFiles)
     abundanceFiles.forEach(function (datasetFile) {
         log.info('reading %s abundances from %s', speciesId, datasetFile)
+        var counter = 0
         var dataset = parseDataset(fs.readFileSync(datasetFile, {'encoding': 'utf8'}));
 
         //TODO refactor to appendAbundances(abundances, dataset.abundances)
@@ -159,8 +161,10 @@ function loadAbundances(speciesId, abundances_dir) {
             if (!abundances.hasOwnProperty(p.eid)) {
                 abundances[p.eid] = []
             }
+            counter++
             abundances[p.eid].push({"tissue": dataset.organ, value: p.value, rank: String(i + 1) + outOf})
         }
+        log.info('%s abundances read from %s', counter, datasetFile)
     })
     return abundances;
 }
@@ -173,8 +177,20 @@ function import_proteins_from_file(file, abundances_dir) {
     log.debug('%s protein records from %s', proteins.length, file)
     var abundances = loadAbundances(speciesId, abundances_dir);
 
-    return save_proteins(proteins, abundances)
+    //chain promises in sequential order:
+    var link = function (prevPromise, currentSlice) {
+        return prevPromise.then(function () {
+            return save_proteins(currentSlice, abundances)
+        })
+    };
+    const chunk = 500, slices = []
+    for (var i = 0, j = proteins.length; i < j; i += chunk) {
+        slices.push(proteins.slice(i, i + chunk))
+    }
+
+    return slices.reduce(link, when('starting promise'))
 }
+
 function import_proteins(proteins_dir, abundances_dir) {
     log.info("importing proteins %s, %s", proteins_dir, abundances_dir)
     glob(proteins_dir + "/*-proteins.txt", function (err, files) {
@@ -214,7 +230,7 @@ function parseOrthgroups(groupId, contents) {
     return groups
 }
 
-function save_orthgroups(groups) {
+function save_orthgroups(groups, proteinIds) {
     log.info('saving %s orthgroups', groups.length)
 
     var d = when.defer()
@@ -234,39 +250,47 @@ function save_orthgroups(groups) {
         //{"id" :9443, "name": "NOG21051","clade": "PRIMATES", "members": [1803841, 1854701]},
         var node = txn.save({"levelId": g.id /*, "level": g.clade*/});
         txn.label(node, "NOG");
+        if (!proteinIds) {
+            var query = "MATCH (p:Protein) WHERE p.iid IN [" + g.members + "] RETURN p.iid, id(p) ";
+            db.query(query, function (err, results) {
+                if (err) {
+                    log.error(err, 'saveGroup(%s) - failed to find proteins %s, query: %s', g.name, g.members, query)
+                    saved.reject(Error(g.name + ' - failed to find proteins ' + g.members + ': ' + err.message));
+                    return
+                }
+                //if (g.members.length !== results.length) {
+                //    var proteinRecords = new Set(results.map(function (el) {
+                //        return el['p.iid']
+                //    }))
+                //    var diff = g.members.filter(function (x) {
+                //        return !proteinRecords.has(x)
+                //    })
+                //    if (diff.length > 0) {
+                //        log.error('saveGroup(%s) - failed to find all members for %s, missing: [%s]', g.name, diff)
+                //        saved.reject(Error(g.name + ' - failed to find proteins ' + diff));
+                //        return
+                //    }
+                //    if (proteinRecords.length < Object.keys(results).length) {
+                //        log.warn('saveGroup(%s) - NON UNIQUE PROTEIN RECORDS, group: %s, records: %s', g.name, JSON.stringify(results))
+                //        //    saved.reject(Error(g.name + ' - NON UNIQUE PROTEIN RECORDS' + g.members));
+                //        //    return
+                //    }
+                //}
 
-        var query = "MATCH (p:Protein) WHERE p.iid IN [" + g.members + "] RETURN p.iid, id(p) ";
-        db.query(query, function (err, results) {
-            if (err) {
-                log.error(err, 'saveGroup(%s) - failed to find proteins %s,[%s], query: %s', g.name, g.members, query)
-                saved.reject(Error(g.name + ' - failed to find proteins ' + g.members + ': ' + err.message));
-                return
-            }
-            var proteinRecords = new Set(results.map(function (el) {
-                return el['p.iid']
-            }))
-            var diff = g.members.filter(function (x) {
-                return !proteinRecords.has(x)
-            })
-            if (diff.length > 0) {
-                log.error('saveGroup(%s) - failed to find all members for %s, missing: [%s]', g.name, diff)
-                saved.reject(Error(g.name + ' - failed to find proteins ' + diff));
-                return
-            }
-            //if (proteinRecords.length < Object.keys(results).length) {
-            //    log.error('saveGroup(%s) - NON UNIQUE PROTEIN RECORDS, group: %s, members: [%s], records:[%s]', g.name, g.members, proteinRecords)
-            //    saved.reject(Error(g.name + ' - NON UNIQUE PROTEIN RECORDS' + g.members));
-            //    return
-            //}
-            var byIid = {}
-            results.forEach(function (r) {
-                byIid[r['p.iid']] = {"id": r['id(p)']};
-            })
-            g.members.forEach(function (protein_iid) {
-                txn.relate(byIid[protein_iid], g.clade, node);
+                results.forEach(function (r) {
+                    txn.relate({"id": r['id(p)']}, g.clade, node);
+                })
+
+                saved.resolve()
+            });
+        } else {
+            g.members.forEach(function (el) {
+                if (el in proteinIds) {
+                    txn.relate({"id": proteinIds[el]}, g.clade, node);
+                }
             })
             saved.resolve()
-        });
+        }
         return saved.promise;
     }
 
@@ -275,11 +299,10 @@ function save_orthgroups(groups) {
     });
     when.all(taskPromises).then(function (not_used) {
         log.trace('committing transaction')
-        txn.commit(function (err, results) {
+        txn.commit(function (err) {
             if (err) {
-                log.error(err, 'import_orthgroups - TRANSACTION FAILED')
+                log.error(err, 'save_orthgroups - TRANSACTION FAILED')
                 var e = Error("TRANSACTION FAILED: " + err.message);
-                e.results = results;
                 deferredImport.reject(e);
                 return
             }
@@ -288,7 +311,7 @@ function save_orthgroups(groups) {
             log.trace('transaction completed')
         })
     }, function (err) {
-        log.error(err, 'import_orthgroups - failed to save one of the groups')
+        log.error(err, 'save_orthgroups - failed to save one of the groups')
         var e = Error("failed to save one of the groups: " + err.message);
         deferredImport.reject(e);
     })
@@ -296,7 +319,7 @@ function save_orthgroups(groups) {
     return deferredImport.promise
 }
 
-function import_import_orthgroups_from_file(file) {
+function import_import_orthgroups_from_file(file, proteinIds) {
     log.info("orthgroups from %s", file);
     var groupId = parseInt(/\/?(\d+)\-orthologs.txt/.exec(file)[1])
     log.info('groupId: %s', groupId)
@@ -306,7 +329,7 @@ function import_import_orthgroups_from_file(file) {
     //chain promises in sequential order:
     var link = function (prevPromise, currentSlice) {
         return prevPromise.then(function () {
-            return save_orthgroups(currentSlice)
+            return save_orthgroups(currentSlice, proteinIds)
         })
     };
     const chunk = 500, slices = []
@@ -319,19 +342,48 @@ function import_import_orthgroups_from_file(file) {
 
 function import_orthgroups(orthgroups_dir) {
     log.info("importing orthgroups from %s", orthgroups_dir)
-    glob(orthgroups_dir + "/*-orthologs.txt", function (err, files) {
-        //chain promises in sequential order:
-        var link = function (prevPromise, currentFile) {
-            return prevPromise.then(function () {
-                log.info('calling import_orthgroups for %s', currentFile)
-                return import_import_orthgroups_from_file(currentFile);
+    log.debug("loading protein ids")
+    //quering for each group members throws errors ECONNRESET so need to load them upfront:
+    db.query("MATCH (p:Protein) RETURN p.iid, id(p)", function (err, results) {
+        if (err) {
+            throw Error('failed to load protein ids ' + JSON.stringify(err))
+        }
+        proteinIds = {}
+        var num = 0
+        results.forEach(function (r) {
+            proteinIds[r['p.iid']] = r['id(p)']
+            num++
+        })
+        log.debug("%s protein ids loaded", num)
+
+        glob(orthgroups_dir + "/*-orthologs.txt", function (err, files) {
+            //chain promises in sequential order:
+            var link = function (prevPromise, currentFile) {
+                return prevPromise.then(function () {
+                    log.info('calling import_orthgroups for %s', currentFile)
+                    return import_import_orthgroups_from_file(currentFile, proteinIds);
+                })
+            };
+            files.reduce(link, when('starting promise')).then(function (res) {
+                log.info('orthgroups import complete')
+            }, function (err) {
+                log.error(err, 'failed to import orthgroups')
             })
-        };
-        files.reduce(link, when('starting promise')).then(function (res) {
-            log.info('orthgroups import complete')
-        }, function (err) {
-            log.error(err, 'failed to import orthgroups')
         })
     })
 }
+
+
+log.level('debug')
+//create_schema().then(function(){
+//    log.info("schema created")
+//}, function (err) {
+//    log.error(err, "failed to create schema!")
+//})
+//import_proteins('../../data/v4.0/proteins', '../../data/v4.0/abundances')
 //import_orthgroups('../../data/v4.0/orthgroups')
+
+//DEMO:
+//function findOrthologs(proteinId) {
+//    db.query("MATCH (p:Protein {iid : 633631})-[:LUCA]->(n:NOG)<-[:LUCA]-(m:Protein)-->(a:Abundance) return m,a")
+//}
