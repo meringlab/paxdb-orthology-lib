@@ -208,7 +208,7 @@ function import_proteins(proteins_dir, abundances_dir) {
     return files.reduce(link, when('starting promise'))
 }
 function parseOrthgroups(groupId, contents) {
-    if (!groupId in orthgroups) {
+    if (!(groupId in orthgroups)) {
         throw Error('orthgroup taxonomic level missing for ' + groupId)
     }
     var clade = orthgroups[groupId].toUpperCase();
