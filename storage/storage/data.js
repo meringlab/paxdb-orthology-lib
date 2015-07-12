@@ -1,6 +1,5 @@
-/**
- * Created by milans on 09/07/15.
- */
+const fs = require('fs')
+
 exports = module.exports = {}
 
 exports.orthgroups = {
@@ -40,3 +39,22 @@ exports.orthgroups = {
     "314146": "EUARCHONTOGLIRES",
     "716545": "SACCHAROMYCETA"
 }
+
+exports.speciesTissuesMap = loadSpeciesTissuesMap()
+
+function loadSpeciesTissuesMap() {
+    const contents = fs.readFileSync('./data/v4.0/ontology/ontology_2_species.tsv', {'encoding': 'utf8'});
+    const map = {}
+    contents.split('\n').forEach(function (line) {
+        var rec = line.split('\t');
+        if (rec.length < 2) {
+            return
+        }
+        if (!(rec[0] in map)) {
+            map[rec[0]] = []
+        }
+        map[rec[0]].push(rec[1])
+    })
+    return map
+}
+
