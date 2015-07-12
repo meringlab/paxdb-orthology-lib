@@ -30,7 +30,7 @@ exports._internal = {
 }
 
 const db = require("seraph")({
-    server: "http://192.168.1.137:7474",
+    server: "http://192.168.54.130:7474",
     user: "neo4j",
     pass: "t5y6u7i8"
 });
@@ -65,30 +65,32 @@ function create_schema() {
 }
 
 function save_proteins(proteins, abundances) {
-    log.info('importing %s proteins and %s abundances', proteins.length, Object.keys(abundances).length)
+    log.info('saving %s proteins', proteins.length)
 
     var d = when.defer()
     if (proteins.length === 0) {
-        log.info('no proteins to import')
+        log.info('no proteins to saving')
         d.resolve()
         return d.promise
     }
     var txn = db.batch();
-
+    var numAbundances = 0;
     proteins.forEach(function (p) {
         var node = txn.save(p);
         txn.label(node, "Protein");
         if (abundances[p.eid] && abundances[p.eid].length > 0) {
             abundances[p.eid].forEach(function (el) {
+                numAbundances++
                 var abundance = txn.save({"value": el.value, "rank": el.rank});
                 txn.label(abundance, "Abundance");
-                txn.relate(node, el.tissue, abundance /*, isDefault : true|false*/);
+                txn.relate(node, el.tissue, abundance, {'tissue': el.tissue}/*, isDefaultAbundance : true|false*/);
             })
         }
     })
+    log.info('about to commit %s proteins and %s abundances', proteins.length, numAbundances)
     txn.commit(function (err, results) {
         if (err) {
-            log.error(err, 'import_proteins - FAILED, %s nodes will remain saved', savedNodes.length)
+            log.error(err, 'saving_proteins - FAILED, %s nodes will remain saved', savedNodes.length)
             var e = Error("TRANSACTION FAILED: " + err.message);
             e.results = results;
             d.reject(e);
@@ -193,23 +195,23 @@ function import_proteins_from_file(file, abundances_dir) {
 
 function import_proteins(proteins_dir, abundances_dir) {
     log.info("importing proteins %s, %s", proteins_dir, abundances_dir)
-    glob(proteins_dir + "/*-proteins.txt", function (err, files) {
-        //chain promises in sequential order:
-        var link = function (prevPromise, currentFile) {
-            return prevPromise.then(function () {
-                log.info('calling import_proteins for %s', currentFile)
-                return import_proteins_from_file(currentFile, abundances_dir);
-                //return when('primise to import ' + currentFile)
-            })
-        };
-        files.reduce(link, when('starting promise')).then(function (res) {
-            log.info('proteins import complete')
-        }, function (err) {
-            log.error(err, 'failed to import')
+    var files = glob.sync(proteins_dir + "/*-proteins.txt")
+
+    //chain promises in sequential order:
+    var link = function (prevPromise, currentFile) {
+        return prevPromise.then(function () {
+            log.info('calling import_proteins for %s', currentFile)
+            return import_proteins_from_file(currentFile, abundances_dir);
+            //return when('primise to import ' + currentFile)
         })
-    })
+    };
+    return files.reduce(link, when('starting promise'))
 }
 function parseOrthgroups(groupId, contents) {
+    if (!groupId in orthgroups) {
+        throw Error('orthgroup taxonomic level missing for ' + groupId)
+    }
+    var clade = orthgroups[groupId].toUpperCase();
     var groups = []
     contents.split('\n').forEach(function (line) {
         if (line.trim() == 0) {
@@ -220,10 +222,11 @@ function parseOrthgroups(groupId, contents) {
         var members = rec.slice(1, rec.length).map(function (el) {
             return parseInt(el)
         });
+        //to make names globaly unique, prepend groupId:
         groups.push({
             "id": groupId,
-            "name": rec[0],
-            "clade": orthgroups[String(groupId)].toUpperCase(),
+            "name": groupId + '.' + rec[0],
+            "clade": clade,
             "members": members
         })
     })
@@ -248,7 +251,7 @@ function save_orthgroups(groups, proteinIds) {
         var saved = when.defer()
 
         //{"id" :9443, "name": "NOG21051","clade": "PRIMATES", "members": [1803841, 1854701]},
-        var node = txn.save({"levelId": g.id /*, "level": g.clade*/});
+        var node = txn.save({"levelId": g.id /*, "level": g.clade*/, "name": g.name});
         txn.label(node, "NOG");
         if (!proteinIds) {
             var query = "MATCH (p:Protein) WHERE p.iid IN [" + g.members + "] RETURN p.iid, id(p) ";
@@ -278,7 +281,7 @@ function save_orthgroups(groups, proteinIds) {
                 //}
 
                 results.forEach(function (r) {
-                    txn.relate({"id": r['id(p)']}, g.clade, node);
+                    txn.relate({"id": r['id(p)']}, g.clade, node, {'levelId': g.id});
                 })
 
                 saved.resolve()
@@ -286,7 +289,7 @@ function save_orthgroups(groups, proteinIds) {
         } else {
             g.members.forEach(function (el) {
                 if (el in proteinIds) {
-                    txn.relate({"id": proteinIds[el]}, g.clade, node);
+                    txn.relate({"id": proteinIds[el]}, g.clade, node, {'level': g.clade});
                 }
             })
             saved.resolve()
@@ -356,34 +359,76 @@ function import_orthgroups(orthgroups_dir) {
         })
         log.debug("%s protein ids loaded", num)
 
-        glob(orthgroups_dir + "/*-orthologs.txt", function (err, files) {
-            //chain promises in sequential order:
-            var link = function (prevPromise, currentFile) {
-                return prevPromise.then(function () {
-                    log.info('calling import_orthgroups for %s', currentFile)
-                    return import_import_orthgroups_from_file(currentFile, proteinIds);
-                })
-            };
-            files.reduce(link, when('starting promise')).then(function (res) {
-                log.info('orthgroups import complete')
-            }, function (err) {
-                log.error(err, 'failed to import orthgroups')
+        var files = glob.sync(orthgroups_dir + "/*-orthologs.txt")
+        //chain promises in sequential order:
+        var link = function (prevPromise, currentFile) {
+            return prevPromise.then(function () {
+                log.info('calling import_orthgroups for %s', currentFile)
+                return import_import_orthgroups_from_file(currentFile, proteinIds);
             })
+        };
+        files.reduce(link, when('starting promise')).then(function () {
+            log.info('orthgroups import complete')
+        }, function (err) {
+            log.error(err, 'failed to import orthgroups')
         })
     })
 }
 
+function findTaxonomicLevels(proteinId) {
+    var id = typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: ' + proteinId
 
-log.level('debug')
-//create_schema().then(function(){
-//    log.info("schema created")
-//}, function (err) {
-//    log.error(err, "failed to create schema!")
-//})
-//import_proteins('../../data/v4.0/proteins', '../../data/v4.0/abundances')
-//import_orthgroups('../../data/v4.0/orthgroups')
+    var query = 'MATCH (p:Protein {' + id + '})-[l]->(n:NOG)<-[ll]-(m:Protein)-[t]->(Abundance) return distinct l.level, collect(distinct t.tissue)'
+
+}
+
+function loadOrthologs(proteinId, taxonomicLevel, tissue) {
+    taxonomicLevel = taxonomicLevel || 'LUCA'
+    tissue = tissue || 'WHOLE_ORGANISM'
+    var d = when.defer()
+    var id = typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: ' + proteinId
+    var query = "MATCH (p:Protein {" + id + "})-[:" + taxonomicLevel + "]" +
+        "->(n:" + taxonomicLevel + ")<-[:LUCA]-(m:Protein)-[:" +
+        tissue + "]->(a:Abundance) return m,a";
+    db.query(query, function (err, results) {
+        if (err) {
+            log.error(err, 'loadOrthologs(%s,%s,%s) FAILED', proteinId, taxonomicLevel, tissue)
+            var e = Error("loadOrthologs FAILED: " + err.message);
+            deferredImport.reject(e);
+            return
+        }
+        var response = {
+            "eid": proteinId,
+            "tissues": ["WHOLE_ORGANISM", "BRAIN"],
+            "members": []
+        }
+        return response
+    })
+    return d.promise
+}
+
+function import_data() {
+    log.level('debug')
+    create_schema().then(function () {
+        log.info("schema created")
+        import_proteins('../../data/v4.0/proteins',
+            '../../data/v4.0/abundances').then(function () {
+                log.info('proteins import complete')
+                import_orthgroups('../../data/v4.0/orthgroups').then(function () {
+                    log.info('orthgroups import complete')
+                }, function (err) {
+                    log.error(err, 'failed to import orthgroups')
+                })
+            }, function (err) {
+                log.error(err, 'failed to import proteins')
+            })
+    }, function (err) {
+        log.error(err, "failed to create schema!")
+    })
+
+}
+
 
 //DEMO:
-//function findOrthologs(proteinId) {
-//    db.query("MATCH (p:Protein {iid : 633631})-[:LUCA]->(n:NOG)<-[:LUCA]-(m:Protein)-->(a:Abundance) return m,a")
-//}
+//findOrthologs(633631, 'EUKARYOTES','WHOLE_ORGANISM')
+//
