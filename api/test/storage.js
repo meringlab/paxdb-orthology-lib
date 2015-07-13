@@ -44,9 +44,21 @@ describe('storage helper functions', function () {
     it('should parse orthologs', function () {
         var parsed = storage._internal.parseOrthgroups(2759, sampleOrthologs)
         parsed.length.should.equal(4)
-        expect(parsed[0]).to.deep.equal({"id": 2759, "clade": "EUKARYOTES", "members": [3334697, 4186372]})
-        expect(parsed[2]).to.deep.equal({"id": 2759, "clade": "EUKARYOTES", "members": [4186917, 3335696, 3334537]})
-        expect(parsed[3]).to.deep.equal({"id": 2759, "clade": "EUKARYOTES", "members": [4188181, 3335027]})
+        expect(parsed[0]).to.deep.equal({
+            "id": 2759, "clade": "EUKARYOTES", "members": [3334697, 4186372], "name": "2759.NOG04004"
+        })
+        expect(parsed[2]).to.deep.equal({
+            "id": 2759,
+            "clade": "EUKARYOTES",
+            "members": [4186917, 3335696, 3334537],
+            "name": "2759.NOG04006"
+        })
+        expect(parsed[3]).to.deep.equal({
+            "id": 2759,
+            "clade": "EUKARYOTES",
+            "members": [4188181, 3335027],
+            "name": "2759.NOG04007"
+        })
     })
 })
 
