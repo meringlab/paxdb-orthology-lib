@@ -37,22 +37,28 @@ var nogs = [
 
 var neo4j = require('../storage/neo4j/index')
 
-neo4j.count('Protein')
-    .then(function (num) {
-        num.should.equal(0);
-    })
-    .then(function () {
-        return neo4j.save_proteins(proteins, abundances)
-    })
-    .then(function () {
-        return neo4j.count('Protein')
-    }, function (err) {
-        throw err;
-    })
-    .then(function (num) {
-        num.should.equal(proteins.length);
-    })
-    .then(function () {
-        neo4j.save_orthgroups(nogs);
-    })
-    .done()
+neo4j.loadOrthologs('9606.ENSP00000356969', 'MAMMALS', 'BRAIN').then(function (cogs) {
+    cogs.members.length.should.equal(2);
+})
+
+
+// TODO use disposable-seraph
+//neo4j.count('Protein')
+//    .then(function (num) {
+//        num.should.equal(0);
+//    })
+//    .then(function () {
+//        return neo4j.save_proteins(proteins, abundances)
+//    })
+//    .then(function () {
+//        return neo4j.count('Protein')
+//    }, function (err) {
+//        throw err;
+//    })
+//    .then(function (num) {
+//        num.should.equal(proteins.length);
+//    })
+//    .then(function () {
+//        neo4j.save_orthgroups(nogs);
+//    })
+//    .done()
