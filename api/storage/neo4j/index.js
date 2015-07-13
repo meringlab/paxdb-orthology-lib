@@ -17,6 +17,7 @@ exports.save_orthgroups = save_orthgroups
 exports.import_proteins = import_proteins
 exports.import_orthgroups = import_orthgroups
 exports.create_schema = create_schema
+exports.loadOrthologs = loadOrthologs
 
 /**
  * just for unit testing
@@ -397,38 +398,46 @@ function import_data() {
 }
 
 function findTaxonomicLevels(proteinId) {
-    var id = typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: ' + proteinId
+    var id = proteinIdAsQueryParameter(proteinId)
 
     var query = 'MATCH (p:Protein {' + id + '})-[l]->(n:NOG)<-[ll]-(m:Protein)-[t]->(Abundance) return distinct l.level, collect(distinct t.tissue)'
 
+}
+
+function proteinIdAsQueryParameter(proteinId) {
+    return typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: "' + proteinId + '"';
 }
 
 function loadOrthologs(proteinId, taxonomicLevel, tissue) {
     taxonomicLevel = taxonomicLevel || 'LUCA'
     tissue = tissue || 'WHOLE_ORGANISM'
     var d = when.defer()
-    var id = typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: ' + proteinId
-    var query = "MATCH (p:Protein {" + id + "})-[:" + taxonomicLevel + "]" +
-        "->(n:" + taxonomicLevel + ")<-[:LUCA]-(m:Protein)-[:" +
+    var id = proteinIdAsQueryParameter(proteinId)
+    var query = "MATCH (:Protein {" + id + "})-[:" + taxonomicLevel + "]" +
+        "->(n:NOG) WITH n MATCH n<-[:" + taxonomicLevel + "]-(m:Protein)-[:" +
         tissue + "]->(a:Abundance) return m,a";
     db.query(query, function (err, results) {
         if (err) {
-            log.error(err, 'loadOrthologs(%s,%s,%s) FAILED', proteinId, taxonomicLevel, tissue)
+            log.error(err, 'loadOrthologs(%s,%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, tissue, query)
             var e = Error("loadOrthologs FAILED: " + err.message);
             deferredImport.reject(e);
             return
         }
         var response = {
-            "eid": proteinId,
-            "tissues": ["WHOLE_ORGANISM", "BRAIN"],
-            "members": []
+            "id": proteinId,
+            "members": results.map(function (row) {
+                return {
+                    "stringdbInternalId": row.m.iid,
+                    "stringdbExternalId": row.m.eid,
+                    "name": row.m.name,
+                    "abundance": {
+                        "value": row.a.value,
+                        "rank": row.a.rank
+                    }
+                }
+            })
         }
-        return response
+        d.resolve(response);
     })
     return d.promise
 }
-
-
-//DEMO:
-//findOrthologs(633631, 'EUKARYOTES','WHOLE_ORGANISM')
-//
