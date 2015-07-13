@@ -2,8 +2,44 @@ const fs = require('fs')
 
 exports = module.exports = {}
 exports.taxonomicLevels = taxonomicLevels
+exports.allSpeciesUnder = allSpeciesUnder
 
 var taxonomicMap = loadMap()
+var taxonomicMapById = (function () {
+    var m = {}
+    for (var prop in taxonomicMap) {
+        if (taxonomicMap.hasOwnProperty(prop)) {
+            m[taxonomicMap[prop].name] = taxonomicMap[prop]
+        }
+    }
+    return m
+})()
+
+function allSpeciesUnder(taxonomicLevel) {
+    var level = (typeof(taxonomicLevel) === 'number') ? taxonomicMap[taxonomicLevel] : taxonomicMapById[taxonomicLevel]
+    if (level === undefined) {
+        throw Error("unknown taxonomic level: " + taxonomicLevel)
+    }
+    if (!level.hasOwnProperty('children')) {
+        throw Error(taxonomicLevel + " is empty!? " + JSON.stringify(level))
+    }
+    var children = []
+    appendLeaves(level, children)
+    return children.sort(function (a, b) {
+        return a > b
+    })
+}
+
+function appendLeaves(level, children) {
+    level.children.forEach(function (child) {
+        if (child.hasOwnProperty('children')) {
+            appendLeaves(child, children)
+        } else {
+            children.push(child.id)
+        }
+    })
+}
+
 
 /**
  * @param speciesId

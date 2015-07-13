@@ -28,4 +28,11 @@ describe('taxonomy', function () {
             'PRIMATES'
         ])
     })
+    it('should return all species under a taxonomic level', function () {
+        taxonomy.allSpeciesUnder('PRIMATES').should.deep.equal([9598, 9606])
+        taxonomy.allSpeciesUnder('RODENTS').should.deep.equal([10090, 10116])
+        taxonomy.allSpeciesUnder('EUARCHONTOGLIRES').should.deep.equal([9598, 9606, 10090, 10116])
+    })
+
+
 })
