@@ -375,6 +375,27 @@ function import_orthgroups(orthgroups_dir) {
     })
 }
 
+function import_data() {
+    log.level('debug')
+    create_schema().then(function () {
+        log.info("schema created")
+        import_proteins('../../data/v4.0/proteins',
+            '../../data/v4.0/abundances').then(function () {
+                log.info('proteins import complete')
+                import_orthgroups('../../data/v4.0/orthgroups').then(function () {
+                    log.info('orthgroups import complete')
+                }, function (err) {
+                    log.error(err, 'failed to import orthgroups')
+                })
+            }, function (err) {
+                log.error(err, 'failed to import proteins')
+            })
+    }, function (err) {
+        log.error(err, "failed to create schema!")
+    })
+
+}
+
 function findTaxonomicLevels(proteinId) {
     var id = typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: ' + proteinId
 
@@ -405,27 +426,6 @@ function loadOrthologs(proteinId, taxonomicLevel, tissue) {
         return response
     })
     return d.promise
-}
-
-function import_data() {
-    log.level('debug')
-    create_schema().then(function () {
-        log.info("schema created")
-        import_proteins('../../data/v4.0/proteins',
-            '../../data/v4.0/abundances').then(function () {
-                log.info('proteins import complete')
-                import_orthgroups('../../data/v4.0/orthgroups').then(function () {
-                    log.info('orthgroups import complete')
-                }, function (err) {
-                    log.error(err, 'failed to import orthgroups')
-                })
-            }, function (err) {
-                log.error(err, 'failed to import proteins')
-            })
-    }, function (err) {
-        log.error(err, "failed to create schema!")
-    })
-
 }
 
 
