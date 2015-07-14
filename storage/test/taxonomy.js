@@ -33,6 +33,11 @@ describe('taxonomy', function () {
         taxonomy.allSpeciesUnder('RODENTS').should.deep.equal([10090, 10116])
         taxonomy.allSpeciesUnder('EUARCHONTOGLIRES').should.deep.equal([9598, 9606, 10090, 10116])
     })
+    it('should return all tissues under a taxonomic level', function () {
+        taxonomy.availableTissuesAtTaxonomicLevel('BACTERIA').should.deep.equal(['WHOLE_ORGANISM'])
+        taxonomy.availableTissuesAtTaxonomicLevel('PRIMATES')[0].should.deep.equal(['ADRENAL_GLAND'])
+        taxonomy.availableTissuesAtTaxonomicLevel('RODENTS')[0].should.deep.equal(['ADRENAL_GLAND'])
+    })
 
 
 })
