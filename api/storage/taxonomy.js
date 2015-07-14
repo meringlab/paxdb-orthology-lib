@@ -1,8 +1,12 @@
 const fs = require('fs')
+const data = require('./data')
+const _und = require('underscore')
 
 exports = module.exports = {}
 exports.taxonomicLevels = taxonomicLevels
 exports.allSpeciesUnder = allSpeciesUnder
+exports.isValidTaxonomicLevel = isValidTaxonomicLevel
+exports.availableTissuesAtTaxonomicLevel = availableTissuesAtTaxonomicLevel
 
 var taxonomicMap = loadMap()
 var taxonomicMapById = (function () {
@@ -15,11 +19,34 @@ var taxonomicMapById = (function () {
     return m
 })()
 
-function allSpeciesUnder(taxonomicLevel) {
+
+function availableTissuesAtTaxonomicLevel(taxonomicLevel) {
+    return allSpeciesUnder(taxonomicLevel).reduce(function (prev, speciesId) {
+        return _und.union(prev, data.speciesTissuesMap[speciesId]);
+    }, []).sort()
+}
+
+/**
+ * validates whether param is a legal/known taxonomic level and
+ * whether the level is legal for this species.
+ *
+ * @param speciesId
+ * @param taxonomicLevel
+ * @return {boolean}
+ */
+function isValidTaxonomicLevel(speciesId, taxonomicLevel) {
+    return (taxonomicLevel in taxonomicLevels(speciesId));
+}
+
+function getLevel(taxonomicLevel) {
     var level = (typeof(taxonomicLevel) === 'number') ? taxonomicMap[taxonomicLevel] : taxonomicMapById[taxonomicLevel]
     if (level === undefined) {
         throw Error("unknown taxonomic level: " + taxonomicLevel)
     }
+    return level;
+}
+function allSpeciesUnder(taxonomicLevel) {
+    var level = getLevel(taxonomicLevel);
     if (!level.hasOwnProperty('children')) {
         throw Error(taxonomicLevel + " is empty!? " + JSON.stringify(level))
     }
