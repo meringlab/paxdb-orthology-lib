@@ -13,6 +13,19 @@
             {"<%= tissue %>" : "/protein/<%= proteinId %>/ortholog_groups/<%= taxonomicLevel %>/<%= tissue %>"}
         <% if (t < numTissues- 1 ) { %> , <% } %>
         <% } %>
-        ]
+        ],
+
+"members" : [
+<% for (var numMembers = orthologs.length, m = 0; m < numMembers; m++) {
+    var member = orthologs[m];    %>
+    {   "@id" : "proteins.api.pax-db.org/protein/<%= member %>",
+        "@type": "Protein",
+        "id" : "<%= member%>",
+        "orthologousGroups": "nogs.api.pax-db.org/protein/<%= member %>/ortholog_groups"
+    }
+<% if (m < numMembers- 1 ) { %> , <% } %>
+<% } %>
+]
+
 
 }

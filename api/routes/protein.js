@@ -52,7 +52,7 @@ router.param('tissue', function (req, res, next, tissue) {
     if (!_und.contains(allowedTissues, tissue)) {
         res.status(404);
         //FIXME this doesn't work, error is not defined
-        res.render('error', {message: 'Invalid tissue for this protein: ' + req.proteinId + ", " + tissue +", only allowed: "+ allowedTissues});
+        res.render('error', {message: 'Invalid tissue for this protein: ' + req.proteinId + ", " + tissue + ", only allowed: " + allowedTissues});
         return;
     }
 
@@ -114,23 +114,26 @@ router.get('/:protein_id/ortholog_groups', function (req, res, next) {
 
 router.get('/:protein_id/ortholog_groups/:taxonomic_level', function (req, res, next) {
     neo4j.findTissuesForOrthologsAtTaxonomicLevel(req.proteinId, req.taxonomicLevel).then(
-        function (data) {
-            req.negotiate({
-                //'html': function () {
-                //    res.header('content-type', "text/html");
-                //    res.render('protein', {"protein": proteinObject});
-                //},
-                'application/ld+json': function () {
-                    renderLevel(res, "application/ld+json", data);
-                },
-                'application/json': function () {
-                    //TODO add Link header to @context
-                    renderLevel(res, "application/json", data);
-                },
-                'default': function () {
-                    renderLevel(res, "application/ld+json", data);
-                }
-            })
+        function (tissues) {
+            neo4j.findOrthologsAtTaxonomicLevel(req.proteinId, req.taxonomicLevel).then(
+                function (orthologs) {
+                    req.negotiate({
+                        //'html': function () {
+                        //    res.header('content-type', "text/html");
+                        //    res.render('protein', {"protein": proteinObject});
+                        //},
+                        'application/ld+json': function () {
+                            renderLevel(res, "application/ld+json", tissues, orthologs.members);
+                        },
+                        'application/json': function () {
+                            //TODO add Link header to @context
+                            renderLevel(res, "application/json", tissues, orthologs.members);
+                        },
+                        'default': function () {
+                            renderLevel(res, "application/ld+json", tissues, orthologs.members);
+                        }
+                    });
+                })
         },
         function (err) {
             //TODO handle error!
@@ -145,9 +148,14 @@ function renderAllLevels(res, contentType, params) {
     res.render('protein_ldjson', params);
 }
 
-function renderLevel(res, contentType, params) {
+function renderLevel(res, contentType, tissues, orthologs) {
     res.header('content-type', contentType);
-    res.render('group_ldjson', params);
+    res.render('group_ldjson', {
+        proteinId: tissues.proteinId,
+        taxonomicLevel: tissues.taxonomicLevel,
+        tissues: tissues.tissues,
+        orthologs: orthologs
+    });
 }
 
 function renderLevelForTissue(res, contentType, params) {
