@@ -19,6 +19,7 @@ exports.import_orthgroups = import_orthgroups
 exports.create_schema = create_schema
 exports.loadOrthologs = loadOrthologs
 exports.findTissuesForOrthologsAtTaxonomicLevel = findTissuesForOrthologsAtTaxonomicLevel
+exports.findOrthologsAtTaxonomicLevel = findOrthologsAtTaxonomicLevel
 
 /**
  * just for unit testing
@@ -403,6 +404,33 @@ function findTaxonomicLevels(proteinId) {
 
     var query = 'MATCH (p:Protein {' + id + '})-[l]->(n:NOG)<-[ll]-(m:Protein)-[t]->(Abundance) return distinct l.level, collect(distinct t.tissue)'
 }
+
+function findOrthologsAtTaxonomicLevel(proteinId, taxonomicLevel) {
+    var d = when.defer()
+    var id = proteinIdAsQueryParameter(proteinId)
+    //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG) WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
+    var query =  'MATCH (:Protein {' + id + '})-[:' + taxonomicLevel + ']->(n:NOG)\n' +
+        ' WITH n MATCH n<-[:' + taxonomicLevel + ']-(m:Protein) \n' +
+        ' RETURN m.eid';
+    db.query(query, function (err, results) {
+        if (err) {
+            log.error(err, 'findOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, query)
+            var e = Error("findOrthologsAtTaxonomicLevel FAILED: " + err.message);
+            deferredImport.reject(e);
+            return
+        }
+        var response = {
+            "proteinId": proteinId,
+            "taxonomicLevel" : taxonomicLevel,
+            "members": results.map(function (row) {
+                return row['m.eid']
+            })
+        }
+        d.resolve(response);
+    })
+    return d.promise
+}
+
 
 function findTissuesForOrthologsAtTaxonomicLevel(proteinId, taxonomicLevel) {
     var d = when.defer()
