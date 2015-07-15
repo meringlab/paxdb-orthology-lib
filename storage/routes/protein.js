@@ -1,9 +1,14 @@
-var express = require('express');
-var router = express.Router(),
+const express = require('express');
+const router = express.Router(),
     negotiate = require('express-negotiate');
+const _und = require('underscore')
 
-var stringdb_proteinid_re = /(\d)\.([a-zA-Z\.])+/;
+const neo4j = require('../storage/neo4j/index')
+const data = require('../storage/data')
+const taxonomy = require('../storage/taxonomy')
 
+//const stringdb_proteinid_re = /(\d)\.([a-zA-Z\.])+/;
+const stringdb_proteinid_re = /(\d+)\..+/;
 
 router.param('protein_id', function (req, res, next, protein_id) {
     if (!stringdb_proteinid_re.test(protein_id)) {
@@ -14,23 +19,20 @@ router.param('protein_id', function (req, res, next, protein_id) {
 
     // once validation is done save the new item in the req
     req.proteinId = protein_id;
+    req.speciesId = parseInt(stringdb_proteinid_re.exec(protein_id)[1]);
     // go to the next thing
     next();
 });
 
-// TODO validate: is it a legal/known taxonomic level? is it legal for this protein?
-//i need the entire phylo tree here, then look up the species, walk up the tree
-//collecting all the levels.
-function is_valid_taxonomic_level(taxonomic_level) {
-    return true;
-}
 router.param('taxonomic_level', function (req, res, next, taxonomic_level) {
     if (!taxonomic_level) {
         next();
         return;
     }
-    if (!is_valid_taxonomic_level(taxonomic_level)) {
+    taxonomic_level = taxonomic_level.toUpperCase()
+    if (!taxonomy.isValidTaxonomicLevel(req.speciesId, taxonomic_level)) {
         res.status(404);
+        //FIXME this doesn't work, error is not defined
         res.render('error', {message: 'Invalid taxonomic level for this protein: ' + req.proteinId + ", " + taxonomic_level});
         return;
     }
@@ -40,55 +42,57 @@ router.param('taxonomic_level', function (req, res, next, taxonomic_level) {
     // go to the next thing
     next();
 });
+router.param('tissue', function (req, res, next, tissue) {
+    if (!tissue) {
+        next();
+        return;
+    }
+    tissue = tissue.toUpperCase()
+    var allowedTissues = data.speciesTissuesMap[req.speciesId];
+    if (!_und.contains(allowedTissues, tissue)) {
+        res.status(404);
+        //FIXME this doesn't work, error is not defined
+        res.render('error', {message: 'Invalid tissue for this protein: ' + req.proteinId + ", " + tissue +", only allowed: "+ allowedTissues});
+        return;
+    }
 
-//TODO load from database
-var proteinObject = {
-    "id": "9606.ENSP00000356969",
-    "members": [
-        {
-            "taxonomicLevel": "cellular organisms",
-            "tissues": ['WHOLE_ORGANISM', 'BRAIN', 'LEAF'],
-            "members": [
-                "protein1",
-                "protein2"
-            ]
-        }, {
-            "taxonomicLevel": "Fungi",
-            "tissues": ['WHOLE_ORGANISM'],
-            "members": [
-                "protein2",
-                "protein3",
-                "protein4"
-            ]
-        }
-    ]
-};
+    // once validation is done save the new item in the req
+    req.tissue = tissue;
+    // go to the next thing
+    next();
+});
 
 
 router.get('/:protein_id/ortholog_groups/:taxonomic_level/:tissue', function (req, res, next) {
+    neo4j.loadOrthologs(req.proteinId, req.taxonomicLevel, req.tissue).then(
+        function (data) {
+            req.negotiate({
+                //'html': function () {
+                //    res.header('content-type', "text/html");
+                //    res.render('protein', {"protein": proteinObject});
+                //},
+                'application/ld+json': function () {
+                    renderLevelForTissue(res, "application/ld+json", data);
+                },
+                'application/json': function () {
+                    //TODO add Link header to @context
+                    renderLevelForTissue(res, "application/json", data);
+                },
+                'default': function () {
+                    renderLevelForTissue(res, "application/ld+json", data);
+                }
+            })
+        },
+        function (err) {
+            //TODO handle error!
+            log.error(err, 'failed to load orthologs at %s for %s, tissue: %s', req.taxonomicLevel, req.proteinId, req.tissue)
+            return next(new Error('failed to load ortholog group for ' + req.proteinId + ': ' + err.message));
+        });
 
-    var group= {
-        "taxonomicLevel": "cellular organisms",
-        "tissues": ['WHOLE_ORGANISM', 'BRAIN', 'LEAF'],
-        "members": [
-            {   "id" : "10090.ENSMUSP00000005824",
-                "abundance": {
-                        "value": 3393,
-                        "unit": "UO:0000169",
-                        "position": 74,
-                        "_rank": "74/2263"
-                }
-            },
-            {   "id":"10116.ENSRNOP00000004662",
-                "abundance": {
-                        "value": 43.9,
-                        "unit": "UO:0000169",
-                        "position": 1156,
-                        "_rank": "1156/12365"
-                }
-            }
-        ]
-    }
+});
+
+router.get('/:protein_id/ortholog_groups', function (req, res, next) {
+    var taxonomicLevels = taxonomy.taxonomicLevels(req.speciesId);
 
     req.negotiate({
         //'html': function () {
@@ -96,47 +100,59 @@ router.get('/:protein_id/ortholog_groups/:taxonomic_level/:tissue', function (re
         //    res.render('protein', {"protein": proteinObject});
         //},
         'application/ld+json': function () {
-            renderGroup(req, res, "application/ld+json", group);
+            renderAllLevels(res, "application/ld+json", {'protein': req.proteinId, 'taxonomicLevels': taxonomicLevels});
         },
         'application/json': function () {
-            renderGroup(req, res, "application/json", group);
+            //TODO add Link header to @context
+            renderAllLevels(res, "application/json", {'protein': req.proteinId, 'taxonomicLevels': taxonomicLevels});
         },
         'default': function () {
-            renderGroup(req, res, "application/ld+json", group);
+            renderAllLevels(res, "application/ld+json", {'protein': req.proteinId, 'taxonomicLevels': taxonomicLevels});
         }
     })
 });
 
-router.get('/:protein_id', function (req, res, next) {
-    req.negotiate({
-        //'html': function () {
-        //    res.header('content-type', "text/html");
-        //    res.render('protein', {"protein": proteinObject});
-        //},
-        'application/ld+json': function () {
-            renderProtein(res, "application/ld+json", proteinObject);
+router.get('/:protein_id/ortholog_groups/:taxonomic_level', function (req, res, next) {
+    neo4j.findTissuesForOrthologsAtTaxonomicLevel(req.proteinId, req.taxonomicLevel).then(
+        function (data) {
+            req.negotiate({
+                //'html': function () {
+                //    res.header('content-type', "text/html");
+                //    res.render('protein', {"protein": proteinObject});
+                //},
+                'application/ld+json': function () {
+                    renderLevel(res, "application/ld+json", data);
+                },
+                'application/json': function () {
+                    //TODO add Link header to @context
+                    renderLevel(res, "application/json", data);
+                },
+                'default': function () {
+                    renderLevel(res, "application/ld+json", data);
+                }
+            })
         },
-        'application/json': function () {
-            renderProtein(res, "application/json", proteinObject);
-        },
-        'default': function () {
-            renderProtein(res, "application/ld+json", proteinObject);
-        }
-    })
-});
-function renderProtein(res, contentType, proteinObject) {
+        function (err) {
+            //TODO handle error!
+            log.error(err, 'failed to find tissues at %s for %s', req.taxonomicLevel, req.proteinId)
+            return next(new Error('failed to load ortholog group for ' + req.proteinId + ': ' + err.message));
+        });
+})
+
+
+function renderAllLevels(res, contentType, params) {
     res.header('content-type', contentType);
-    res.render('protein_ldjson', {
-        "protein": proteinObject
-    });
+    res.render('protein_ldjson', params);
 }
-function renderGroup(req, res, contentType, groupObject) {
+
+function renderLevel(res, contentType, params) {
     res.header('content-type', contentType);
-    res.render('orthgroup_ldjson', {
-        "protein_id": req.proteinId,
-        "tissue": req.params.tissue,
-        "group": groupObject
-    });
+    res.render('group_ldjson', params);
+}
+
+function renderLevelForTissue(res, contentType, params) {
+    res.header('content-type', contentType);
+    res.render('orthgroup_with_abundances_ldjson', params);
 }
 
 module.exports = router;

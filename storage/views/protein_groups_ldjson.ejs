@@ -1,0 +1,23 @@
+{
+    "@context": "http://api.pax-db.org/orthology-context.jsonld",
+    "@id": "/protein/<%= protein.id %>",
+    "id": "<%= protein.id %>",
+    "@type": "OrhologGroups",
+"members": [
+<% for (var numMembers = protein.members.length, i = 0; i < numMembers; i++) {
+    var el = protein.members[i];    %> {
+"@id": "/protein/<%= protein.id %>/ortholog_groups/<%= el.taxonomicLevel %>",
+"@type": "OrhologGroup",
+"taxonomicLevel": "<%= el.taxonomicLevel %>",
+"tissues" : [
+<% for (var numTissues = el.tissues.length, t = 0; t < numTissues; t++) {
+    var tissue = el.tissues[t];    %>
+{"<%= tissue %>" : "/protein/<%= protein.id %>/ortholog_groups/<%= el.taxonomicLevel  %>/<%=  tissue %>"}
+<% if (t < numTissues- 1 ) { %> , <% } %>
+<% } %>
+],
+"members" : <%- JSON.stringify(el.members) %>
+} <% if (i < numMembers - 1 ) { %> , <% } %>
+<% } %>
+]
+}

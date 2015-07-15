@@ -35,7 +35,7 @@ function availableTissuesAtTaxonomicLevel(taxonomicLevel) {
  * @return {boolean}
  */
 function isValidTaxonomicLevel(speciesId, taxonomicLevel) {
-    return (taxonomicLevel in taxonomicLevels(speciesId));
+    return _und.contains(taxonomicLevels(speciesId), taxonomicLevel);
 }
 
 function getLevel(taxonomicLevel) {
