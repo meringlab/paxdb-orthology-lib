@@ -40,6 +40,9 @@ var neo4j = require('../storage/neo4j/index')
 neo4j.loadOrthologs('9606.ENSP00000356969', 'MAMMALS', 'BRAIN').then(function (cogs) {
     cogs.members.length.should.equal(2);
 })
+neo4j.findTissuesForOrthologsAtTaxonomicLevel('9606.ENSP00000356969', 'MAMMALS').then(function (nog) {
+    nog.tissues.length.should.equal(58);
+})
 
 
 // TODO use disposable-seraph

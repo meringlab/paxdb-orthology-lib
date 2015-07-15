@@ -18,6 +18,7 @@ exports.import_proteins = import_proteins
 exports.import_orthgroups = import_orthgroups
 exports.create_schema = create_schema
 exports.loadOrthologs = loadOrthologs
+exports.findTissuesForOrthologsAtTaxonomicLevel = findTissuesForOrthologsAtTaxonomicLevel
 
 /**
  * just for unit testing
@@ -401,7 +402,33 @@ function findTaxonomicLevels(proteinId) {
     var id = proteinIdAsQueryParameter(proteinId)
 
     var query = 'MATCH (p:Protein {' + id + '})-[l]->(n:NOG)<-[ll]-(m:Protein)-[t]->(Abundance) return distinct l.level, collect(distinct t.tissue)'
+}
 
+function findTissuesForOrthologsAtTaxonomicLevel(proteinId, taxonomicLevel) {
+    var d = when.defer()
+    var id = proteinIdAsQueryParameter(proteinId)
+    //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG) WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
+    var query =  'MATCH (:Protein {' + id + '})-[:' + taxonomicLevel + ']->(n:NOG)\n' +
+                ' WITH n MATCH n<-[:' + taxonomicLevel + ']-(:Protein)-[tissue]->(:Abundance) \n' +
+                ' RETURN DISTINCT tissue.tissue';
+    db.query(query, function (err, results) {
+        if (err) {
+            log.error(err, 'findTissuesForOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, query)
+            var e = Error("findTissuesForOrthologsAtTaxonomicLevel FAILED: " + err.message);
+            deferredImport.reject(e);
+            return
+        }
+        var response = {
+            "proteinId": proteinId,
+            "taxonomicLevel" : taxonomicLevel,
+            "tissues": results.map(function (row) {
+                return  row['tissue.tissue']
+            })
+        }
+        response.tissues.sort()
+        d.resolve(response);
+    })
+    return d.promise
 }
 
 function proteinIdAsQueryParameter(proteinId) {
@@ -424,14 +451,17 @@ function loadOrthologs(proteinId, taxonomicLevel, tissue) {
             return
         }
         var response = {
-            "id": proteinId,
+            "proteinId": proteinId,
+            "taxonomicLevel" : taxonomicLevel,
+            "tissue" : tissue,
             "members": results.map(function (row) {
                 return {
                     "stringdbInternalId": row.m.iid,
-                    "stringdbExternalId": row.m.eid,
+                    "proteinId": row.m.eid,
                     "name": row.m.name,
                     "abundance": {
-                        "value": row.a.value,
+                        "value": parseFloat(row.a.value),
+                        "position" : parseInt(row.a.rank.substring(0, row.a.rank.indexOf('/'))),
                         "rank": row.a.rank
                     }
                 }
