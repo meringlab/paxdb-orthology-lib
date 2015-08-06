@@ -9,8 +9,14 @@ const orthgroups = require('../data.js').orthgroups
 
 const log = bunyan.createLogger({name: "paxdb-API-orthologs", module: "storage/neo4j"});
 
-exports = module.exports = {}
+var config = JSON.parse(fs.readFileSync("/opt/paxdb/v4.0/orthology_api.json"));
+const db = require("seraph")({
+    server: process.env.NEO4J_URL || config.url,
+    user: process.env.NEO4J_USER || config.user,
+    pass: process.env.NEO4J_PASS || config.pass
+});
 
+exports = module.exports = {}
 exports.count = count
 exports.save_proteins = save_proteins
 exports.save_orthgroups = save_orthgroups
@@ -19,6 +25,7 @@ exports.import_orthgroups = import_orthgroups
 exports.create_schema = create_schema
 exports.loadOrthologs = loadOrthologs
 exports.findTissuesForOrthologsAtTaxonomicLevel = findTissuesForOrthologsAtTaxonomicLevel
+
 exports.findOrthologsAtTaxonomicLevel = findOrthologsAtTaxonomicLevel
 
 /**
@@ -31,12 +38,6 @@ exports._internal = {
     parseProteins: parseProteins,
     parseOrthgroups: parseOrthgroups
 }
-
-const db = require("seraph")({
-    server: "http://192.168.54.130:7474",
-    user: "neo4j",
-    pass: "t5y6u7i8"
-});
 
 function create_schema() {
     //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
@@ -443,7 +444,7 @@ function findTissuesForOrthologsAtTaxonomicLevel(proteinId, taxonomicLevel) {
         if (err) {
             log.error(err, 'findTissuesForOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, query)
             var e = Error("findTissuesForOrthologsAtTaxonomicLevel FAILED: " + err.message);
-            deferredImport.reject(e);
+            d.reject(e);
             return
         }
         var response = {
