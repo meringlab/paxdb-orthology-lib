@@ -35,8 +35,8 @@ describe('taxonomy', function () {
     })
     it('should return all tissues under a taxonomic level', function () {
         taxonomy.availableTissuesAtTaxonomicLevel('BACTERIA').should.deep.equal(['WHOLE_ORGANISM'])
-        taxonomy.availableTissuesAtTaxonomicLevel('PRIMATES')[0].should.deep.equal(['ADRENAL_GLAND'])
-        taxonomy.availableTissuesAtTaxonomicLevel('RODENTS')[0].should.deep.equal(['ADRENAL_GLAND'])
+        taxonomy.availableTissuesAtTaxonomicLevel('PRIMATES')[0].should.equal('ADRENAL_GLAND')
+        taxonomy.availableTissuesAtTaxonomicLevel('RODENTS')[0].should.equal('ADRENAL_GLAND')
     })
 
 

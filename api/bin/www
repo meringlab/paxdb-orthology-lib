@@ -17,7 +17,8 @@ app.set('port', port);
 
 var server = http.createServer(app);
 
-var boot = function () {
+var boot = function (neo4jdb) {
+    app.set('neo4j', neo4jdb)
     /**
      * Listen on provided port, on all network interfaces.
      */
@@ -33,7 +34,14 @@ var shutdown = function () {
 }
 
 if (require.main === module) {
-    boot();
+    var fs = require('fs')
+    var config = JSON.parse(fs.readFileSync("/opt/paxdb/v4.0/orthology_api.json"));
+    const neo4j = require('../storage/neo4j/index')({
+        server: process.env.NEO4J_URL || config.url,
+        user: process.env.NEO4J_USER || config.user,
+        pass: process.env.NEO4J_PASS || config.pass
+    })
+    boot(neo4j);
 } else {
     console.info('Running app as a module')
     exports.boot = boot;
