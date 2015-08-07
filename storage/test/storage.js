@@ -5,7 +5,7 @@ var should = require('chai').should(),
     expect = require('chai').expect,
     assert = require('assert');
 
-var storage = require('../storage/neo4j/index')
+var importer = require('../storage/neo4j/import')()
 var sampleDataset =
     "#name: D.vulgaris - Whole organism (Integrated)\n\
 #score: 4.46\n\
@@ -34,7 +34,7 @@ NOG04007	4188181	3335027\n";
 
 describe('storage helper functions', function () {
     it('should parse dataset', function () {
-        var parsed = storage._internal.parseDataset(sampleDataset)
+        var parsed = importer._internal.parseDataset(sampleDataset)
         parsed.organ.should.equal('WHOLE_ORGANISM')
         parsed.numAbundances.should.equal(7)
         expect(parsed.abundances[0]).to.deep.equal({iid: 4574, eid: '882.DVU0956', value: 4191})
@@ -42,7 +42,7 @@ describe('storage helper functions', function () {
         expect(parsed.abundances[6]).to.deep.equal({iid: 6961, eid: '882.DVU3373', value: 553})
     })
     it('should parse orthologs', function () {
-        var parsed = storage._internal.parseOrthgroups(2759, sampleOrthologs)
+        var parsed = importer._internal.parseOrthgroups(2759, sampleOrthologs)
         parsed.length.should.equal(4)
         expect(parsed[0]).to.deep.equal({
             "id": 2759, "clade": "EUKARYOTES", "members": [3334697, 4186372], "name": "2759.NOG04004"

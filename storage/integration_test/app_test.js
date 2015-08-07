@@ -9,7 +9,15 @@ var boot = require(appModule).boot,
 
 describe('server', function () {
     before(function () {
-        boot();
+        //TODO service lookup
+        var fs = require('fs')
+        var config = JSON.parse(fs.readFileSync("/opt/paxdb/v4.0/orthology_api.json"));
+        const neo4j = require('../storage/neo4j/index')({
+            server: process.env.NEO4J_URL || config.url,
+            user: process.env.NEO4J_USER || config.user,
+            pass: process.env.NEO4J_PASS || config.pass
+        })
+        boot(neo4j);
     });
 
     describe('homepage', function () {

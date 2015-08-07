@@ -3,7 +3,6 @@ const router = express.Router(),
     negotiate = require('express-negotiate');
 const _und = require('underscore')
 
-const neo4j = require('../storage/neo4j/index')
 const data = require('../storage/data')
 const taxonomy = require('../storage/taxonomy')
 
@@ -64,7 +63,7 @@ router.param('tissue', function (req, res, next, tissue) {
 
 
 router.get('/:protein_id/ortholog_groups/:taxonomic_level/:tissue', function (req, res, next) {
-    neo4j.loadOrthologs(req.proteinId, req.taxonomicLevel, req.tissue).then(
+    req.app.get('neo4j').loadOrthologs(req.proteinId, req.taxonomicLevel, req.tissue).then(
         function (data) {
             req.negotiate({
                 //'html': function () {
@@ -113,6 +112,7 @@ router.get('/:protein_id/ortholog_groups', function (req, res, next) {
 });
 
 router.get('/:protein_id/ortholog_groups/:taxonomic_level', function (req, res, next) {
+    var neo4j = req.app.get('neo4j');
     neo4j.findTissuesForOrthologsAtTaxonomicLevel(req.proteinId, req.taxonomicLevel).then(
         function (tissues) {
             neo4j.findOrthologsAtTaxonomicLevel(req.proteinId, req.taxonomicLevel).then(
@@ -164,3 +164,7 @@ function renderLevelForTissue(res, contentType, params) {
 }
 
 module.exports = router;
+//TODO
+//exports = module.exports = function (options) {
+//    return router
+//}

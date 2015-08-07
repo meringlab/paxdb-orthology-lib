@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "chai": "*",
+    "disposable-seraph": "^0.3.4",
     "mocha": "*",
     "superagent": "^1.2.0"
   },
