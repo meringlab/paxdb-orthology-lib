@@ -5,7 +5,7 @@ var should = require('chai').should(),
     expect = require('chai').expect,
     assert = require('assert');
 
-var importer = require('../storage/neo4j/import')()
+var importer = require('../lib/importer')()
 var sampleDataset =
     "#name: D.vulgaris - Whole organism (Integrated)\n\
 #score: 4.46\n\

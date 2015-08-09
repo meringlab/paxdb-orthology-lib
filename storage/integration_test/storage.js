@@ -70,7 +70,7 @@ describe('orthology service', function () {
     });
 
     it('should load and query', function (done) {
-        var neo4j = require('../storage/neo4j/index')({db: db})
+        var neo4j = require('../lib/storage')({db: db})
 
         neo4j.count('Protein')
             .then(function (num) {

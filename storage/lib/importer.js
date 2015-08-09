@@ -6,7 +6,9 @@ const when = require('when');
 const bunyan = require('bunyan');
 const fs = require('fs');
 const glob = require("glob")
-const orthgroups = require('../data.js').orthgroups
+const orthgroups = require('./data.js').orthgroups
+
+const data_dir = '../data/v4.0/';
 
 function Importer(config) {
     const log = bunyan.createLogger({
@@ -15,16 +17,16 @@ function Importer(config) {
         server: config ? config.url : 'disposable-neo4j'
     });
 
-    const storage = config ? require('storage')(config) : undefined
+    const storage = config ? require('./storage')(config) : undefined
 
     this.import_data = function () {
         log.level('debug')
         storage.create_schema().then(function () {
             log.info("schema created")
-            this.import_proteins('../../data/v4.0/proteins',
-                '../../data/v4.0/abundances').then(function () {
+            this.import_proteins(data_dir + 'proteins',
+                data_dir + 'abundances').then(function () {
                     log.info('proteins import complete')
-                    this.import_orthgroups('../../data/v4.0/orthgroups').then(function () {
+                    this.import_orthgroups(data_dir + 'orthgroups').then(function () {
                         log.info('orthgroups import complete')
                     }, function (err) {
                         log.error(err, 'failed to import orthgroups')

@@ -1,0 +1,8 @@
+#!/usr/bin/env node
+
+/**
+ * Created by milans on 09/08/15.
+ */
+
+var indexer = require('../lib/indexer');
+indexer.import_data()

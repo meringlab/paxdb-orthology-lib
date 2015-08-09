@@ -6,7 +6,7 @@ var should = require('chai').should(),
     assert = require('assert');
 
 
-var taxonomy = require('../storage/taxonomy')
+var taxonomy = require('../lib/taxonomy')
 
 describe('taxonomy', function () {
     it('should return all taxonomic levels in ascending order for a species', function () {
