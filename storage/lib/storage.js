@@ -319,6 +319,12 @@ exports = module.exports = function (options) {
         log.info('using server: ' + options.server)
         db = require("seraph")(options)
     }
+    var data = require('./data')
+    var taxonomy = require('./taxonomy')
+    var storage = new Storage(db);
 
-    return new Storage(db);
+    storage.taxonomy = taxonomy
+    storage.speciesTissuesMap = data.speciesTissuesMap
+    storage.orthgroups = data.orthgroups
+    return storage;
 };
