@@ -3,9 +3,6 @@ const router = express.Router(),
     negotiate = require('express-negotiate');
 const _und = require('underscore')
 
-const data = require('../storage/data')
-const taxonomy = require('../storage/taxonomy')
-
 //const stringdb_proteinid_re = /(\d)\.([a-zA-Z\.])+/;
 const stringdb_proteinid_re = /(\d+)\..+/;
 
@@ -29,7 +26,7 @@ router.param('taxonomic_level', function (req, res, next, taxonomic_level) {
         return;
     }
     taxonomic_level = taxonomic_level.toUpperCase()
-    if (!taxonomy.isValidTaxonomicLevel(req.speciesId, taxonomic_level)) {
+    if (!req.app.get('neo4j').taxonomy.isValidTaxonomicLevel(req.speciesId, taxonomic_level)) {
         res.status(404);
         //FIXME this doesn't work, error is not defined
         res.render('error', {message: 'Invalid taxonomic level for this protein: ' + req.proteinId + ", " + taxonomic_level});
@@ -47,7 +44,7 @@ router.param('tissue', function (req, res, next, tissue) {
         return;
     }
     tissue = tissue.toUpperCase()
-    var allowedTissues = data.speciesTissuesMap[req.speciesId];
+    var allowedTissues = req.app.get('neo4j').speciesTissuesMap[req.speciesId];
     if (!_und.contains(allowedTissues, tissue)) {
         res.status(404);
         //FIXME this doesn't work, error is not defined
@@ -91,7 +88,7 @@ router.get('/:protein_id/ortholog_groups/:taxonomic_level/:tissue', function (re
 });
 
 router.get('/:protein_id/ortholog_groups', function (req, res, next) {
-    var taxonomicLevels = taxonomy.taxonomicLevels(req.speciesId);
+    var taxonomicLevels = req.app.get('neo4j').taxonomicLevels(req.speciesId);
 
     req.negotiate({
         //'html': function () {

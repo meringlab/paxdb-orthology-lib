@@ -1,12 +1,14 @@
 {
-  "name": "paxdb-api-orthology",
+  "name": "paxdb-api-orthology-rest",
   "version": "0.0.1",
-  "private": true,
   "author": "Milan Simonovic <milan.simonovic@uzh.ch>",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/paxdb/-api-orthology.git"
+    "url": "https://github.com/paxdb/api-orthology"
+  },
+  "bugs": {
+    "url": "https://github.com/paxdb/api-orthology/issues"
   },
   "scripts": {
     "start": "node ./bin/www",
@@ -22,7 +24,7 @@
     "express-negotiate": "0.0.5",
     "glob": "^5.0.13",
     "morgan": "~1.6.1",
-    "seraph": "^0.13.1",
+    "paxdb-service-orthology-storage": "^4.0.1",
     "serve-favicon": "~2.3.0",
     "underscore": "^1.8.3",
     "when": "^3.7.3"
