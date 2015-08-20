@@ -34,14 +34,17 @@ var shutdown = function () {
 }
 
 if (require.main === module) {
-    var fs = require('fs')
-    var config = JSON.parse(fs.readFileSync("/opt/paxdb/v4.0/orthology_api.json"));
-    const neo4j = require('../storage/neo4j/index')({
-        server: process.env.NEO4J_URL || config.url,
-        user: process.env.NEO4J_USER || config.user,
-        pass: process.env.NEO4J_PASS || config.pass
-    })
-    boot(neo4j);
+    var backend = require('paxdb-service-orthology-storage');
+    var consul = backend.consul({consul_host: process.env.CONSUL_HOST});
+    consul.serviceDescription('orthology_storage_v4.0', function (description) {
+        const url = 'http://' + description[0].ServiceAddress + ':' + description[0].ServicePort
+        const neo4j = backend({
+            server: url,
+            user: process.env.NEO4J_USER,
+            pass: process.env.NEO4J_PASS
+        })
+        boot(neo4j);
+    });
 } else {
     console.info('Running app as a module')
     exports.boot = boot;

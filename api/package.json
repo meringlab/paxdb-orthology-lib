@@ -15,6 +15,7 @@
     "test": "mocha test/*.js integration_test/*.js"
   },
   "dependencies": {
+    "paxdb-service-orthology-storage": "~4.0",
     "body-parser": "~1.13.1",
     "bunyan": "^1.4.0",
     "cookie-parser": "~1.3.5",
@@ -24,7 +25,6 @@
     "express-negotiate": "0.0.5",
     "glob": "^5.0.13",
     "morgan": "~1.6.1",
-    "paxdb-service-orthology-storage": "^4.0.1",
     "serve-favicon": "~2.3.0",
     "underscore": "^1.8.3",
     "when": "^3.7.3"

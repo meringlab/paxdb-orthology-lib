@@ -21,7 +21,7 @@
     {   "@id" : "proteins.api.pax-db.org/protein/<%= member %>",
         "@type": "Protein",
         "id" : "<%= member%>",
-        "orthologousGroups": "nogs.api.pax-db.org/protein/<%= member %>/ortholog_groups"
+        "orthologousGroups": "/protein/<%= member %>/ortholog_groups"
     }
 <% if (m < numMembers- 1 ) { %> , <% } %>
 <% } %>

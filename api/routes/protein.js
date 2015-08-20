@@ -88,7 +88,7 @@ router.get('/:protein_id/ortholog_groups/:taxonomic_level/:tissue', function (re
 });
 
 router.get('/:protein_id/ortholog_groups', function (req, res, next) {
-    var taxonomicLevels = req.app.get('neo4j').taxonomicLevels(req.speciesId);
+    var taxonomicLevels = req.app.get('neo4j').taxonomy.taxonomicLevels(req.speciesId);
 
     req.negotiate({
         //'html': function () {
