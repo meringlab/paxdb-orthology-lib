@@ -4,5 +4,14 @@
  * Created by milans on 09/08/15.
  */
 
-var indexer = require('../lib/indexer');
-indexer.import_data()
+const consul_host = process.argv[2] || '127.0.0.1'
+const neo4j_pass = process.argv[3] || 'neo4j'
+
+// get neo4j connection params
+
+const consul = require('../lib/consul-client')({consul_host: consul_host})
+consul.serviceDescription('orthology_storage_v4.0', function (description) {
+    const url = 'http://' + description[0].ServiceAddress + ':' + description[0].ServicePort
+    const indexer = require('../lib/importer')({server: url, user: 'neo4j', pass: neo4j_pass});
+    indexer.import_data()
+});

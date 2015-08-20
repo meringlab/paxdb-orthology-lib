@@ -328,3 +328,6 @@ exports = module.exports = function (options) {
     storage.orthgroups = data.orthgroups
     return storage;
 };
+
+var consul = require('./consul-client')
+exports.consul = consul

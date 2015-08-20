@@ -1,6 +1,6 @@
 {
   "name": "paxdb-service-orthology-storage",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "private": false,
   "author": "Milan Simonovic <milan.simonovic@imls.uzh.ch>",
   "license": "MIT",
@@ -24,17 +24,18 @@
     "test": "mocha test/*.js integration_test/*.js"
   },
   "dependencies": {
-    "bunyan": "^1.4.0",
-    "debug": "~2.2.0",
+    "bunyan": "~1.4",
+    "consul": "~0.15",
+    "debug": "~2.2",
     "glob": "^5.0.13",
-    "morgan": "~1.6.1",
-    "seraph": "^0.13.1",
-    "underscore": "^1.8.3",
-    "when": "^3.7.3"
+    "morgan": "~1.6",
+    "seraph": "~0.13",
+    "underscore": "~1.8",
+    "when": "~3.7"
   },
   "devDependencies": {
     "chai": "*",
-    "disposable-seraph": "^0.3.4",
+    "disposable-seraph": "~0.3",
     "mocha": "*"
   },
   "engines": {
