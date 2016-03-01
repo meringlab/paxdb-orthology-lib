@@ -28,4 +28,42 @@ All versions are `<major>.<minor>.<patch>`, where major and minor follow
 
 MIT. See "LICENSE.txt".
 
+# Neo4j Dockerfile
 
+A Dockerfile that produces a Docker Image for [Neo4j](http://www.neo4j.org/).
+
+## Neo4j version
+
+2.2.4
+
+## Usage
+
+### Build the image
+
+To create the image `paxdb/neo4j`, execute the following command:
+
+```
+$ docker build -t paxdb/neo4j .
+```
+
+### Run the image
+
+To run the image and bind to host port 7474:
+
+```
+$ docker run -d --name neo4j -p 7474:7474 paxdb/neo4j
+```
+
+#### Persistent data
+
+The Neo4j server is configured to store data in the `/data` directory inside the container. You can map the
+container's `/data` volume to a volume on the host so the data becomes independent of the running container:
+
+```
+$ mkdir -p /tmp/neo4j
+$ docker run -d \
+    --name neo4j \
+    -p 7474:7474 \
+    -v /tmp/neo4j:/data \
+    paxdb/neo4j
+```
