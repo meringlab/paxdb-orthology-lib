@@ -28,7 +28,7 @@ function Storage(_db) {
             if (err) {
                 log.error(err, 'findOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, query)
                 var e = Error("findOrthologsAtTaxonomicLevel FAILED: " + err.message);
-                deferredImport.reject(e);
+                d.reject(e);
                 return
             }
             var response = {
