@@ -1,25 +1,5 @@
-FROM        ubuntu:14.04
+FROM        meringlab/oracle-java8
 MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
-
-ENV         DEBIAN_FRONTEND noninteractive
-RUN         apt-get update; apt-get install -y software-properties-common
-
-RUN         echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-            echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
-
-RUN         add-apt-repository -y ppa:webupd8team/java && \
-            apt-get update && \
-            apt-get install -y oracle-java8-installer oracle-java8-set-default
-
-RUN 	    rm -rf /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
-
-# to cleanup
-#RUN	    apt-get remove -yq software-properties-common && \
-#	    apt-get autoremove -yq && \
-#	    apt-get clean -yq && \
-#	    rm -rf /var/lib/apt/lists/*
-
-ENV	    JAVA_HOME  /usr/lib/jvm/java-8-oracle
 
 ENV NEO4J_VERSION 2.2.4
 
@@ -48,3 +28,6 @@ CMD [""]
 
 ENV SERVICE_TAGS "paxdb,api"
 ENV SERVICE_NAME orthology_storage_v4.0
+
+# BUGFIX 
+RUN ln -s /usr/bin/nodejs /usr/bin/node
