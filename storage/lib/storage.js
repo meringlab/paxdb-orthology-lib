@@ -229,7 +229,7 @@ function Storage(_db) {
             if (err) {
                 log.error(err, 'loadOrthologs(%s,%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, tissue, query)
                 var e = Error("loadOrthologs FAILED: " + err.message);
-                deferredImport.reject(e);
+                d.reject(e);
                 return
             }
             var response = {
