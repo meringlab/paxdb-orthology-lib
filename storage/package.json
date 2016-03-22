@@ -13,11 +13,11 @@
     "orthologs"
   ],
   "bugs": {
-    "url": "https://github.com/PaxDb/orthology-service-storage/issues"
+    "url": "https://github.com/meringlab/paxdb-api-orthology-storage/issues"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/PaxDb/orthology-service-storage"
+    "url": "https://github.com/meringlab/paxdb-api-orthology-storage"
   },
   "scripts": {
     "index": "node ./bin/index",
