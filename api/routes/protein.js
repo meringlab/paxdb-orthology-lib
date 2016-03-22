@@ -2,6 +2,12 @@ const express = require('express');
 const router = express.Router(),
     negotiate = require('express-negotiate');
 const _und = require('underscore')
+const bunyan = require('bunyan');
+const log = bunyan.createLogger({
+    name: "paxdb-API-orthologs",
+    module: "protein"
+    //TODO server / host / process ..
+});
 
 //const stringdb_proteinid_re = /(\d)\.([a-zA-Z\.])+/;
 const stringdb_proteinid_re = /(\d+)\..+/;
@@ -9,7 +15,7 @@ const stringdb_proteinid_re = /(\d+)\..+/;
 router.param('protein_id', function (req, res, next, protein_id) {
     if (!stringdb_proteinid_re.test(protein_id)) {
         res.status(404);
-        res.render('error', {message: 'Invalid protein id: ' + protein_id});
+        res.render('error', {message: 'Invalid protein id: ' + protein_id, stack: '', });
         return;
     }
 
