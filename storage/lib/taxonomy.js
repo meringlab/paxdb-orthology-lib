@@ -161,7 +161,7 @@ function depthFirstTraversal(root, visitor, postVistor) {
   visitor(root);
   if (root.children) {
     root.children.forEach(function(child) {
-      depthFirstTraversal(child, visitor);
+      depthFirstTraversal(child, visitor, postVistor);
     });
   }
   if (postVistor) {

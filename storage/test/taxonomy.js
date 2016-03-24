@@ -84,6 +84,13 @@ describe('taxonomy', function() {
       ascomycetes.children[0].id.should.equal(716545);
     })
 
+    it('should remove empty groups', function() {
+      var tree = taxonomy.proteinFamilyTree([
+        {'id': '9606.ENSP00000229277'}
+      ], 'MAMMALS');
+      tree.children.length.should.equal(1);
+    })
+
     it('should have proteins assigned to species', function() {
       var tree = taxonomy.proteinFamilyTree([
         {'id': '4932.YHR174W'}
@@ -92,5 +99,7 @@ describe('taxonomy', function() {
       yeast.proteins.length.should.equal(1);
       yeast.proteins[0].id.should.equal('4932.YHR174W');
     })
+
+
   })
 })
