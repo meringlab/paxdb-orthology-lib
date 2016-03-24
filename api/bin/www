@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('orthology:server');
 var http = require('http');
 
+const nodeEnv = process.env.NODE_ENV || 'development';
+
 /**
  * Get port from environment and store in Express.
  */
@@ -35,16 +37,25 @@ var shutdown = function () {
 
 if (require.main === module) {
     var backend = require('paxdb-service-orthology-storage');
-    var consul = backend.consul({consul_host: process.env.CONSUL_HOST});
-    consul.serviceDescription('orthology_storage_v4.0', function (description) {
-        const url = 'http://' + description[0].ServiceAddress + ':' + description[0].ServicePort
+    if (nodeEnv === 'development') {
         const neo4j = backend({
-            server: url,
+            server: process.env.NEO4J_URL,
             user: process.env.NEO4J_USER,
             pass: process.env.NEO4J_PASS
         })
         boot(neo4j);
-    });
+    } else {
+        var consul = backend.consul({consul_host: process.env.CONSUL_HOST});
+        consul.serviceDescription('orthology_storage_v4.0', function (description) {
+            const url = 'http://' + description[0].ServiceAddress + ':' + description[0].ServicePort
+            const neo4j = backend({
+                server: url,
+                user: process.env.NEO4J_USER,
+                pass: process.env.NEO4J_PASS
+            })
+            boot(neo4j);
+        });
+    }
 } else {
     console.info('Running app as a module')
     exports.boot = boot;
