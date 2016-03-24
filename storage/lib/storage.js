@@ -4,6 +4,7 @@
 const when = require('when');
 const bunyan = require('bunyan');
 const glob = require("glob")
+const taxonomy = require('./taxonomy')
 
 function Storage(_db) {
     var db = _db
@@ -232,22 +233,28 @@ function Storage(_db) {
                 d.reject(e);
                 return
             }
+            var orthologs = results.map(function (row) {
+                return {
+                    "stringdbInternalId": row.m.iid,
+                    "proteinId": row.m.eid,
+                    "name": row.m.name,
+                    "abundance": {
+                        "value": parseFloat(row.a.value),
+                        "position": parseInt(row.a.rank.substring(0, row.a.rank.indexOf('/'))),
+                        "rank": row.a.rank
+                    }
+                }
+            });
+            var orthologsIds = orthologs.map(function (o) {
+              return {'id' : o.proteinId}
+            })
+            var familyTree = taxonomy.proteinFamilyTree(orthologsIds, taxonomicLevel);
             var response = {
                 "proteinId": proteinId,
                 "taxonomicLevel": taxonomicLevel,
                 "tissue": tissue,
-                "members": results.map(function (row) {
-                    return {
-                        "stringdbInternalId": row.m.iid,
-                        "proteinId": row.m.eid,
-                        "name": row.m.name,
-                        "abundance": {
-                            "value": parseFloat(row.a.value),
-                            "position": parseInt(row.a.rank.substring(0, row.a.rank.indexOf('/'))),
-                            "rank": row.a.rank
-                        }
-                    }
-                })
+                "members": orthologs,
+                "familyTree" : familyTree
             }
             d.resolve(response);
         })
@@ -320,7 +327,6 @@ exports = module.exports = function (options) {
         db = require("seraph")(options)
     }
     var data = require('./data')
-    var taxonomy = require('./taxonomy')
     var storage = new Storage(db);
 
     storage.taxonomy = taxonomy
