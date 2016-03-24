@@ -50,13 +50,15 @@ router.param('tissue', function (req, res, next, tissue) {
         return;
     }
     tissue = tissue.toUpperCase()
-    var allowedTissues = req.app.get('neo4j').speciesTissuesMap[req.speciesId];
-    if (!_und.contains(allowedTissues, tissue)) {
-        res.status(404);
-        //FIXME this doesn't work, error is not defined
-        res.render('error', {message: 'Invalid tissue for this protein: ' + req.proteinId + ", " + tissue + ", only allowed: " + allowedTissues});
-        return;
-    }
+    //FIXME when called with EUKARYOTES/URINE for 4932.YHR174W it says only allowed: EMBRYO,WHOLE_ORGANISM,
+    //but at EUKARYOTES should allow all organs for eukaryotes
+    // var allowedTissues = req.app.get('neo4j').speciesTissuesMap[req.speciesId];
+    // if (!_und.contains(allowedTissues, tissue)) {
+    //     res.status(404);
+    //     //FIXME this doesn't work, error is not defined
+    //     res.render('error', {message: 'Invalid tissue for this protein: ' + req.proteinId + ", " + tissue + ", only allowed: " + allowedTissues});
+    //     return;
+    // }
 
     // once validation is done save the new item in the req
     req.tissue = tissue;
