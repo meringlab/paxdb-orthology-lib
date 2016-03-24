@@ -8,7 +8,12 @@ exports.allSpeciesUnder = allSpeciesUnder
 exports.isValidTaxonomicLevel = isValidTaxonomicLevel
 exports.availableTissuesAtTaxonomicLevel = availableTissuesAtTaxonomicLevel
 
+//use union type
+const LEVEL_TYPE = {ORTHGROUP: 'orthgroup', SPECIES: 'species'};
+
 var taxonomicMap = loadMap()
+// exports.taxonomicMap = taxonomicMap;
+
 var taxonomicMapById = (function () {
     var m = {}
     for (var prop in taxonomicMap) {
@@ -45,10 +50,11 @@ function getLevel(taxonomicLevel) {
     }
     return level;
 }
+
 function allSpeciesUnder(taxonomicLevel) {
     var level = getLevel(taxonomicLevel);
-    if (!level.hasOwnProperty('children')) {
-        throw Error(taxonomicLevel + " is empty!? " + JSON.stringify(level))
+    if (level.type !== LEVEL_TYPE.ORTHGROUP || !level.hasOwnProperty('children')) {
+        throw Error(taxonomicLevel + " is empty!? " + level.name)
     }
     var children = []
     appendLeaves(level, children)
@@ -57,16 +63,24 @@ function allSpeciesUnder(taxonomicLevel) {
     })
 }
 
+function depthFirstTraversal(root, visitor) {
+    visitor(root);
+    if (root.children) {
+        root.children.forEach(function(child) {
+            depthFirstTraversal(child, visitor);
+        });
+    }
+}
+
 function appendLeaves(level, children) {
-    level.children.forEach(function (child) {
-        if (child.hasOwnProperty('children')) {
-            appendLeaves(child, children)
-        } else {
-            children.push(child.id)
+    depthFirstTraversal(level, function(node) {
+        //node.type === 'species' ?
+        // if (!node.hasOwnProperty('children')) {
+        if (node.type === LEVEL_TYPE.SPECIES) {
+            children.push(node.id)
         }
     })
 }
-
 
 /**
  * @param speciesId
@@ -97,9 +111,12 @@ function loadMap() {
     });
     const map = {}
 
+    function getType(id) {
+        return id in data.orthgroups ? LEVEL_TYPE.ORTHGROUP : LEVEL_TYPE.SPECIES;
+    }
     function getParent(rec) {
         if (!(rec[1] in map)) {
-            map[rec[1]] = {id: parseInt(rec[1]), name: rec[3].toUpperCase(), children: []}
+            map[rec[1]] = {id: parseInt(rec[1]), name: rec[3].toUpperCase(), type: getType(rec[1]), children: []}
         } else {
             if (!map[rec[1]].hasOwnProperty('children')) {
                 map[rec[1]].children = []
@@ -109,7 +126,11 @@ function loadMap() {
     }
 
     function getChild(rec) {
-        var child = (rec[0] in map) ? map[rec[0]] : {id: parseInt(rec[0]), name: rec[2].toUpperCase()}
+        var child = (rec[0] in map) ? map[rec[0]] : {
+            id: parseInt(rec[0]),
+            name: rec[2].toUpperCase(),
+            type: getType(rec[0])
+        }
         map[rec[0]] = child
         return child
     }
