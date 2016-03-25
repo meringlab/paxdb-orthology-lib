@@ -31,6 +31,7 @@ var taxonomicMapById = (function() {
  * @param taxonomicLevel LUCA, BACTERIA, EUKARYOTES...
  * @return {{}} family tree
  */
+//TODO tissue equivalence
 function proteinFamilyTree(proteins, taxonomicLevel) {
   //todo assert proteins is an array
   if (!proteins || proteins.length === 0) {

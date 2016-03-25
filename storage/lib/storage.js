@@ -59,15 +59,19 @@ function Storage(_db) {
                 d.reject(e);
                 return
             }
-            var response = {
-                "proteinId": proteinId,
-                "taxonomicLevel": taxonomicLevel,
-                "tissues": results.map(function (row) {
-                    return row['tissue.tissue']
-                })
-            }
-            response.tissues.sort()
-            d.resolve(response);
+          var tissues = 'tissue.tissue' in results ?
+            [results['tissue.tissue']] //single tissue
+            :
+            results.map(function (row) { //array of tissues
+              return row['tissue.tissue']
+            });
+          var response = {
+            "proteinId": proteinId,
+            "taxonomicLevel": taxonomicLevel,
+            "tissues": tissues
+          }
+          response.tissues.sort()
+          d.resolve(response);
         })
         return d.promise
     }
