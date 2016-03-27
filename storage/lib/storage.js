@@ -325,7 +325,8 @@ exports = module.exports = function (options) {
     });
     var db;
     if (options.hasOwnProperty('db')) {
-        db = disposable
+        log.info('using disposable db')
+        db = options.db
     } else {
         log.info('using server: ' + options.server)
         db = require("seraph")(options)
