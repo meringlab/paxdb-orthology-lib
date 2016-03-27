@@ -80,7 +80,6 @@ function Storage(_db) {
         return typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: "' + proteinId + '"';
     }
 
-
     this.count = function (label, callback) {
         var d = when.defer()
 
@@ -136,14 +135,14 @@ function Storage(_db) {
     this.save_orthgroups = function (groups, proteinIds) {
         log.info('saving %s orthgroups', groups.length)
 
-        var d = when.defer()
+        var deferredImport = when.defer()
+        
         if (groups.length === 0) {
             log.info('no groups to import')
-            d.resolve()
-            return d.promise
+            deferredImport.resolve()
+            return deferredImport.promise
         }
 
-        var deferredImport = when.defer()
         var txn = db.batch();
 
         function saveGroup(g) {
