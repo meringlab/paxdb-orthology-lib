@@ -1,6 +1,6 @@
 {
   "name": "paxdb-service-orthology-storage",
-  "version": "4.0.2",
+  "version": "4.0.3",
   "private": false,
   "author": "Milan Simonovic <milan.simonovic@imls.uzh.ch>",
   "license": "MIT",
