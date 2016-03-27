@@ -86,7 +86,7 @@ describe('orthology service', function () {
                 num.should.equal(proteins.length);
             })
             .then(function () {
-                neo4j.save_orthgroups(nogs);
+                return neo4j.save_orthgroups(nogs);
             })
             .then(function () {
                 return neo4j.loadOrthologs('9606.ENSP00000356969', 'PRIMATES', 'BRAIN')
