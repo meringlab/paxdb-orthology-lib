@@ -1,7 +1,9 @@
 FROM        meringlab/oracle-java8
 MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
-ENV NEO4J_VERSION 2.2.4
+ENV NEO4J_VERSION 2.3.3
+
+# TODO create user
 
 # Install and configure Neo4j
 RUN cd /tmp && \
@@ -12,14 +14,12 @@ RUN cd /tmp && \
     sed -e 's/^#org.neo4j.server.webserver.address=.*$/org.neo4j.server.webserver.address=0.0.0.0/' -i /neo4j/conf/neo4j-server.properties && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Add scripts
 ADD bin/run.sh /scripts/
 RUN chmod +x /scripts/*.sh
 
-# Expose listen port
 EXPOSE 7474
 
-# Expose our data volumes
+# should I create data volume?
 VOLUME ["/data"]
 
 # Command to run
@@ -28,6 +28,3 @@ CMD [""]
 
 ENV SERVICE_TAGS "paxdb,api"
 ENV SERVICE_NAME orthology_storage_v4.0
-
-# BUGFIX 
-RUN ln -s /usr/bin/nodejs /usr/bin/node

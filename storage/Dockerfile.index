@@ -1,0 +1,14 @@
+FROM        meringlab/node5
+MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
+
+ADD . /scripts/
+
+CWD /scripts
+
+RUN npm install
+
+# neo4j username & pass should come thru ENV
+ENV CONSUL_HOST titan.meringlab.org
+ENV NEO4J_PASS seeecret
+
+CMD ["node", "bin/index"]
