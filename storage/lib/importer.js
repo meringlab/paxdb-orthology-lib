@@ -8,7 +8,7 @@ const fs = require('fs');
 const glob = require("glob")
 const orthgroups = require('./data.js').orthgroups
 
-const data_dir = '../data/v4.0/';
+const data_dir = __dirname + '/../data/v4.0/';
 
 function Importer(config) {
     const log = bunyan.createLogger({
@@ -18,15 +18,15 @@ function Importer(config) {
     });
 
     const storage = config ? require('./storage')(config) : undefined
-
+    var _this = this;
     this.import_data = function () {
         log.level('debug')
         storage.create_schema().then(function () {
             log.info("schema created")
-            this.import_proteins(data_dir + 'proteins',
+            _this.import_proteins(data_dir + 'proteins',
                 data_dir + 'abundances').then(function () {
                     log.info('proteins import complete')
-                    this.import_orthgroups(data_dir + 'orthgroups').then(function () {
+                _this.import_orthgroups(data_dir + 'orthgroups').then(function () {
                         log.info('orthgroups import complete')
                     }, function (err) {
                         log.error(err, 'failed to import orthgroups')
@@ -86,14 +86,16 @@ function Importer(config) {
     }
 
     this.import_proteins = function (proteins_dir, abundances_dir) {
+        var _this = this;
         log.info("importing proteins %s, %s", proteins_dir, abundances_dir)
         var files = glob.sync(proteins_dir + "/*-proteins.txt")
+        log.debug('total protein files to import: %s',  files.length)
 
         //chain promises in sequential order:
         var link = function (prevPromise, currentFile) {
             return prevPromise.then(function () {
                 log.info('calling import_proteins for %s', currentFile)
-                return this.import_proteins_from_file(currentFile, abundances_dir);
+                return _this.import_proteins_from_file(currentFile, abundances_dir);
                 //return when('primise to import ' + currentFile)
             })
         };
@@ -123,11 +125,13 @@ function Importer(config) {
     }
 
     this.import_orthgroups = function (orthgroups_dir) {
+        var _this = this;
+
         log.info("importing orthgroups from %s", orthgroups_dir)
         log.debug("loading protein ids")
 
         //quering for each group members throws errors ECONNRESET so need to load them upfront:
-        storage.load_protein_ids().then(function (err, proteinIds) {
+        return storage.load_protein_ids().then(function (err, proteinIds) {
             if (err) {
                 throw Error('failed to load protein ids ' + JSON.stringify(err))
             }
@@ -136,7 +140,7 @@ function Importer(config) {
             var link = function (prevPromise, currentFile) {
                 return prevPromise.then(function () {
                     log.info('calling import_orthgroups for %s', currentFile)
-                    return this.import_import_orthgroups_from_file(currentFile, proteinIds);
+                    return _this.import_import_orthgroups_from_file(currentFile, proteinIds);
                 })
             };
             files.reduce(link, when('starting promise')).then(function () {
