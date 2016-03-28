@@ -131,9 +131,9 @@ function Importer(config) {
         log.debug("loading protein ids")
 
         //quering for each group members throws errors ECONNRESET so need to load them upfront:
-        return storage.load_protein_ids().then(function (err, proteinIds) {
-            if (err) {
-                throw Error('failed to load protein ids ' + JSON.stringify(err))
+        return storage.load_protein_ids().then(function (proteinIds) {
+            if (!proteinIds) {
+                throw Error('failed to load protein ids')
             }
             var files = glob.sync(orthgroups_dir + "/*-orthologs.txt")
             //chain promises in sequential order:
