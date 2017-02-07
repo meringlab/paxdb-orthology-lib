@@ -1,9 +1,18 @@
-FROM        meringlab/oracle-java8
+FROM        ubuntu:xenial
 MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
-ENV NEO4J_VERSION 2.3.3
+# java first
 
-# TODO create user
+ENV         DEBIAN_FRONTEND noninteractive
+RUN         apt-get update; apt-get install -y software-properties-common
+RUN         echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
+            echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
+RUN         add-apt-repository -y ppa:webupd8team/java && \
+            apt-get update && \
+               apt-get install -y oracle-java8-installer oracle-java8-set-default
+RUN         rm -rf /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
+
+ENV NEO4J_VERSION 2.3.7
 
 # Install and configure Neo4j
 RUN cd /tmp && \
@@ -15,12 +24,13 @@ RUN cd /tmp && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 ADD bin/run.sh /scripts/
-RUN chmod +x /scripts/*.sh
+RUN chmod ugo+x /scripts/*.sh
+RUN useradd -ms /bin/bash neo4j
+ADD neo4j /data
+RUN chown -R neo4j /neo4j/ /data/
+USER neo4j
 
 EXPOSE 7474
-
-# should I create data volume?
-VOLUME ["/data"]
 
 # Command to run
 ENTRYPOINT ["/scripts/run.sh"]
