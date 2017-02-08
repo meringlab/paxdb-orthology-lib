@@ -1,4 +1,4 @@
-FROM        meringlab/node5
+FROM        meringlab/node6
 MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
 ADD . /scripts/
