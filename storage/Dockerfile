@@ -1,16 +1,5 @@
-FROM        ubuntu:xenial
+FROM        meringlab/java8
 MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
-
-# java first
-
-ENV         DEBIAN_FRONTEND noninteractive
-RUN         apt-get update; apt-get install -y software-properties-common
-RUN         echo debconf shared/accepted-oracle-license-v1-1 select true | debconf-set-selections && \
-            echo debconf shared/accepted-oracle-license-v1-1 seen true | debconf-set-selections
-RUN         add-apt-repository -y ppa:webupd8team/java && \
-            apt-get update && \
-               apt-get install -y oracle-java8-installer oracle-java8-set-default
-RUN         rm -rf /tmp/* /var/tmp/* /var/cache/oracle-jdk8-installer
 
 ENV NEO4J_VERSION 2.3.7
 
