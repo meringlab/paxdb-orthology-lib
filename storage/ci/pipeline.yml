@@ -1,4 +1,8 @@
 ---
+# fly -t dev login $IP
+# fly -t dev set-pipeline -p paxdb-api-orthology-storage -c ci/pipeline.yml --var "registry-password=secret"
+# fly -t dev unpause-pipeline  -p paxdb-api-orthology-storage
+# fly -t dev trigger-job --job paxdb-api-orthology-storage/test
 resources:
 - name: code
   type: git
@@ -12,5 +16,20 @@ jobs:
   plan:
   - get: code
     trigger: true
+
   - task: compile-test-code
-    file: code/ci/task_run_tests.yml
+    config:
+      platform: linux
+      image_resource:
+        type: docker-image
+        source:
+          repository: docker-registry.meringlab.org:5443/meringlab/node6
+          username: admin
+          password: {{registry-password}}
+      #    repository: meringlab/node6
+          tag: latest
+      inputs:
+        - name: code
+      run:
+        path: ./ci/test.sh
+        dir: ./code/

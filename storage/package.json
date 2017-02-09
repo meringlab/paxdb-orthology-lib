@@ -21,7 +21,8 @@
   },
   "scripts": {
     "index": "node ./bin/index",
-    "test": "mocha test/*.js integration_test/*.js"
+    "test": "mocha test/*.js ",
+    "integration-test": "mocha integration_test/*.js"
   },
   "dependencies": {
     "bunyan": "~1.8",
