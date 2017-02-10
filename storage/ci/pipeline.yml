@@ -9,6 +9,20 @@ resources:
   source:
     uri: https://github.com/meringlab/paxdb-api-orthology-storage.git
 
+- name: orthology-storage-index-image
+  type: docker-image
+  source:
+    repository: docker-registry.meringlab.org:5443/paxdb/orthology-storage-index
+    username: admin
+    email: paxdb.team@gmail.com
+    password: {{registry-password}}
+
+- name: ubuntu-xenial
+  type: docker-image
+  source:
+    repository: ubuntu
+    tag: "xenial"
+
 jobs:
 - name: test
   public: true
@@ -16,7 +30,9 @@ jobs:
   plan:
   - get: code
     trigger: true
-
+  - get: ubuntu-xenial
+    trigger: true
+    params: {save: true}
   - task: compile-test-code
     config:
       platform: linux
@@ -33,3 +49,11 @@ jobs:
       run:
         path: ./ci/test.sh
         dir: ./code/
+  # todo integration test, need to make an image with both java and node
+  - put: orthology-storage-index-image
+    params:
+    # see https://github.com/concourse/docker-image-resource#parameters-1 for details
+      build: code/
+      dockerfile: code/Dockerfile.index
+      load_base: ubuntu-xenial
+#      tag: latest

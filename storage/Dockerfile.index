@@ -8,7 +8,6 @@ CWD /scripts
 RUN npm install
 
 # neo4j username & pass should come thru ENV
-ENV CONSUL_HOST tethys.meringlab.org
-ENV NEO4J_PASS seeecret
+ENV NEO4J_PASS neo4j
 
 CMD ["node", "bin/index"]
