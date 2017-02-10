@@ -3,7 +3,7 @@ MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
 ADD . /scripts/
 
-CWD /scripts
+WORKDIR /scripts
 
 RUN npm install
 
