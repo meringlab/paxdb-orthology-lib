@@ -1,13 +1,17 @@
 #!/usr/bin/env node
 
-const consul_host = process.env.CONSUL_HOST || '127.0.0.1'
-const neo4j_pass = process.env.NEO4J_PASS || 'neo4j'
+const neo4jUser = process.env.NEO4J_USER || 'neo4j';
+const neo4jPass = process.env.NEO4J_PASS || 'neo4j';
+const neo4jHost = process.env.NEO4J_HOST || 'neo4j';
+const neo4jPort = process.env.NEO4J_PORT || '7474';
+const serverUrl = `http://${neo4jHost}:${neo4jPort}`;
 
-// get neo4j connection params
-
-const consul = require('../lib/consul-client')({consul_host: consul_host})
-consul.serviceDescription('orthology_storage_v4.0', function (description) {
-    const server_url = 'http://' + description[0].ServiceAddress + ':' + description[0].ServicePort
-    const indexer = require('../lib/importer')({server: server_url, user: 'neo4j', pass: neo4j_pass});
-    indexer.import_data()
+const connectionOpts = { server: serverUrl, user: neo4jUser, pass: neo4jPass };
+const indexer = require('../lib/importer')(connectionOpts);
+//neo4j requires that the initial password neo4j is changed
+indexer.changeInitialPassword(err => {
+    if (err) {
+        throw Error("failed to change initial password, cannot index");
+    }
+    indexer.import_data();
 });

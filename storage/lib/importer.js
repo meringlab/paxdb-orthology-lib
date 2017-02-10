@@ -5,7 +5,7 @@
 const when = require('when');
 const bunyan = require('bunyan');
 const fs = require('fs');
-const glob = require("glob")
+const glob = require("glob");
 const orthgroups = require('./data.js').orthgroups
 
 const data_dir = __dirname + '/../data/v4.0/';
@@ -19,6 +19,9 @@ function Importer(config) {
 
     const storage = config ? require('./storage')(config) : undefined
     var _this = this;
+    this.changeInitialPassword = function (cb) {
+        storage.changePassword(config.pass + config.pass, cb);
+    };
     this.import_data = function () {
         log.level('debug')
         storage.create_schema().then(function () {

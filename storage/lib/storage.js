@@ -13,6 +13,12 @@ function Storage(_db) {
         module: "storage/neo4j",
         server: db.options.server
     });
+    this.changePassword = function (pass, cb) {
+        db.changePassword(pass, function(err) {
+            //password is now changed, and `db`'s options have been updated with the new password
+            cb(err);
+        });
+    };
     function findTaxonomicLevels(proteinId) {
         var id = proteinIdAsQueryParameter(proteinId)
         var query = 'MATCH (p:Protein {' + id + '})-[l]->(n:NOG)<-[ll]-(m:Protein)-[t]->(Abundance) return distinct l.level, collect(distinct t.tissue)'
