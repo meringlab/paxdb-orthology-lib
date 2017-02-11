@@ -111,22 +111,24 @@ function Storage(_db) {
         }
         var txn = db.batch();
         var numAbundances = 0;
+        var savedNodes = 0;
         proteins.forEach(function (p) {
             var node = txn.save(p);
             txn.label(node, "Protein");
+            savedNodes++;
             if (abundances[p.eid] && abundances[p.eid].length > 0) {
                 abundances[p.eid].forEach(function (el) {
-                    numAbundances++
+                    numAbundances++;
                     var abundance = txn.save({"value": el.value, "rank": el.rank});
                     txn.label(abundance, "Abundance");
                     txn.relate(node, el.tissue, abundance, {'tissue': el.tissue}/*, isDefaultAbundance : true|false*/);
                 })
             }
         })
-        log.info('about to commit %s proteins and %s abundances', proteins.length, numAbundances)
+        log.info('about to commit %s proteins and %s abundances', proteins.length, numAbundances);
         txn.commit(function (err, results) {
             if (err) {
-                log.error(err, 'saving_proteins - FAILED, %s nodes will remain saved', savedNodes.length)
+                log.error(err, 'saving_proteins - FAILED, %s nodes will remain saved', savedNodes);
                 var e = Error("TRANSACTION FAILED: " + err.message);
                 e.results = results;
                 d.reject(e);
