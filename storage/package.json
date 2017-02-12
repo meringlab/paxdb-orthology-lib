@@ -21,6 +21,7 @@
   },
   "scripts": {
     "index": "node ./bin/index",
+    "lint": "./node_modules/eslint/bin/eslint.js lib/data.js",
     "test": "mocha test/*.js",
     "integration-test": "mocha integration_test/*.js"
   },
@@ -37,7 +38,10 @@
   "devDependencies": {
     "chai": "*",
     "disposable-seraph": "~0.5",
-    "mocha": "*"
+    "mocha": "*",
+    "eslint": "^2.7.0",
+    "eslint-config-airbnb": "^6.2.0",
+    "eslint-plugin-react": "^4.2.3"
   },
   "engines": {
     "node": "6.x.x"
