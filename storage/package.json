@@ -21,7 +21,7 @@
   },
   "scripts": {
     "index": "node ./bin/index",
-    "lint": "./node_modules/eslint/bin/eslint.js lib/consul-client.js lib/data.js lib/importer.js",
+    "lint": "./node_modules/eslint/bin/eslint.js lib/consul-client.js lib/data.js lib/importer.js lib/taxonomy.js",
     "test": "mocha test/*.js",
     "integration-test": "mocha integration_test/*.js"
   },
