@@ -7,6 +7,7 @@ const bunyan = require('bunyan');
 const fs = require('fs');
 const glob = require('glob');
 const orthgroups = require('./data.js').orthgroups;
+const storageModule = require('./storage');
 
 const dataDir = `${__dirname}/../data/v4.0/`;
 
@@ -17,7 +18,8 @@ function Importer(config) {
         server: config ? config.url : 'disposable-neo4j'
     });
 
-    const storage = config ? require('./storage')(config) : undefined;
+
+    const storage = config ? storageModule(config) : undefined;
     const _this = this;
     this.changeInitialPassword = (cb) => {
         storage.changePassword(config.pass + config.pass, cb);
@@ -30,13 +32,13 @@ function Importer(config) {
                 log.info('proteins import complete');
                 _this.import_orthgroups(`${dataDir}orthgroups`).then(() => {
                     log.info('orthgroups import complete');
-                }, err => {
+                }, (err) => {
                     log.error(err, 'failed to import orthgroups');
                 });
-            }, err => {
+            }, (err) => {
                 log.error(err, 'failed to import proteins');
             });
-        }, err => {
+        }, (err) => {
             log.error(err, 'failed to create schema!');
         });
     };
@@ -45,12 +47,12 @@ function Importer(config) {
         const dataset = { abundances: [] };
         const records = contents.split('\n');
         let i = 0;
-        for (; i < records.length && records[i].indexOf('#') === 0; i++) {
+        for (; i < records.length && records[i].indexOf('#') === 0; i += 1) {
             if (records[i].indexOf('organ:') !== -1) {
-                dataset.organ = records[i].match(/organ\:\s+([A-Z_]+)/)[1];
+                dataset.organ = records[i].match(/organ:\s+([A-Z_]+)/)[1];
             }
         }
-        for (/*i from previous loop*/; i < records.length; i++) {
+        for (/*i from previous loop*/; i < records.length; i += 1) {
             const r = records[i].trim().split('\t');
             if (r.length < 2) {
                 continue;
@@ -66,7 +68,7 @@ function Importer(config) {
         const abundances = {};
         const abundanceFiles = glob.sync(`${abundancesDir}/${speciesId}-*.txt`);
         log.debug('abundance files found: %s', abundanceFiles);
-        abundanceFiles.forEach(datasetFile => {
+        abundanceFiles.forEach((datasetFile) => {
             log.info('reading %s abundances from %s', speciesId, datasetFile);
             let counter = 0;
             const datasetContents = fs.readFileSync(datasetFile, { encoding: 'utf8' });
@@ -74,12 +76,12 @@ function Importer(config) {
 
             //TODO refactor to appendAbundances(abundances, dataset.abundances)
             const outOf = `/${String(dataset.numAbundances)}`;
-            for (let i = 0; i < dataset.abundances.length; i++) {
+            for (let i = 0; i < dataset.abundances.length; i += 1) {
                 const p = dataset.abundances[i];
-                if (!abundances.hasOwnProperty(p.eid)) {
+                if (!Object.prototype.hasOwnProperty.call(abundances, p.eid)) {
                     abundances[p.eid] = [];
                 }
-                counter++;
+                counter += 1;
                 const rank = `${String(i + 1)}${outOf}`;
                 abundances[p.eid].push({ tissue: dataset.organ, value: p.value, rank });
             }
@@ -90,8 +92,8 @@ function Importer(config) {
 
     function parseProteins(contents) {
         const proteins = [];
-        contents.split('\n').forEach(line => {
-            if (line.trim() === 0) {
+        contents.split('\n').forEach((line) => {
+            if (!line.trim()) {
                 return;
             }
             const r = line.split('\t');
@@ -102,7 +104,7 @@ function Importer(config) {
 
     this.import_proteins_from_file = (file, abundancesDir) => {
         log.info('proteins from %s', file);
-        const speciesId = /\/?(\d+)\-proteins.txt/.exec(file)[1];
+        const speciesId = /\/?(\d+)-proteins.txt/.exec(file)[1];
         log.info('species: %s', speciesId);
         const proteins = parseProteins(fs.readFileSync(file, { encoding: 'utf8' }));
         log.debug('%s protein records from %s', proteins.length, file);
@@ -144,8 +146,8 @@ function Importer(config) {
         }
         const clade = orthgroups[groupId].toUpperCase();
         const groups = [];
-        contents.split('\n').forEach(line => {
-            if (line.trim() === 0) {
+        contents.split('\n').forEach((line) => {
+            if (!line.trim()) {
                 return;
             }
             const rec = line.split('\t');
@@ -164,7 +166,7 @@ function Importer(config) {
 
     this.import_import_orthgroups_from_file = (file, proteinIds) => {
         log.info('orthgroups from %s', file);
-        const groupId = parseInt(/\/?(\d+)\-orthologs.txt/.exec(file)[1], 10);
+        const groupId = parseInt(/\/?(\d+)-orthologs.txt/.exec(file)[1], 10);
         log.info('groupId: %s', groupId);
         const groups = parseOrthgroups(groupId, fs.readFileSync(file, { encoding: 'utf8' }));
         log.debug('%s orthgroup records from %s', groups.length, file);
@@ -188,7 +190,7 @@ function Importer(config) {
         log.debug('loading protein ids');
 
         //quering for each group members throws errors ECONNRESET so need to load them upfront:
-        return storage.load_protein_ids().then(proteinIds => {
+        return storage.load_protein_ids().then((proteinIds) => {
             if (!proteinIds) {
                 throw Error('failed to load protein ids');
             }
@@ -203,7 +205,7 @@ function Importer(config) {
 
             files.reduce(link, when('starting promise')).then(() => {
                 log.info('orthgroups import complete');
-            }, err => {
+            }, (err) => {
                 log.error(err, 'failed to import orthgroups');
             });
         });
@@ -216,4 +218,4 @@ function Importer(config) {
     this._internal = { parseDataset, parseProteins, parseOrthgroups };
 }
 
-exports = module.exports = options => new Importer(options);
+exports = module.exports = options => new Importer(options); //eslint-disable-line no-multi-assign

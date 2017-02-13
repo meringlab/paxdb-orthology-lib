@@ -5,9 +5,10 @@
  */
 
 const bunyan = require('bunyan');
+const consul = require('consul');
 
 function ConsulClient(consulHost) {
-    this.consul = require('consul')({ host: consulHost });
+    this.consul = consul({ host: consulHost });
 }
 
 ConsulClient.prototype.serviceDescription = function serviceDescription(name, cb) {
@@ -20,13 +21,14 @@ ConsulClient.prototype.serviceDescription = function serviceDescription(name, cb
     });
 };
 
-exports = module.exports = (options) => {
+exports = module.exports = (options) => { //eslint-disable-line no-multi-assign
     const log = bunyan.createLogger({
         name: 'consul-client',
         module: 'paxdb-api'
     });
     let host = '127.0.0.1';
-    if (options && options.hasOwnProperty('consul_host')) {
+
+    if (options && Object.prototype.hasOwnProperty.call(options, 'consul_host')) {
         host = options.consul_host;
     }
     log.info(`consul host: ${host}`);

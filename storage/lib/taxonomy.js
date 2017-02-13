@@ -12,10 +12,13 @@ const taxonomicMap = loadMap(); //eslint-disable-line  no-use-before-define
 
 const taxonomicMapById = (() => {
     const m = {};
-    for (const prop in taxonomicMap) {
-        if (taxonomicMap.hasOwnProperty(prop)) {
-            m[taxonomicMap[prop].name] = taxonomicMap[prop];
-        }
+    // for (const prop in taxonomicMap) {
+    //     if (taxonomicMap.hasOwnProperty(prop)) {
+    //         m[taxonomicMap[prop].name] = taxonomicMap[prop];
+    //     }
+    // }
+    for (const prop of Object.keys(taxonomicMap)) {
+        m[taxonomicMap[prop].name] = taxonomicMap[prop];
     }
     return m;
 })();
@@ -32,7 +35,7 @@ function cloneTree(obj) {
 
     if (obj instanceof Array) {
         const copy = [];
-        for (let i = 0, len = obj.length; i < len; i++) {
+        for (let i = 0, len = obj.length; i < len; i += 1) {
             copy[i] = cloneTree(obj[i]);
         }
         return copy;
@@ -40,10 +43,8 @@ function cloneTree(obj) {
 
     if (obj instanceof Object) {
         const copy = {};
-        for (const attr in obj) {
-            if (obj.hasOwnProperty(attr) && attr !== 'parent') {
-                copy[attr] = cloneTree(obj[attr]);
-            }
+        for (const attr of Object.keys(obj).filter(key => key !== 'parent')) {
+            copy[attr] = cloneTree(obj[attr]);
         }
         return copy;
     }
@@ -53,7 +54,7 @@ function cloneTree(obj) {
 
 function getLevel(taxonomicLevel) {
     let level;
-    if (typeof(taxonomicLevel) === 'number') {
+    if (typeof taxonomicLevel === 'number') {
         level = taxonomicMap[taxonomicLevel];
     } else {
         level = taxonomicMapById[taxonomicLevel];
@@ -75,7 +76,7 @@ function taxonomicLevels(speciesId) {
         throw Error(`unknown species ${speciesId}`);
     }
     const species = taxonomicMap[speciesId];
-    if (species.hasOwnProperty('children')) {
+    if (Object.prototype.hasOwnProperty.call(species, 'children')) {
         throw Error(`not species (but taxonomic level): ${species.name}`);
     }
     const levels = [];
@@ -89,9 +90,7 @@ function taxonomicLevels(speciesId) {
 function depthFirstTraversal(root, visitor, postVistor) {
     visitor(root);
     if (root.children) {
-        root.children.forEach(child => {
-            depthFirstTraversal(child, visitor, postVistor);
-        });
+        root.children.forEach(child => depthFirstTraversal(child, visitor, postVistor));
     }
     if (postVistor) {
         postVistor(root);
@@ -99,7 +98,7 @@ function depthFirstTraversal(root, visitor, postVistor) {
 }
 
 function appendLeaves(level, children) {
-    depthFirstTraversal(level, node => {
+    depthFirstTraversal(level, (node) => {
         if (node.type === LEVEL_TYPE.SPECIES) {
             children.push(node.id);
         }
@@ -108,7 +107,7 @@ function appendLeaves(level, children) {
 
 function allSpeciesUnder(taxonomicLevel) {
     const level = getLevel(taxonomicLevel);
-    if (level.type !== LEVEL_TYPE.ORTHGROUP || !level.hasOwnProperty('children')) {
+    if (level.type !== LEVEL_TYPE.ORTHGROUP || !Object.prototype.hasOwnProperty.call(level, 'children')) {
         throw Error(`${taxonomicLevel} is empty!? ${level.name}`);
     }
     const children = [];
@@ -152,7 +151,7 @@ function proteinFamilyTree(proteins, taxonomicLevel) {
     //need to clone but can't use JSON.parse/stringify because it's circular
     const tree = cloneTree(level);
     const inputSpeciesMap = {};
-    _und.forEach(proteins, p => {
+    _und.forEach(proteins, (p) => {
         const speciesId = p.id.split('.')[0];
         if (!(speciesId in inputSpeciesMap)) {
             inputSpeciesMap[speciesId] = [];
@@ -160,13 +159,13 @@ function proteinFamilyTree(proteins, taxonomicLevel) {
         inputSpeciesMap[speciesId].push(p);
     });
     const species = [];
-    depthFirstTraversal(tree, node => {
+    depthFirstTraversal(tree, (node) => {
         if (node.type === LEVEL_TYPE.SPECIES && node.id in inputSpeciesMap) {
             species.push(node);
         }
         if (node.type === LEVEL_TYPE.ORTHGROUP) {
             let i = node.children.length;
-            while (i--) {
+            while (i--) { //eslint-disable-line no-plusplus
                 if (node.children[i].type === LEVEL_TYPE.SPECIES
                     && !(node.children[i].id in inputSpeciesMap)) {
                     node.children.splice(i, 1);
@@ -175,11 +174,11 @@ function proteinFamilyTree(proteins, taxonomicLevel) {
             //continue search thru children
             //only afterwards cleanup this node if empty
         }
-    }, node => {
+    }, (node) => {
         //cleanup empty orthgroups
         if (node.type === LEVEL_TYPE.ORTHGROUP) {
             let i = node.children.length;
-            while (i--) {
+            while (i--) { //eslint-disable-line no-plusplus
                 if (node.children[i].type === LEVEL_TYPE.ORTHGROUP
                     && node.children[i].children.length === 0) {
                     node.children.splice(i, 1);
@@ -187,11 +186,11 @@ function proteinFamilyTree(proteins, taxonomicLevel) {
             }
         }
     });
-    _und.forEach(species, s => {
+    _und.forEach(species, (s) => {
         s.proteins = inputSpeciesMap[s.id];
     });
     //sort children so it's easier to test
-    depthFirstTraversal(tree, node => {
+    depthFirstTraversal(tree, (node) => {
         if (node.type === LEVEL_TYPE.ORTHGROUP) {
             node.children.sort((c1, c2) => c1.id - c2.id);
         }
@@ -216,10 +215,8 @@ function loadMap() {
                 type: getType(rec[1]),
                 children: []
             };
-        } else {
-            if (!map[rec[1]].hasOwnProperty('children')) {
-                map[rec[1]].children = [];
-            }
+        } else if (!Object.prototype.hasOwnProperty.call(map[rec[1]], 'children')) {
+            map[rec[1]].children = [];
         }
         return map[rec[1]];
     }
@@ -234,7 +231,7 @@ function loadMap() {
         return child;
     }
 
-    records.forEach(line => {
+    records.forEach((line) => {
         const rec = line.split('\t');
         if (rec.length < 4) {
             return;
@@ -247,7 +244,7 @@ function loadMap() {
     return map;
 }
 
-exports = module.exports = {};
+exports = module.exports = {}; //eslint-disable-line no-multi-assign
 exports.taxonomicLevels = taxonomicLevels;
 exports.allSpeciesUnder = allSpeciesUnder;
 exports.isValidTaxonomicLevel = isValidTaxonomicLevel;

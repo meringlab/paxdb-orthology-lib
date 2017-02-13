@@ -3,170 +3,168 @@
  */
 const when = require('when');
 const bunyan = require('bunyan');
-const glob = require("glob")
-const taxonomy = require('./taxonomy')
+const data = require('./data');
+const taxonomy = require('./taxonomy');
+const consul = require('./consul-client');
 
+/**
+ *
+ * some interesting queries:
+ * <ul>
+ *     <li>`MATCH (p:Protein \{${id}})-[l]->(n:NOG)<-[ll]-(m:Protein)-[t]->(Abundance)
+ *              return distinct l.level, collect(distinct t.tissue)`</li>
+ * </ul>
+ *
+ *
+ * @param _db
+ * @constructor
+ */
 function Storage(_db) {
-    var db = _db
+    const db = _db;
     const log = bunyan.createLogger({
-        name: "paxdb-API-orthologs",
-        module: "storage/neo4j",
+        name: 'paxdb-API-orthologs',
+        module: 'storage/neo4j',
         server: db.options.server
     });
-    this.changePassword = function (pass, cb) {
-        db.changePassword(pass, function(err) {
-            //password is now changed, and `db`'s options have been updated with the new password
-            cb(err);
-        });
+    this.changePassword = (pass, cb) => {
+        db.changePassword(pass, err => cb(err));
+        // `db`'s options will be updated with the new password
     };
-    function findTaxonomicLevels(proteinId) {
-        var id = proteinIdAsQueryParameter(proteinId)
-        var query = 'MATCH (p:Protein {' + id + '})-[l]->(n:NOG)<-[ll]-(m:Protein)-[t]->(Abundance) return distinct l.level, collect(distinct t.tissue)'
-    }
-
-    this.findOrthologsAtTaxonomicLevel = function (proteinId, taxonomicLevel) {
-        var d = when.defer()
-        var id = proteinIdAsQueryParameter(proteinId)
-        //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG) WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
-        var query = 'MATCH (:Protein {' + id + '})-[:' + taxonomicLevel + ']->(n:NOG)\n' +
-            ' WITH n MATCH n<-[:' + taxonomicLevel + ']-(m:Protein) \n' +
-            ' RETURN m.eid';
-        db.query(query, function (err, results) {
-            if (err) {
-                log.error(err, 'findOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, query)
-                var e = Error("findOrthologsAtTaxonomicLevel FAILED: " + err.message);
-                d.reject(e);
-                return
-            }
-            var response = {
-                "proteinId": proteinId,
-                "taxonomicLevel": taxonomicLevel,
-                "members": results.map(function (row) {
-                    return row['m.eid']
-                })
-            }
-            d.resolve(response);
-        })
-        return d.promise
-    }
-
-
-    this.findTissuesForOrthologsAtTaxonomicLevel = function (proteinId, taxonomicLevel) {
-        var d = when.defer()
-        var id = proteinIdAsQueryParameter(proteinId)
-        //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG) WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
-        var query = 'MATCH (:Protein {' + id + '})-[:' + taxonomicLevel + ']->(n:NOG)\n' +
-            ' WITH n MATCH n<-[:' + taxonomicLevel + ']-(:Protein)-[tissue]->(:Abundance) \n' +
-            ' RETURN DISTINCT tissue.tissue';
-        db.query(query, function (err, results) {
-            if (err) {
-                log.error(err, 'findTissuesForOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, query)
-                var e = Error("findTissuesForOrthologsAtTaxonomicLevel FAILED: " + err.message);
-                d.reject(e);
-                return
-            }
-          var tissues = 'tissue.tissue' in results ?
-            [results['tissue.tissue']] //single tissue
-            :
-            results.map(function (row) { //array of tissues
-              return row['tissue.tissue']
-            });
-          var response = {
-            "proteinId": proteinId,
-            "taxonomicLevel": taxonomicLevel,
-            "tissues": tissues
-          }
-          response.tissues.sort()
-          d.resolve(response);
-        })
-        return d.promise
-    }
 
     function proteinIdAsQueryParameter(proteinId) {
-        return typeof(proteinId) === 'number' ? 'iid: ' + proteinId : 'eid: "' + proteinId + '"';
+        return typeof proteinId === 'number' ? `iid: ${proteinId}` : `eid: "${proteinId}"`;
     }
 
-    this.count = function (label, callback) {
-        var d = when.defer()
-
-        var cypher = "MATCH (n:" + label + ") RETURN count(*)"
-        db.queryRaw(cypher, function (err, result) {
+    this.findOrthologsAtTaxonomicLevel = (proteinId, taxonomicLevel) => {
+        const d = when.defer();
+        const id = proteinIdAsQueryParameter(proteinId);
+        //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG)
+        //  WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
+        const query = `MATCH (:Protein {${id}})-[:${taxonomicLevel}]->(n:NOG)
+            WITH n MATCH n<-[:${taxonomicLevel}]-(m:Protein) 
+            RETURN m.eid`;
+        db.query(query, (err, results) => {
             if (err) {
-                log.error(err, 'neo4j - failed to count %s', label)
+                log.error(err, 'findOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]',
+                    proteinId, taxonomicLevel, query);
+                d.reject(Error(`findOrthologsAtTaxonomicLevel FAILED: ${err.message}`));
+                return;
+            }
+            const response = { proteinId, taxonomicLevel, members: results.map(row => row['m.eid']) };
+            d.resolve(response);
+        });
+        return d.promise;
+    };
+
+    this.findTissuesForOrthologsAtTaxonomicLevel = (proteinId, taxonomicLevel) => {
+        const d = when.defer();
+        const id = proteinIdAsQueryParameter(proteinId);
+        //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG)
+        // WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
+        const query = `MATCH (:Protein {${id}})-[:${taxonomicLevel}]->(n:NOG)
+            WITH n MATCH n<-[:${taxonomicLevel}]-(:Protein)-[tissue]->(:Abundance) 
+            RETURN DISTINCT tissue.tissue`;
+        db.query(query, (err, results) => {
+            if (err) {
+                log.error(err, 'findTissuesForOrthologsAtTaxonomicLevel(%s,%s) FAILED, query:[%s]',
+                    proteinId, taxonomicLevel, query);
+                d.reject(Error(`findTissuesForOrthologsAtTaxonomicLevel FAILED: ${err.message}`));
+                return;
+            }
+            const singleTissue = ('tissue.tissue' in results);
+            const tissues = singleTissue ? [results['tissue.tissue']] : results.map(row => row['tissue.tissue']);
+            tissues.sort();
+            d.resolve({ proteinId, taxonomicLevel, tissues });
+        });
+        return d.promise;
+    };
+
+    this.count = (label) => {
+        const d = when.defer();
+
+        const cypher = `MATCH (n:${label}) RETURN count(*)`;
+        db.queryRaw(cypher, (err, result) => {
+            if (err) {
+                log.error(err, 'neo4j - failed to count %s', label);
                 throw new Error(err.message);
             }
-            d.resolve(result.data[0][0])
+            d.resolve(result.data[0][0]);
         });
-        return d.promise
-    }
+        return d.promise;
+    };
 
-    this.save_proteins = function (proteins, abundances) {
-        log.info('saving %s proteins', proteins.length)
+    this.save_proteins = (proteins, abundances) => {
+        log.info('saving %s proteins', proteins.length);
 
-        var d = when.defer()
+        const d = when.defer();
         if (proteins.length === 0) {
-            log.info('no proteins to saving')
-            d.resolve()
-            return d.promise
+            log.info('no proteins to saving');
+            d.resolve();
+            return d.promise;
         }
-        var txn = db.batch();
-        var numAbundances = 0;
-        var savedNodes = 0;
-        proteins.forEach(function (p) {
-            var node = txn.save(p);
-            txn.label(node, "Protein");
-            savedNodes++;
+        const txn = db.batch();
+        let numAbundances = 0;
+        let savedNodes = 0;
+        proteins.forEach((p) => {
+            const node = txn.save(p);
+            txn.label(node, 'Protein');
+            savedNodes += 1;
             if (abundances[p.eid] && abundances[p.eid].length > 0) {
-                abundances[p.eid].forEach(function (el) {
-                    numAbundances++;
-                    var abundance = txn.save({"value": el.value, "rank": el.rank});
-                    txn.label(abundance, "Abundance");
-                    txn.relate(node, el.tissue, abundance, {'tissue': el.tissue}/*, isDefaultAbundance : true|false*/);
-                })
+                abundances[p.eid].forEach((el) => {
+                    numAbundances += 1;
+                    const abundance = txn.save({ value: el.value, rank: el.rank });
+                    txn.label(abundance, 'Abundance');
+                    txn.relate(node, el.tissue, abundance, { tissue: el.tissue }/*, isDefaultAbundance : true*/);
+                });
             }
-        })
+        });
         log.info('about to commit %s proteins and %s abundances', proteins.length, numAbundances);
-        txn.commit(function (err, results) {
+        txn.commit((err, results) => {
             if (err) {
                 log.error(err, 'saving_proteins - FAILED, %s nodes will remain saved', savedNodes);
-                var e = Error("TRANSACTION FAILED: " + err.message);
+                const e = Error(`TRANSACTION FAILED: ${err.message}`);
                 e.results = results;
                 d.reject(e);
-                return
+                return;
             }
             d.resolve();
-        })
-        return d.promise
-    }
+        });
+        return d.promise;
+    };
 
+    this.save_orthgroups = (groups, proteinIds) => {
+        log.info('saving %s orthgroups', groups.length);
 
-    this.save_orthgroups = function (groups, proteinIds) {
-        log.info('saving %s orthgroups', groups.length)
+        const deferredImport = when.defer();
 
-        var deferredImport = when.defer()
-        
         if (groups.length === 0) {
-            log.info('no groups to import')
-            deferredImport.resolve()
-            return deferredImport.promise
+            log.info('no groups to import');
+            deferredImport.resolve();
+            return deferredImport.promise;
         }
 
-        var txn = db.batch();
+        const txn = db.batch();
 
+        /**
+         *
+         * @param g
+         * @return {Promise}
+         */
         function saveGroup(g) {
-            log.trace('saving group %s in %s', g.name, g.clade)
-            var saved = when.defer()
+            log.trace('saving group %s in %s', g.name, g.clade);
+            const saved = when.defer();
 
             //{"id" :9443, "name": "NOG21051","clade": "PRIMATES", "members": [1803841, 1854701]},
-            var node = txn.save({"levelId": g.id /*, "level": g.clade*/, "name": g.name});
-            txn.label(node, "NOG");
+            const node = txn.save({ levelId: g.id /*, "level": g.clade*/, name: g.name });
+            txn.label(node, 'NOG');
             if (!proteinIds) {
-                var query = "MATCH (p:Protein) WHERE p.iid IN [" + g.members + "] RETURN p.iid, id(p) ";
-                db.query(query, function (err, results) {
+                const query = `MATCH (p:Protein) WHERE p.iid IN [${g.members}] RETURN p.iid, id(p) `;
+                db.query(query, (err, results) => {
                     if (err) {
-                        log.error(err, 'saveGroup(%s) - failed to find proteins %s, query: %s', g.name, g.members, query)
-                        saved.reject(Error(g.name + ' - failed to find proteins ' + g.members + ': ' + err.message));
-                        return
+                        const msgTemplate = 'saveGroup(%s) - failed to find proteins %s, query: %s';
+                        log.error(err, msgTemplate, g.name, g.members, query);
+                        saved.reject(Error(`${g.name} - failed to find proteins ${g.members}: ${err.message}`));
+                        return;
                     }
                     //if (g.members.length !== results.length) {
                     //    var proteinRecords = new Set(results.map(function (el) {
@@ -187,165 +185,151 @@ function Storage(_db) {
                     //    }
                     //}
 
-                    results.forEach(function (r) {
-                        txn.relate({"id": r['id(p)']}, g.clade, node, {'levelId': g.id});
-                    })
+                    results.forEach((r) => {
+                        txn.relate({ id: r['id(p)'] }, g.clade, node, { levelId: g.id });
+                    });
 
-                    saved.resolve()
+                    saved.resolve();
                 });
             } else {
-                g.members.forEach(function (el) {
+                g.members.forEach((el) => {
                     if (el in proteinIds) {
-                        txn.relate({"id": proteinIds[el]}, g.clade, node, {'level': g.clade});
+                        txn.relate({ id: proteinIds[el] }, g.clade, node, { level: g.clade });
                     }
-                })
-                saved.resolve()
+                });
+                saved.resolve();
             }
             return saved.promise;
         }
 
-        var taskPromises = groups.map(function (g) {
-            return saveGroup(g)
-        });
-        when.all(taskPromises).then(function (not_used) {
-            log.trace('committing transaction')
-            txn.commit(function (err) {
+        when.all(groups.map(g => saveGroup(g))).then(() => {
+            log.trace('committing transaction');
+            txn.commit((err) => {
                 if (err) {
-                    log.error(err, 'save_orthgroups - TRANSACTION FAILED')
-                    var e = Error("TRANSACTION FAILED: " + err.message);
+                    log.error(err, 'save_orthgroups - TRANSACTION FAILED');
+                    //XXX attach err to e?
+                    const e = Error(`TRANSACTION FAILED: ${err.message}`);
                     deferredImport.reject(e);
-                    return
+                    return;
                 }
 
                 deferredImport.resolve();
-                log.trace('transaction completed')
-            })
-        }, function (err) {
-            log.error(err, 'save_orthgroups - failed to save one of the groups')
-            var e = Error("failed to save one of the groups: " + err.message);
-            deferredImport.reject(e);
-        })
-
-        return deferredImport.promise
-    }
-
-    this.loadOrthologs = function (proteinId, taxonomicLevel, tissue) {
-        taxonomicLevel = taxonomicLevel || 'LUCA'
-        tissue = tissue || 'WHOLE_ORGANISM'
-        var d = when.defer()
-        var id = proteinIdAsQueryParameter(proteinId)
-        var query = "MATCH (:Protein {" + id + "})-[:" + taxonomicLevel + "]" +
-            "->(n:NOG) WITH n MATCH n<-[:" + taxonomicLevel + "]-(m:Protein)-[:" +
-            tissue + "]->(a:Abundance) return m,a";
-        db.query(query, function (err, results) {
-            if (err) {
-                log.error(err, 'loadOrthologs(%s,%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, tissue, query)
-                var e = Error("loadOrthologs FAILED: " + err.message);
-                d.reject(e);
-                return
-            }
-            var orthologs = results.map(function (row) {
-                return {
-                    "stringdbInternalId": row.m.iid,
-                    "proteinId": row.m.eid,
-                    "name": row.m.name,
-                    "abundance": {
-                        "value": parseFloat(row.a.value),
-                        "position": parseInt(row.a.rank.substring(0, row.a.rank.indexOf('/'))),
-                        "rank": row.a.rank
-                    }
-                }
+                log.trace('transaction completed');
             });
-            var orthologsIds = orthologs.map(function (o) {
-              return {'id' : o.proteinId}
-            })
-            var familyTree = taxonomy.proteinFamilyTree(orthologsIds, taxonomicLevel);
-            var response = {
-                "proteinId": proteinId,
-                "taxonomicLevel": taxonomicLevel,
-                "tissue": tissue,
-                "members": orthologs,
-                "familyTree" : familyTree
-            }
-            d.resolve(response);
-        })
-        return d.promise
-    }
+        }, (err) => {
+            const msg = `failed to save one of the groups: ${err.message}`;
+            log.error(err, msg);
+            deferredImport.reject(Error(msg));
+        });
 
+        return deferredImport.promise;
+    };
 
-    this.create_schema = function () {
-        //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
-        var deferred = when.defer()
-        db.index.createIfNone('Protein', 'iid', function (err, index) {
+    this.loadOrthologs = (proteinId, taxonomicLevel, tissue) => {
+        taxonomicLevel = taxonomicLevel || 'LUCA'; //eslint-disable-line no-param-reassign
+        tissue = tissue || 'WHOLE_ORGANISM'; //eslint-disable-line no-param-reassign
+        const d = when.defer();
+        const id = proteinIdAsQueryParameter(proteinId);
+
+        const query = `MATCH (:Protein {${id}})-[:${taxonomicLevel}]->(n:NOG) 
+           WITH n MATCH n<-[:${taxonomicLevel}]-(m:Protein)-[:${tissue}]->(a:Abundance) return m,a`;
+
+        db.query(query, (err, results) => {
             if (err) {
-                log.error(err, 'create_schema - failed to create iid index for Protein')
-                deferred.reject('failed to create iid index for Protein: ' + err)
+                log.error(err, 'loadOrthologs(%s,%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, tissue, query);
+                d.reject(Error(`loadOrthologs FAILED: ${err.message}`));
                 return;
             }
-            db.index.createIfNone('Protein', 'eid', function (err, index) {
-                if (err) {
-                    log.error(err, 'create_schema - failed to create eid index for Protein')
-                    deferred.reject('failed to create eid index for Protein: ' + err)
-                    return
+            const members = results.map(row => ({
+                stringdbInternalId: row.m.iid,
+                proteinId: row.m.eid,
+                name: row.m.name,
+                abundance: {
+                    value: parseFloat(row.a.value),
+                    position: parseInt(row.a.rank.substring(0, row.a.rank.indexOf('/')), 10),
+                    rank: row.a.rank
                 }
-                db.constraints.uniqueness.createIfNone('Protein', 'iid', function (err, constraint) {
-                    if (err) {
-                        log.error(err, 'create_schema - failed to create UNIQUE constraint on iid for Protein')
-                        deferred.reject('failed to create eid index for Protein: ' + err)
-                        return
-                    }
-                    deferred.resolve()
-                })
+            }));
+            const orthologsIds = members.map(o => ({ id: o.proteinId }));
+            const familyTree = taxonomy.proteinFamilyTree(orthologsIds, taxonomicLevel);
+            const response = { proteinId, taxonomicLevel, tissue, members, familyTree };
+            d.resolve(response);
+        });
+        return d.promise;
+    };
 
-            });
-        })
-        return deferred.promise
-    }
 
-    this.load_protein_ids = function () {
-        var deferred = when.defer()
-        db.query("MATCH (p:Protein) RETURN p.iid, id(p)", function (err, results) {
+    this.create_schema = () => {
+        //can't use txn.index.create, lib doesn't allow data and schema manipulation in the same txn, so:
+        const deferred = when.defer();
+        db.index.createIfNone('Protein', 'iid', (err) => {
             if (err) {
-                deferred.reject('failed to load protein ids: ' + err)
-                return
+                const msg = `failed to create iid index for Protein: ${err}`;
+                log.error(err, msg);
+                deferred.reject(msg);
+                return;
             }
-            proteinIds = {}
-            var num = 0
-            results.forEach(function (r) {
-                proteinIds[r['p.iid']] = r['id(p)']
-                num++
-            })
-            log.debug("%s protein ids loaded", num)
-            deferred.resolve(proteinIds)
-        })
-        return deferred.promise
-    }
+            db.index.createIfNone('Protein', 'eid', (err2) => {
+                if (err2) {
+                    const msg = `failed to create eid index for Protein: ${err2}`;
+                    log.error(err2, msg);
+                    deferred.reject(msg);
+                    return;
+                }
+                db.constraints.uniqueness.createIfNone('Protein', 'iid', (err3) => {
+                    if (err3) {
+                        const msg = `failed to create eid index for Protein: ${err3}`;
+                        log.error(err3, msg);
+                        deferred.reject(msg);
+                        return;
+                    }
+                    deferred.resolve();
+                });
+            });
+        });
+        return deferred.promise;
+    };
 
+    this.load_protein_ids = () => {
+        const deferred = when.defer();
+        db.query('MATCH (p:Protein) RETURN p.iid, id(p)', (err, results) => {
+            if (err) {
+                deferred.reject(`failed to load protein ids: ${err}`);
+                return;
+            }
+            const proteinIds = {};
+            let num = 0;
+            results.forEach((r) => {
+                proteinIds[r['p.iid']] = r['id(p)'];
+                num += 1;
+            });
+            log.debug('%s protein ids loaded', num);
+            deferred.resolve(proteinIds);
+        });
+        return deferred.promise;
+    };
 }
 
-
-exports = module.exports = function (options) {
+exports = module.exports = (options) => {  //eslint-disable-line no-multi-assign
     //disposabledb.constructor instanceof Seraph ?
     const log = bunyan.createLogger({
-        name: "paxdb-API-orthologs",
-        module: "storage/neo4j"
+        name: 'paxdb-API-orthologs',
+        module: 'storage/neo4j'
     });
-    var db;
-    if (options.hasOwnProperty('db')) {
-        log.info('using disposable db')
-        db = options.db
+    let db;
+    if (Object.prototype.hasOwnProperty.call(options, 'db')) {
+        log.info('using disposable db');
+        db = options.db;
     } else {
-        log.info('using server: ' + options.server)
-        db = require("seraph")(options)
+        log.info(`using server: ${options.server}`);
+        db = require('seraph')(options); //eslint-disable-line global-require
     }
-    var data = require('./data')
-    var storage = new Storage(db);
+    const storage = new Storage(db);
 
-    storage.taxonomy = taxonomy
-    storage.speciesTissuesMap = data.speciesTissuesMap
-    storage.orthgroups = data.orthgroups
+    storage.taxonomy = taxonomy;
+    storage.speciesTissuesMap = data.speciesTissuesMap;
+    storage.orthgroups = data.orthgroups;
     return storage;
 };
 
-var consul = require('./consul-client')
-exports.consul = consul
+exports.consul = consul;

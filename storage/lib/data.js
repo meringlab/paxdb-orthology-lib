@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const ORTHOLOGY_SPECIES_MAP = './data/v4.0/ontology/ontology_2_species.tsv';
 
-exports = module.exports = {};
+exports = module.exports = {}; //eslint-disable-line no-multi-assign
 
 exports.orthgroups = {
     1: 'LUCA',
@@ -45,7 +45,7 @@ exports.orthgroups = {
 function loadSpeciesTissuesMap() {
     const contents = fs.readFileSync(ORTHOLOGY_SPECIES_MAP, { encoding: 'utf8' });
     const map = {};
-    contents.split('\n').forEach(line => {
+    contents.split('\n').forEach((line) => {
         const rec = line.split('\t');
         if (rec.length < 2) {
             return;
