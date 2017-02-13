@@ -34,7 +34,27 @@
       {
         "props": false
       }
-    ]
+    ],
+      "max-len": [
+          2,
+          120,
+          4,
+          {
+              "code": 120,
+              "ignoreComments": true,
+              "ignoreTemplateLiterals": true,
+              "ignoreUrls": true
+          }
+      ],
+      "no-restricted-syntax": [
+          "error",
+          "ForInStatement",
+          //'ForOfStatement',
+          "LabeledStatement",
+          "WithStatement"
+      ],
+      "no-underscore-dangle": 0,
+      "no-continue": 0
   }
 // , "globals": {
 //    "$": true,
