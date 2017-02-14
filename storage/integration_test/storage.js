@@ -47,45 +47,53 @@ const nogs = [
 ];
 
 describe('orthology service', function() {
-    let db, neo;
+    let db, supervisor;
 
     before(function(done) {
         // allow 10 minutes for initial disposable-seraph startup.
         this.timeout(600000);
         this.slow(300000);
-        seraph({ version: '2.3.7' /*,clean: true */}, function(err, dbObj, neoObj) {
+        seraph({ version: '2.3.7' /*,clean: true */}, function(err, _seraph, _supervisor) {
             if (err) return done(err);
-            neo = neoObj;
-            db = dbObj;
-            // db.changePassword('test', function (err) {
-            //     if (err) {
-            //         console.log('failed to change initial pasword', err);
-            //         done(err);
-            //     } else {
-            //         db.options.pass = 'test';
-            //         console.log('seraph ready to use');
-            //         done();
-            //     }
-            // });
-            done();
+            supervisor = _supervisor;
+            db = _seraph;
+            db.changePassword('test', function(err) {
+                if (err) {
+                    if (err.message !== 'Invalid username or password.') {
+                        console.log('failed to change initial pasword', err);
+                        return done(err);
+                    }
+                    console.warn('seems like the initial password has already been changed');
+                }
+                db.options.pass = 'test';
+                //this is cached, so must change it as well
+                db.options.authString = "bmVvNGo6dGVzdA=="; //base64 of 'neo4j:test', new Buffer('neo4j:test').toString('base64')
+                console.log('seraph ready to use');
+                done();
+            });
+            // done();
         });
     });
 
     after(function(done) {
-        this.timeout(20000);
-        this.slow(10000);
-        neo.stop(done);
+        this.timeout(60000);
+        this.slow(30000);
+        supervisor && supervisor.stop(done);
     });
 
     beforeEach(function(done) {
         this.timeout(200000);
         this.slow(100000);
-        // neo.clean(done)
-        done();
+
+        // supervisor.clean(done)
+        db.queryRaw('MATCH (n) DETACH DELETE n', function(err) {
+            if (err) return done(err);
+            done();
+        });
     });
 
     it('should load and query', function(done) {
-        var neo4j = storageModule({ db: db });
+        var neo4j = storageModule({ db });
         neo4j.count('Protein')
             .then(function(num) {
                 num.should.equal(0);
