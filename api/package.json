@@ -5,10 +5,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/paxdb/api-orthology"
+    "url": "https://github.com/meringlab/paxdb-api-orthology-frontend"
   },
   "bugs": {
-    "url": "https://github.com/paxdb/api-orthology/issues"
+    "url": "https://github.com/meringlab/paxdb-api-orthology-frontend/issues"
   },
   "scripts": {
     "start": "node ./bin/www",
