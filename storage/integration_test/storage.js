@@ -53,7 +53,7 @@ describe('orthology service', function() {
         // allow 10 minutes for initial disposable-seraph startup.
         this.timeout(600000);
         this.slow(300000);
-        seraph({ version: '2.3.7' /*,clean: true */}, function(err, _seraph, _supervisor) {
+        seraph({ version: '3.1.1' /*,clean: true */}, function(err, _seraph, _supervisor) {
             if (err) return done(err);
             supervisor = _supervisor;
             db = _seraph;

@@ -39,9 +39,9 @@ function Storage(_db) {
         const d = when.defer();
         const id = proteinIdAsQueryParameter(proteinId);
         //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG)
-        //  WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
+        //  WITH n MATCH (n)<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
         const query = `MATCH (:Protein {${id}})-[:${taxonomicLevel}]->(n:NOG)
-            WITH n MATCH n<-[:${taxonomicLevel}]-(m:Protein) 
+            WITH n MATCH (n)<-[:${taxonomicLevel}]-(m:Protein) 
             RETURN m.eid`;
         db.query(query, (err, results) => {
             if (err) {
@@ -60,9 +60,9 @@ function Storage(_db) {
         const d = when.defer();
         const id = proteinIdAsQueryParameter(proteinId);
         //var query = 'MATCH (:Protein {' + id + '})-[level]->(n:NOG)
-        // WITH n MATCH n<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
+        // WITH n MATCH (n)<-[level]-(:Protein)-[tissue]-(:Abundance) return  distinct level.level,  tissue.tissue';
         const query = `MATCH (:Protein {${id}})-[:${taxonomicLevel}]->(n:NOG)
-            WITH n MATCH n<-[:${taxonomicLevel}]-(:Protein)-[tissue]->(:Abundance) 
+            WITH n MATCH (n)<-[:${taxonomicLevel}]-(:Protein)-[tissue]->(:Abundance) 
             RETURN DISTINCT tissue.tissue`;
         db.query(query, (err, results) => {
             if (err) {
@@ -232,7 +232,7 @@ function Storage(_db) {
         const id = proteinIdAsQueryParameter(proteinId);
 
         const query = `MATCH (:Protein {${id}})-[:${taxonomicLevel}]->(n:NOG) 
-           WITH n MATCH n<-[:${taxonomicLevel}]-(m:Protein)-[:${tissue}]->(a:Abundance) return m,a`;
+           WITH n MATCH (n)<-[:${taxonomicLevel}]-(m:Protein)-[:${tissue}]->(a:Abundance) return m,a`;
 
         db.query(query, (err, results) => {
             if (err) {
