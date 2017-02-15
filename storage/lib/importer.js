@@ -18,30 +18,17 @@ function Importer(config) {
         server: config ? config.url : 'disposable-neo4j'
     });
 
-
     const storage = config ? storageModule(config) : undefined;
     const _this = this;
-    this.changeInitialPassword = (cb) => {
-        storage.changePassword(config.pass + config.pass, cb);
-    };
-    this.import_data = () => {
+
+    this.importData = () => {
         log.level('debug');
-        storage.create_schema().then(() => {
-            log.info('schema created');
-            _this.import_proteins(`${dataDir}proteins`, `${dataDir}abundances`).then(() => {
-                log.info('proteins import complete');
-                _this.import_orthgroups(`${dataDir}orthgroups`).then(() => {
-                    log.info('orthgroups import complete');
-                }, (err) => {
-                    log.error(err, 'failed to import orthgroups');
-                });
-            }, (err) => {
-                log.error(err, 'failed to import proteins');
-            });
-        }, (err) => {
-            log.error(err, 'failed to create schema!');
-        });
+        return storage.create_schema()
+            .then(() => _this.import_proteins(`${dataDir}proteins`, `${dataDir}abundances`))
+            .then(() => _this.import_orthgroups(`${dataDir}orthgroups`));
     };
+
+    this.changeInitialPassword = cb => storage.changePassword(`a-${config.pass}`, cb);
 
     function parseDataset(contents) {
         const dataset = { abundances: [] };
@@ -194,7 +181,9 @@ function Importer(config) {
             if (!proteinIds) {
                 throw Error('failed to load protein ids');
             }
+            log.debug(`${Object.keys(proteinIds).length} total protein ids loaded`);
             const files = glob.sync(`${orthgroupsDir}/*-orthologs.txt`);
+            log.debug(`orthgroups: ${files}`);
             //chain promises in sequential order:
             function link(prevPromise, currentFile) {
                 return prevPromise.then(() => {
@@ -203,11 +192,7 @@ function Importer(config) {
                 });
             }
 
-            files.reduce(link, when('starting promise')).then(() => {
-                log.info('orthgroups import complete');
-            }, (err) => {
-                log.error(err, 'failed to import orthgroups');
-            });
+            return files.reduce(link, when('starting promise'));
         });
     };
 
