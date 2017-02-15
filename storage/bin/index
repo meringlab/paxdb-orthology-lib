@@ -8,10 +8,15 @@ const serverUrl = `http://${neo4jHost}:${neo4jPort}`;
 
 const connectionOpts = { server: serverUrl, user: neo4jUser, pass: neo4jPass };
 const indexer = require('../lib/importer')(connectionOpts);
-//neo4j requires that the initial password neo4j is changed
-indexer.changeInitialPassword(err => {
+
+indexer.importData().then((err) => {
     if (err) {
-        throw Error("failed to change initial password, cannot index");
+        console.error(err, 'import failed');
+        process.exit(1);
     }
-    indexer.import_data();
+    console.log('import completed successfully');
+    process.exit(0);
+}).catch(reason => {
+    console.error(reason, 'failed to import data');
+    process.exit(2);
 });
