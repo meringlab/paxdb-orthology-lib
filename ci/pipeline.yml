@@ -18,7 +18,8 @@ resources:
     username: admin
     email: paxdb.team@gmail.com
     password: {{registry-password}}
-- name: orthology-api
+
+- name: orthology-api-image
   type: docker-image
   source:
     repository: docker-registry.meringlab.org:5443/paxdb/orthology-api
@@ -33,42 +34,49 @@ resources:
     tag: "xenial"
 
 jobs:
-- name: build
+- name: storage
   public: true
   serial: true
   plan:
+#TODO
+#- aggregate:
   - get: code
-    trigger: true
+    trigger: false
   - get: ubuntu-xenial
-    trigger: true
     params: {save: true}
   - task: compile-test-code
-    config:
-      platform: linux
-      image_resource:
-        type: docker-image
-        source:
-          repository: docker-registry.meringlab.org:5443/meringlab/node6
-          username: admin
-          password: {{registry-password}}
-      #    repository: meringlab/node6
-          tag: latest
-      inputs:
-        - name: code
-      run:
-        path: ./ci/test.sh
-        dir: ./code/
-  # todo integration test, need to make an image with both java and node
-  - put: orthology-api
+    file: code/ci/build-task.yml
     params:
-    # see https://github.com/concourse/docker-image-resource#parameters-1 for details
-      build: code/
-      dockerfile: code/Dockerfile.front
-      load_base: ubuntu-xenial
-      tag: 4.0.4
+      password: {{registry-password}}
+
+  # todo integration test, need to make an image with both java and node
+
   - put: orthology-storage-index-image
     params:
       build: code/
       dockerfile: code/Dockerfile.index
+      load_base: ubuntu-xenial
+      tag: 4.0.4
+
+- name: api
+  public: true
+  serial: false
+  plan:
+#TODO
+#- aggregate:
+  - get: code
+    trigger: true
+  - get: ubuntu-xenial
+    params: {save: true}
+  - task: compile-test-code
+    file: code/ci/build-task.yml
+    params:
+      password: {{registry-password}}
+  # todo integration test, need a storage container
+  - put: orthology-api-image
+    params:
+    # see https://github.com/concourse/docker-image-resource#parameters-1 for details
+      build: code/
+      dockerfile: code/Dockerfile.front
       load_base: ubuntu-xenial
       tag: 4.0.4
