@@ -18,6 +18,13 @@ resources:
     username: admin
     email: paxdb.team@gmail.com
     password: {{registry-password}}
+- name: orthology-api
+  type: docker-image
+  source:
+    repository: docker-registry.meringlab.org:5443/paxdb/orthology-api
+    username: admin
+    email: paxdb.team@gmail.com
+    password: {{registry-password}}
 
 - name: ubuntu-xenial
   type: docker-image
@@ -52,17 +59,17 @@ jobs:
         path: ./ci/test.sh
         dir: ./code/
   # todo integration test, need to make an image with both java and node
-  - put: orthology-storage-index-image
-    params:
-    # see https://github.com/concourse/docker-image-resource#parameters-1 for details
-      build: code/
-      dockerfile: code/Dockerfile.index
-      load_base: ubuntu-xenial
-#      tag: latest
   - put: orthology-api
     params:
     # see https://github.com/concourse/docker-image-resource#parameters-1 for details
       build: code/
       dockerfile: code/Dockerfile.front
+      load_base: ubuntu-xenial
+#      tag: latest
+  - put: orthology-storage-index-image
+    params:
+    # see https://github.com/concourse/docker-image-resource#parameters-1 for details
+      build: code/
+      dockerfile: code/Dockerfile.index
       load_base: ubuntu-xenial
 #      tag: latest

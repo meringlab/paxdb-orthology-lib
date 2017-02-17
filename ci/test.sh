@@ -7,4 +7,4 @@ npm install
 npm run lint
 npm test
 
-# npm run integration-test # !requires java
+# npm run integration-test-storage # !requires java
