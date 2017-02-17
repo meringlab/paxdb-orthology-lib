@@ -2,18 +2,24 @@
 FROM meringlab/node6
 MAINTAINER Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
-EXPOSE 3000
 ENV WD /var/www/paxdb
+
+COPY bin lib public routes routes views app.js package.json $WD/
+COPY data/v4.0/ontology $WD/data/v4.0/ontology
+
+RUN useradd -ms /bin/bash www && chown -R www $WD
+USER www
+
 WORKDIR  $WD
-COPY . $WD
 RUN npm install
 
 # DEFAULTS, override when creating a container:
-ENV CONSUL_HOST 'tethys.meringlab.org'
 ENV NEO4J_URL 'http://localhost:7474'
 ENV NEO4J_USER neo4j
 ENV NEO4J_PASS neo4j
 
 # VOLUME $WD
+
+EXPOSE 3000
 
 CMD ["node", "./bin/www"]
