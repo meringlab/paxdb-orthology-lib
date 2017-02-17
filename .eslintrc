@@ -22,7 +22,7 @@
     "spaced-comment": 0,
     "no-var": 1,
     "indent": [
-      2,
+      1,
       4,
       {
         "SwitchCase": 2,

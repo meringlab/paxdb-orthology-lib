@@ -22,7 +22,7 @@
   "scripts": {
     "index": "node ./bin/index",
     "start": "node ./bin/www",
-    "lint": "./node_modules/eslint/bin/eslint.js lib/",
+    "lint": "./node_modules/eslint/bin/eslint.js lib/ bin/*",
     "test": "mocha test/*.js",
     "integration-test-storage": "mocha integration_test/storage.js",
     "integration-test-front": "mocha integration_test/app.js"
