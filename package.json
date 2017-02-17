@@ -2,6 +2,7 @@
   "name": "paxdb-orthology",
   "version": "4.0.4",
   "private": false,
+  "description": "pax-db.org orthology service",
   "author": "Milan Simonovic <milan.simonovic@imls.uzh.ch>",
   "license": "MIT",
   "main": "lib/storage.js",
