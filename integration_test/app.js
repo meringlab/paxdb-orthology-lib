@@ -7,10 +7,11 @@ var boot = require(appModule).boot,
     should = require('chai').should(),
     expect = require('chai').expect;
 var fs = require('fs');
+const storage = require('../lib/storage');
 
 describe('server', function () {
     before(function () {
-        const neo4j = require('paxdb-service-orthology-storage')({
+        const neo4j = storage({
             server: process.env.NEO4J_URL || 'http://neo4j:7474',
             user: process.env.NEO4J_USER || 'neo4j',
             pass: process.env.NEO4J_PASS || 'neo4j'
