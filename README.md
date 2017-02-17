@@ -1,4 +1,11 @@
-This is the [pax-db.org](http://pax-db.org) orthology storage microservice. It consists of two docker images, one for neo4j and another to import data.
+This is the [pax-db.org](http://pax-db.org) orthology storage microservice. 
+
+Essentially there're two packages here, one for the storage (neo4j) 
+and another for the front-end (node.js express).
+
+# Storage
+
+Storage consists of two docker images, one for storage (neo4j) and another to import data.
 
 As a bonus it exports an npm module which exposes the api. Example usage:
 
@@ -8,9 +15,47 @@ As a bonus it exports an npm module which exposes the api. Example usage:
     orth.loadOrthologs('9606.ENSP00000356969', 'PRIMATES', 'BRAIN').
         then(cogs => console.log(`orthologs: ${JSON.stringify(cogs)}));
 
-# Installation
+## Installation
 
     npm install paxdb-service-orthology-storage
+
+## Storage build
+
+```
+docker build -t paxdb/orthology-indexer -f Dockerfile.index .
+```
+
+Need to create a tmp neo4j for data indexing. The Neo4j server is configured 
+to store data in the `/data` directory inside the container. We'll map the
+container's `/data` volume to a volume on the host and use it later to build the final image:
+
+
+```
+docker run -d --name paxdb_tmp_neo --log-driver=json-file \
+    --env=NEO4J_AUTH=none \
+    --env=NEO4J_dbms_memory_pagecache_size=1024M \
+    --env=NEO4J_dbms_memory_heap_maxSize=2048M \
+    -p 37890:7474 \
+    -v neo4j:/data  \
+    neo4j:3.1.1
+```
+
+Now create the second container to run the import:
+
+```
+docker run --rm --env=NEO4J_PORT=37890 paxdb/orthology-importer
+```
+
+Once it's done, stop neo4j and create the other image with the neo4j data:
+
+```
+docker stop paxdb_tmp_neo
+docker build -t paxdb/orthology-storage -f Dockerfile.storage .
+docker rm -v paxdb_tmp_neo
+```
+
+# API Frontend
+
 
 
 # Versioning
@@ -22,49 +67,4 @@ All versions are `<major>.<minor>.<patch>`, where major and minor follow
 # License
 
 MIT. See "LICENSE.txt".
-
-## Neo4j version
-
-3.1
-
-## Usage
-
-### Build the image
-
-To create the image `paxdb/neo4j`, execute the following command:
-
-```
-$ docker build -t paxdb/neo4j .
-```
-
-### Run the image
-
-To run the image and bind to host port 7474:
-
-```
-$ docker run -d --name neo4j -p 7474:7474 paxdb/neo4j
-```
-
-Once it's up and running open neo4j console, for example http://0.0.0.0:32768, and set the password.
-
-Now create the second container to run the import:
-
-```
-sudo docker build -t paxdb/orthology-import -f Dockerfile.index .
-sudo docker run --rm paxdb/orthology-import
-```
-
-#### Persistent data
-
-The Neo4j server is configured to store data in the `/data` directory inside the container. You can map the
-container's `/data` volume to a volume on the host so the data becomes independent of the running container:
-
-```
-$ mkdir -p /tmp/neo4j
-$ docker run -d \
-    --name neo4j \
-    -p 7474:7474 \
-    -v /tmp/neo4j:/data \
-    paxdb/neo4j
-```
 

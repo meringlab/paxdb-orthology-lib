@@ -1,13 +1,15 @@
 ---
+
 # fly -t dev login $IP
-# fly -t dev set-pipeline -p paxdb-api-orthology-storage -c ci/pipeline.yml --var "registry-password=secret"
-# fly -t dev unpause-pipeline  -p paxdb-api-orthology-storage
-# fly -t dev trigger-job --job paxdb-api-orthology-storage/test
+# fly -t dev set-pipeline -p paxdb-orthology -c ci/pipeline.yml --var "registry-password=secret"
+# fly -t dev unpause-pipeline  -p paxdb-orthology
+# fly -t dev trigger-job --job paxdb-orthology/build
+
 resources:
 - name: code
   type: git
   source:
-    uri: https://github.com/meringlab/paxdb-api-orthology-storage.git
+    uri: https://github.com/meringlab/paxdb-orthology.git
 
 - name: orthology-storage-index-image
   type: docker-image
@@ -24,9 +26,9 @@ resources:
     tag: "xenial"
 
 jobs:
-- name: test
+- name: build
   public: true
-#  serial: true
+  serial: true
   plan:
   - get: code
     trigger: true
@@ -55,5 +57,12 @@ jobs:
     # see https://github.com/concourse/docker-image-resource#parameters-1 for details
       build: code/
       dockerfile: code/Dockerfile.index
+      load_base: ubuntu-xenial
+#      tag: latest
+  - put: orthology-api
+    params:
+    # see https://github.com/concourse/docker-image-resource#parameters-1 for details
+      build: code/
+      dockerfile: code/Dockerfile.front
       load_base: ubuntu-xenial
 #      tag: latest
