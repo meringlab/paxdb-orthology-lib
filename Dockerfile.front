@@ -14,6 +14,8 @@ COPY views $WD/views
 COPY app.js package.json $WD/
 COPY data/v4.0/ontology $WD/data/v4.0/ontology
 
+COPY integration_test $WD/integration_test
+
 RUN useradd -ms /bin/bash www && chown -R www $WD
 USER www
 
