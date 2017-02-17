@@ -1,13 +1,16 @@
 ---
 platform: linux
 
+params:
+    password:
+
 image_resource:
     type: docker-image
     source:
 #      repository: meringlab/node6
       repository: docker-registry.meringlab.org:5443/meringlab/node6
       username: admin
-      password: {{registry-password}}
+#      password: {{registry-password}} # should come as a param
       tag: latest
 inputs:
     - name: code
