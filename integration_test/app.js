@@ -11,7 +11,7 @@ var fs = require('fs');
 describe('server', function () {
     before(function () {
         const neo4j = require('paxdb-service-orthology-storage')({
-            server: process.env.NEO4J_URL || 'http://localhost:7474',
+            server: process.env.NEO4J_URL || 'http://neo4j:7474',
             user: process.env.NEO4J_USER || 'neo4j',
             pass: process.env.NEO4J_PASS || 'neo4j'
         });

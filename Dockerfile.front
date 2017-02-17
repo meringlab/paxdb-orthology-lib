@@ -4,7 +4,14 @@ MAINTAINER Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
 ENV WD /var/www/paxdb
 
-COPY bin lib public routes routes views app.js package.json $WD/
+# must copy each folder separately,
+# COPY dir1 dir2 ./ works like COPY dir1/* dir2/* ./
+COPY bin $WD/
+COPY lib $WD/
+COPY public $WD/
+COPY routes $WD/
+COPY views $WD/
+COPY app.js package.json $WD/
 COPY data/v4.0/ontology $WD/data/v4.0/ontology
 
 RUN useradd -ms /bin/bash www && chown -R www $WD
@@ -14,7 +21,7 @@ WORKDIR  $WD
 RUN npm install
 
 # DEFAULTS, override when creating a container:
-ENV NEO4J_URL 'http://localhost:7474'
+ENV NEO4J_URL 'http://neo4j:7474'
 ENV NEO4J_USER neo4j
 ENV NEO4J_PASS neo4j
 
