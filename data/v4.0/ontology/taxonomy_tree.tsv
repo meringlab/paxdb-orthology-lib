@@ -1,0 +1,104 @@
+##! [ RR header version 0.7b ]
+##! created: 12/06/2015 10:08:41
+##! location: ../PaxDB/derived/paxdb_tree.tsv
+##! interpreter: python
+##! script: /mnt/mnemo2/damian/PaxDB/sources/create_tree_for_paxdb.py
+##! args: 
+##! rundir: ../PaxDB/sources
+##! script timestamp: 12/06/2015 09:42:49
+##! script MD5: 9d2f941c00605b74cf20e6e83d42a18f
+##! input file: ../eggNOGv4/ncbi_taxonomy/nodes.dmp timestamp:  21/11/2013 17:55:46
+##! input file: ../eggNOGv4/ncbi_taxonomy/names.dmp timestamp:  21/11/2013 17:55:44
+##! input file: ../paxdb/v4.0/species_list.txt timestamp:  12/06/2015 10:09:17
+##! input file: ../PaxDB/groups/groups_species_paxdb.tsv timestamp:  22/09/2014 10:43:11
+##!
+198214	543	Shigella flexneri 2a str. 301	enterobacteriaceae
+83332	2	Mycobacterium tuberculosis H37Rv	bacteria
+211586	1236	Shewanella oneidensis MR-1	gammaproteobacteria
+1148	1117	Synechocystis sp. PCC 6803	cyanobacteria
+7955	7711	Danio rerio	chordates
+7227	7147	Drosophila melanogaster	diptera
+4577	4447	Zea mays	liliopsida
+91561	314145	cetartiodactyla	laurasiatheria
+243159	1236	Acidithiobacillus ferrooxidans ATCC 23270	gammaproteobacteria
+543	1236	enterobacteriaceae	gammaproteobacteria
+2157	1	archaea	luca
+64091	2157	Halobacterium sp. NRC-1	archaea
+32524	8287	amniotes	sarcopterygii
+224308	186817	Bacillus subtilis subsp. subtilis str. 168	bacillaceae
+5061	716545	Aspergillus niger	saccharomyceta
+33090	2759	greenplants	eukaryotes
+122586	1224	Neisseria meningitidis MC58	proteobacteria
+39947	4447	Oryza sativa Japonica Group	liliopsida
+214092	543	Yersinia pestis CO92	enterobacteriaceae
+9823	91561	Sus scrofa	cetartiodactyla
+9989	314146	rodents	euarchontoglires
+10116	9989	Rattus norvegicus	rodents
+99287	543	Salmonella enterica subsp. enterica serovar Typhimurium str. LT2	enterobacteriaceae
+192222	29547	Campylobacter jejuni subsp. jejuni NCTC 11168	epsilonproteobacteria
+6656	33316	arthropods	coelomata
+5691	5653	Trypanosoma brucei	kinetoplasts
+68525	1224	deproteobacteria	proteobacteria
+85962	29547	Helicobacter pylori 26695	epsilonproteobacteria
+4890	4751	ascomycetes	fungi
+4896	4890	Schizosaccharomyces pombe	ascomycetes
+9913	91561	Bos taurus	cetartiodactyla
+33316	33208	coelomata	metazoa
+33154	2759	opisthokonts	eukaryotes
+208964	1236	Pseudomonas aeruginosa PAO1	gammaproteobacteria
+267671	2	Leptospira interrogans serovar Copenhageni str. Fiocruz L1-130	bacteria
+226186	2	Bacteroides thetaiotaomicron VPI-5482	bacteria
+7711	33316	chordates	coelomata
+1236	1224	gammaproteobacteria	proteobacteria
+593117	2157	Thermococcus gammatolerans EJ3	archaea
+1239	2	firmicutes	bacteria
+8287	7711	sarcopterygii	chordates
+1385	1239	bacillales	firmicutes
+4751	33154	fungi	opisthokonts
+7147	6656	diptera	arthropods
+716545	4890	saccharomyceta	ascomycetes
+353153	5653	Trypanosoma cruzi strain CL Brener	kinetoplasts
+9796	314145	Equus caballus	laurasiatheria
+722438	2	Mycoplasma pneumoniae FH	bacteria
+33208	33154	metazoa	opisthokonts
+1224	2	proteobacteria	bacteria
+882	68525	Desulfovibrio vulgaris str. Hildenborough	deproteobacteria
+314146	40674	euarchontoglires	mammals
+314145	40674	laurasiatheria	mammals
+186817	1385	bacillaceae	bacillales
+169963	1385	Listeria monocytogenes EGD-e	bacillales
+29547	68525	epsilonproteobacteria	deproteobacteria
+511145	543	Escherichia coli str. K-12 substr. MG1655	enterobacteriaceae
+2	1	bacteria	luca
+272623	186826	Lactococcus lactis subsp. lactis Il1403	lactobacillales
+272624	1236	Legionella pneumophila subsp. pneumophila str. Philadelphia 1	gammaproteobacteria
+4447	35493	liliopsida	streptophyta
+5653	2759	kinetoplasts	eukaryotes
+186826	1239	lactobacillales	firmicutes
+4932	716545	Saccharomyces cerevisiae	saccharomyceta
+10090	9989	Mus musculus	rodents
+7165	7147	Anopheles gambiae	diptera
+2759	1	eukaryotes	luca
+4081	35493	Solanum lycopersicum	streptophyta
+449447	1117	Microcystis aeruginosa NIES-843	cyanobacteria
+9615	314145	Canis lupus familiaris	laurasiatheria
+8364	8287	Xenopus (Silurana) tropicalis	sarcopterygii
+214684	4751	Cryptococcus neoformans var. neoformans JEC21	fungi
+40674	32524	mammals	amniotes
+9598	9443	Pan troglodytes	primates
+283166	1224	Bartonella henselae str. Houston-1	proteobacteria
+158878	1385	Staphylococcus aureus subsp. aureus Mu50	bacillales
+546414	2	Deinococcus deserti VCD115	bacteria
+1117	2	cyanobacteria	bacteria
+9031	32524	Gallus gallus	amniotes
+260799	186817	Bacillus anthracis str. Sterne	bacillaceae
+9606	9443	Homo sapiens	primates
+44689	2759	Dictyostelium discoideum	eukaryotes
+9443	314146	primates	euarchontoglires
+35493	33090	streptophyta	greenplants
+3702	35493	Arabidopsis thaliana	streptophyta
+3055	33090	Chlamydomonas reinhardtii	greenplants
+5833	2759	Plasmodium falciparum	eukaryotes
+160490	186826	Streptococcus pyogenes M1 GAS	lactobacillales
+6239	33208	Caenorhabditis elegans	metazoa
+7460	6656	Apis mellifera	arthropods

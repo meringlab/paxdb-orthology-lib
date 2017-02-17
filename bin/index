@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+const neo4jUser = process.env.NEO4J_USER || 'neo4j';
+const neo4jPass = process.env.NEO4J_PASS || 'neo4j';
+const neo4jHost = process.env.NEO4J_HOST || 'neo4j';
+const neo4jPort = process.env.NEO4J_PORT_7474_TCP_PORT || '7474';
+const serverUrl = `http://${neo4jHost}:${neo4jPort}`;
+
+const connectionOpts = { server: serverUrl, user: neo4jUser, pass: neo4jPass };
+const indexer = require('../lib/importer')(connectionOpts);
+
+indexer.importData().then((err) => {
+    if (err) {
+        console.error(err, 'import failed');
+        process.exit(1);
+    }
+    console.log('import completed successfully');
+    process.exit(0);
+}).catch(reason => {
+    console.error(reason, 'failed to import data');
+    process.exit(2);
+});

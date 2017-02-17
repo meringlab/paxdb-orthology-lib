@@ -1,0 +1,64 @@
+// Use this file as a starting point for your project's .eslintrc.
+// Copy this file, and add rule overrides as needed.
+{
+  "extends": "airbnb",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+//      "jsx": true
+    },
+    "sourceType": "module"
+  },
+  "env": {
+    "node": true,
+    "mocha": true
+  },
+  "rules": {
+    // disable requiring trailing commas because it might be nice to revert to
+    // being JSON at some point, and I don't want to make big changes now.
+    "comma-dangle": 0,
+    //do not require space following // because WebStorm (possibly other editors) comments
+    // a block without adding a space
+    "spaced-comment": 0,
+    "no-var": 1,
+    "indent": [
+      2,
+      4,
+      {
+        "SwitchCase": 2,
+        "VariableDeclarator": 4
+      }
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
+      "max-len": [
+          2,
+          120,
+          4,
+          {
+              "code": 120,
+              "ignoreComments": true,
+              "ignoreTemplateLiterals": true,
+              "ignoreUrls": true
+          }
+      ],
+      "no-restricted-syntax": [
+          "error",
+          "ForInStatement",
+          //'ForOfStatement',
+          "LabeledStatement",
+          "WithStatement"
+      ],
+      "no-underscore-dangle": 0,
+      "no-continue": 0
+  }
+// , "globals": {
+//    "$": true,
+//    "_": true
+//    "it": true,
+//  }
+}

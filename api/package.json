@@ -3,13 +3,6 @@
   "version": "0.0.2",
   "author": "Milan Simonovic <milan.simonovic@uzh.ch>",
   "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/meringlab/paxdb-api-orthology-frontend"
-  },
-  "bugs": {
-    "url": "https://github.com/meringlab/paxdb-api-orthology-frontend/issues"
-  },
   "scripts": {
     "start": "node ./bin/www",
     "test": "mocha integration_test/*.js"

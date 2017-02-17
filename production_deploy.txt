@@ -1,0 +1,21 @@
+# Production build
+
+```
+sudo docker build -t paxdb/orthology-storage .
+sudo docker tag paxdb/orthology-storage docker-registry.meringlab.org:5443/paxdb/orthology-storage
+sudo docker push docker-registry.meringlab.org:5443/paxdb/orthology-storage
+```
+
+then use ansible to deploy:
+
+```
+ansible-playbook -i production/hosts paxdb/orthology-storage.yml
+```
+Once it's up and running open neo4j console, for example http://0.0.0.0:32768, and set the password.
+
+Now create the second container to run the import:
+
+```
+sudo docker build -t paxdb/orthology-import -f Dockerfile.index .
+sudo docker run --rm paxdb/orthology-import
+```
