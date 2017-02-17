@@ -6,11 +6,11 @@ ENV WD /var/www/paxdb
 
 # must copy each folder separately,
 # COPY dir1 dir2 ./ works like COPY dir1/* dir2/* ./
-COPY bin $WD/
-COPY lib $WD/
-COPY public $WD/
-COPY routes $WD/
-COPY views $WD/
+COPY bin $WD/bin
+COPY lib $WD/lib
+COPY public $WD/public
+COPY routes $WD/routes
+COPY views $WD/views
 COPY app.js package.json $WD/
 COPY data/v4.0/ontology $WD/data/v4.0/ontology
 
