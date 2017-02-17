@@ -65,11 +65,10 @@ jobs:
       build: code/
       dockerfile: code/Dockerfile.front
       load_base: ubuntu-xenial
-#      tag: latest
+      tag: 4.0.4
   - put: orthology-storage-index-image
     params:
-    # see https://github.com/concourse/docker-image-resource#parameters-1 for details
       build: code/
       dockerfile: code/Dockerfile.index
       load_base: ubuntu-xenial
-#      tag: latest
+      tag: 4.0.4
