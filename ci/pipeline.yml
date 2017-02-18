@@ -27,6 +27,7 @@ resources:
     username: admin
     email: paxdb.team@gmail.com
     password: {{registry-password}}
+    tag: 4.0.4
 
 - name: orthology-api-image
   type: docker-image
@@ -35,6 +36,7 @@ resources:
     username: admin
     email: paxdb.team@gmail.com
     password: {{registry-password}}
+    tag: 4.0.4
 
 - name: ubuntu-xenial
   type: docker-image
@@ -65,7 +67,6 @@ jobs:
       build: code/
       dockerfile: code/Dockerfile.index
       load_base: ubuntu-xenial
-      tag: 4.0.4
 
 - name: api
   public: true
@@ -89,4 +90,3 @@ jobs:
       build: code/
       dockerfile: code/Dockerfile.front
       load_base: ubuntu-xenial
-      tag: 4.0.4
