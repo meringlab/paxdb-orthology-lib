@@ -47,14 +47,13 @@ jobs:
   public: true
   serial: true
   plan:
-#TODO
-#- aggregate:
-  - get: code
-    trigger: false
-  - get: meringlab-node6
-    params: {save: true}
-  - get: ubuntu-xenial
-    params: {save: true}
+  - aggregate:
+      - get: code
+        trigger: false
+      - get: meringlab-node6
+        params: {save: true}
+      - get: ubuntu-xenial
+        params: {save: true}
   - task: compile-test-code
     file: code/ci/build-task.yml
     image: meringlab-node6
@@ -73,13 +72,13 @@ jobs:
   serial: false
   plan:
 #TODO
-#- aggregate:
-  - get: code
-    trigger: true
-  - get: ubuntu-xenial
-    params: {save: true}
-  - get: meringlab-node6
-    params: {save: true}
+  - aggregate:
+      - get: code
+        trigger: false
+      - get: meringlab-node6
+        params: {save: true}
+      - get: ubuntu-xenial
+        params: {save: true}
   - task: compile-test-code
     file: code/ci/build-task.yml
     image: meringlab-node6
