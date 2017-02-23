@@ -4,6 +4,12 @@ const app = require('../app');
 const debug = require('debug')('orthology:server');
 const http = require('http');
 const backend = require('../lib/storage');
+const bunyan = require('bunyan');
+const log = bunyan.createLogger({
+    name: "paxdb-API-orthologs",
+    module: "www"
+    //TODO server / host / process ..
+});
 
 /**
  * Normalize a port into a number, string, or false.
@@ -45,11 +51,11 @@ function onError(error) {
     // handle specific listen errors with friendly messages
     switch (error.code) {
         case 'EACCES':
-            console.error(`${bind} requires elevated privileges`);
+            log.error(`${bind} requires elevated privileges`);
             process.exit(1);
             break;
         case 'EADDRINUSE':
-            console.error(`${bind} is already in use`);
+            log.error(`${bind} is already in use`);
             process.exit(1);
             break;
         default:
@@ -74,7 +80,7 @@ function boot(neo4jdb) {
      * Listen on provided port, on all network interfaces.
      */
     server.listen(port, () => {
-        console.info(`Express server listening on port ${app.get('port')}`);
+        log.info(`Express server listening on port ${app.get('port')}`);
     });
     server.on('error', onError);
     server.on('listening', onListening);
@@ -89,12 +95,55 @@ function shutdown() {
  * and in this case don't start the server (boot):
  */
 if (require.main === module) {
-    const neo4j = backend({
+    let neo4j = backend({
         server: process.env.NEO4J_URL,
         user: process.env.NEO4J_USER,
         pass: process.env.NEO4J_PASS
     });
-    boot(neo4j);
+    log.info(`testing storage connection ${process.env.NEO4J_URL}`);
+    neo4j.count('NOG').then((num) => {
+        log.info(`connection works, total groups: ${num}`);
+        boot(neo4j);
+    }).catch((reason) => {
+        log.warn(`failed to connect with the provided password: ${reason.message}`);
+        if (reason.statusCode === 401 && reason.message === 'Invalid username or password.') {
+            log.info('will try with the default password');
+
+            let tmpNeo = backend({
+                server: process.env.NEO4J_URL,
+                user: 'neo4j',
+                pass: 'neo4j'
+            });
+
+            tmpNeo.count('NOG').then((num) => {
+                log.warn('using the default password, consider changing it!');
+                boot(tmpNeo);
+            }).catch((err2) => {
+                log.warn('failed using the default password');
+                if (err2.statusCode === 403 && err2.message.indexOf('change their password') > -1) {
+                    log.info('fresh neo4j instance, must change the initial password');
+                    tmpNeo.changePassword(process.env.NEO4J_PASS, (err) => {
+                        if (err) {
+                            log.error(err, 'failed to change the initial password');
+                            process.exit(1);
+                        }
+                        neo4j = backend({
+                            server: process.env.NEO4J_URL,
+                            user: process.env.NEO4J_USER,
+                            pass: process.env.NEO4J_PASS
+                        });
+                        boot(neo4j);
+                    })
+                } else {
+                    log.error(err2, 'cannot connect to the storage');
+                    process.exit(2);
+                }
+            });
+        } else {
+            log.error(reason, 'cannot connect to the storage');
+            process.exit(3);
+        }
+    });
 } else {
     console.info('Running app as a module');
     exports.boot = boot;
