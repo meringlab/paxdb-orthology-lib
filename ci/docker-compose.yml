@@ -1,0 +1,45 @@
+# for local development:
+---
+version: '3'
+networks:
+  paxdb-back:
+    driver: overlay
+    driver_opts:
+      subnet: "10.0.9.0/24"
+services:
+  orthology-storage:
+    image: docker-registry.meringlab.org:5443/paxdb/orthology-storage:4.0.4
+    container_name: paxdb-orthology-storage
+    restart: always
+    networks:
+      - paxdb-back
+    ports:
+      - "13016:7474"
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 60s
+#      restart_policy:
+#        condition: on-failure
+
+  orthology-api:
+    image: docker-registry.meringlab.org:5443/paxdb/orthology-api:4.0.4
+    container_name: paxdb-orthology-api
+    networks:
+      - paxdb-back
+#    restart: always
+    ports:
+      - "13017:3000"
+    depends_on:
+      - orthology-storage
+    environment:
+      NEO4J_URL: "http://orthology-storage:7474"
+      NEO4J_PASS: neo4jinja
+    deploy:
+      replicas: 1
+      update_config:
+        parallelism: 1
+        delay: 10s
+#      restart_policy:
+#        condition: on-failure
