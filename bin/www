@@ -5,9 +5,10 @@ const debug = require('debug')('orthology:server');
 const http = require('http');
 const backend = require('../lib/storage');
 const bunyan = require('bunyan');
+
 const log = bunyan.createLogger({
-    name: "paxdb-API-orthologs",
-    module: "www"
+    name: 'paxdb-API-orthologs',
+    module: 'www'
     //TODO server / host / process ..
 });
 
@@ -109,13 +110,13 @@ if (require.main === module) {
         if (reason.statusCode === 401 && reason.message === 'Invalid username or password.') {
             log.info('will try with the default password');
 
-            let tmpNeo = backend({
+            const tmpNeo = backend({
                 server: process.env.NEO4J_URL,
                 user: 'neo4j',
                 pass: 'neo4j'
             });
 
-            tmpNeo.count('NOG').then((num) => {
+            tmpNeo.count('NOG').then(() => {
                 log.warn('using the default password, consider changing it!');
                 boot(tmpNeo);
             }).catch((err2) => {
@@ -127,13 +128,14 @@ if (require.main === module) {
                             log.error(err, 'failed to change the initial password');
                             process.exit(1);
                         }
+                        //not sure if the previous neo4j be reused
                         neo4j = backend({
                             server: process.env.NEO4J_URL,
                             user: process.env.NEO4J_USER,
                             pass: process.env.NEO4J_PASS
                         });
                         boot(neo4j);
-                    })
+                    });
                 } else {
                     log.error(err2, 'cannot connect to the storage');
                     process.exit(2);
@@ -145,7 +147,7 @@ if (require.main === module) {
         }
     });
 } else {
-    console.info('Running app as a module');
+    log.info('Running app as a module');
     exports.boot = boot;
     exports.shutdown = shutdown;
     exports.port = app.get('port');
