@@ -11,15 +11,6 @@ resources:
   source:
     uri: https://github.com/meringlab/paxdb-orthology.git
 
-- name: meringlab-node6
-  type: docker-image
-  source:
-    repository: docker-registry.meringlab.org:5443/meringlab/node6
-    username: admin
-    password: {{registry-password}} # should come as a param
-    tag: latest
-    #      repository: meringlab/node6
-
 - name: orthology-storage-index-image
   type: docker-image
   source:
@@ -27,7 +18,7 @@ resources:
     username: admin
     email: paxdb.team@gmail.com
     password: {{registry-password}}
-    tag: 4.0.4
+    tag: 4.1.0
 
 - name: orthology-api-image
   type: docker-image
@@ -36,7 +27,13 @@ resources:
     username: admin
     email: paxdb.team@gmail.com
     password: {{registry-password}}
-    tag: 4.0.4
+    tag: 4.1.0
+
+- name: node-6
+  type: docker-image
+  source:
+    repository: node
+    tag: "6-alpine"
 
 - name: ubuntu-xenial
   type: docker-image
@@ -52,13 +49,13 @@ jobs:
   - aggregate:
       - get: code
         trigger: false
-      - get: meringlab-node6
+      - get: node-6
         params: {save: true}
       - get: ubuntu-xenial
         params: {save: true}
   - task: compile-test-code
     file: code/ci/build-task.yml
-    image: meringlab-node6
+    image: node-6-alpine
 
   # todo integration test, need to make an image with both java and node
 
@@ -82,7 +79,7 @@ jobs:
         params: {save: true}
   - task: compile-test-code
     file: code/ci/build-task.yml
-    image: meringlab-node6
+    image: node-6
   # todo integration test, need a storage container
   - put: orthology-api-image
     params:

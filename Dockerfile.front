@@ -1,5 +1,5 @@
-# Version: 0.2
-FROM meringlab/node6
+# Version: 0.3
+FROM node:6-alpine
 MAINTAINER Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
 ENV WD /var/www/paxdb
@@ -12,12 +12,9 @@ COPY public $WD/public
 COPY routes $WD/routes
 COPY views $WD/views
 COPY app.js package.json $WD/
-COPY data/v4.0/ontology $WD/data/v4.0/ontology
+COPY data/ontology $WD/data/ontology
 
 COPY integration_test $WD/integration_test
-
-RUN useradd -ms /bin/bash www && chown -R www $WD
-USER www
 
 WORKDIR  $WD
 RUN npm install
