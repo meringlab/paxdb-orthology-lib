@@ -18,7 +18,7 @@ const log = bunyan.createLogger({
 function normalizePort(val) {
     const port = parseInt(val, 10);
 
-    if (isNaN(port)) {
+    if (isNaN(port)) { //eslint-disable-line no-restricted-globals
         // named pipe
         return val;
     }
