@@ -35,12 +35,6 @@ resources:
     repository: node
     tag: "6-alpine"
 
-- name: ubuntu-xenial
-  type: docker-image
-  source:
-    repository: ubuntu
-    tag: "xenial"
-
 jobs:
 - name: storage
   public: true
@@ -51,11 +45,9 @@ jobs:
         trigger: false
       - get: node-6
         params: {save: true}
-      - get: ubuntu-xenial
-        params: {save: true}
   - task: compile-test-code
     file: code/ci/build-task.yml
-    image: node-6-alpine
+    image: node-6
 
   # todo integration test, need to make an image with both java and node
 
@@ -63,7 +55,7 @@ jobs:
     params:
       build: code/
       dockerfile: code/Dockerfile.index
-      load_base: ubuntu-xenial
+      load_base: node-6
 
 - name: api
   public: true
@@ -75,8 +67,6 @@ jobs:
         trigger: false
       - get: meringlab-node6
         params: {save: true}
-      - get: ubuntu-xenial
-        params: {save: true}
   - task: compile-test-code
     file: code/ci/build-task.yml
     image: node-6
@@ -86,4 +76,4 @@ jobs:
     # see https://github.com/concourse/docker-image-resource#parameters-1 for details
       build: code/
       dockerfile: code/Dockerfile.front
-      load_base: ubuntu-xenial
+      load_base: node-6
