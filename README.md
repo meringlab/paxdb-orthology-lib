@@ -1,4 +1,4 @@
-This is the [pax-db.org](http://pax-db.org) orthology storage microservice. 
+This is the [pax-db.org](http://pax-db.org) orthology storage API service. 
 
 Essentially there're two packages here, one for the storage (neo4j) 
 and another for the front-end (node.js express).
@@ -7,7 +7,7 @@ and another for the front-end (node.js express).
 
 Storage consists of two docker images, one for storage (neo4j) and another to import data.
 
-As a bonus it exports an npm module which exposes the api. Example usage:
+As a bonus it exports an npm module which exposes the API. Example usage:
 
     const opts = {server:'http://neo4j:7474',user:'neo4j',pass:'secret'};
     const orth = require('paxdb-service-orthology-storage')(opts);
@@ -35,15 +35,16 @@ docker run -d --name paxdb_tmp_neo --log-driver=json-file \
     --env=NEO4J_AUTH=none \
     --env=NEO4J_dbms_memory_pagecache_size=1024M \
     --env=NEO4J_dbms_memory_heap_maxSize=2048M \
-    -p 37890:7474 \
+    -p 27474:7474 \
     -v neo4j:/data  \
-    neo4j:3.1.1
+    neo4j:3.1.6
 ```
 
 Now create the second container to run the import:
 
 ```
-docker run --rm --env=NEO4J_PORT=37890 paxdb/orthology-importer
+# docker run --rm --env=NEO4J_PORT=37890 paxdb/orthology-indexer
+docker run --rm --link paxdb_tmp_neo:neo4j paxdb/orthology-indexer
 ```
 
 Once it's done, stop neo4j and create the other image with the neo4j data:
