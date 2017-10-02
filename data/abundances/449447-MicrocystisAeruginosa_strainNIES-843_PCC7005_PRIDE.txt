@@ -1,4 +1,4 @@
-#id: 170
+#id: 167
 #name: M.aeruginosa - Whole organism, PCC7055, SC (Alexova,MCP,2011)
 #score: 3.75
 #weight: 100%

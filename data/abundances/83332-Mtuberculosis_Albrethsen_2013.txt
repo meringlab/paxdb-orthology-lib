@@ -1,4 +1,4 @@
-#id: 287
+#id: 157
 #name: M.tuberculosis - Whole organism, SC (Albrethsen,MCP,2013)
 #score: 5.25
 #weight: 30%

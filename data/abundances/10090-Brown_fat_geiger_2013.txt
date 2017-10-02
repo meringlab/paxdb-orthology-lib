@@ -1,4 +1,4 @@
-#id: 8
+#id: 238
 #name: M.musculus - Brown adipose tissue,  Protein Intensity (Geiger,MCP,2013)
 #score: 12.43
 #weight: 100%

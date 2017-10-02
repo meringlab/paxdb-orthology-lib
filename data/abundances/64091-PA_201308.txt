@@ -1,4 +1,4 @@
-#id: 244
+#id: 438
 #name: H.salinarum(NRC-1) - Whole organism, SC (PeptideAtlas,Aug,2013)
 #score: 9.88
 #weight: 90%

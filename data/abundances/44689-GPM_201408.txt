@@ -1,4 +1,4 @@
-#id: 167
+#id: 321
 #name: D.discoideum - Whole organism, SC (GPM,Aug,2014)
 #score: 10.51
 #weight: 100%

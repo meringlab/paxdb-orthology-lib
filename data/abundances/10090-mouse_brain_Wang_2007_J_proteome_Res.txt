@@ -1,4 +1,4 @@
-#id: 57
+#id: 490
 #name: M.musculus - Brain, SC (Wang,JProteomeRes,2006)
 #score: 5.29
 #weight: 100%

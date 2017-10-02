@@ -1,4 +1,4 @@
-#id: 221
+#id: 60
 #name: E.coli - Whole organism, APEX (Lu,Nat_Biotechnol,2007)
 #score: 9.49
 #weight: 10%

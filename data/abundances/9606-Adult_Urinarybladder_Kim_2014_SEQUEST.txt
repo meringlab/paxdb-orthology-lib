@@ -1,4 +1,4 @@
-#id: 357
+#id: 17
 #name: H.sapiens - Urinary bladder, SC (Kim,Nature,2014)
 #score: 15.11
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 349
+#id: 434
 #name: H.sapiens - Female gonad, SC (Kim,Nature,2014)
 #score: 22.29
 #weight: 100%

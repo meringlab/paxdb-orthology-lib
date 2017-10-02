@@ -1,4 +1,4 @@
-#id: 46
+#id: 69
 #name: M.musculus - Muscle,  Protein Intensity (Geiger,MCP,2013)
 #score: 7.17
 #weight: 100%

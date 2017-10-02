@@ -1,4 +1,4 @@
-#id: 482
+#id: 46
 #name: S.enterica - Whole organism, SC (GPM,Aug,2014)
 #score: 10.83
 #weight: 100%

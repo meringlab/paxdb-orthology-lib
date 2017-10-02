@@ -1,4 +1,4 @@
-#id: 314
+#id: 389
 #name: H.sapiens - Whole organism, SC (PeptideAtlas,Aug,2014)
 #score: 26.05
 #weight: 70%

@@ -1,4 +1,4 @@
-#id: 334
+#id: 172
 #name: H.sapiens - Cell line, A549, SC (Geiger,MCP,2012)
 #score: 5.57
 #weight: 100%

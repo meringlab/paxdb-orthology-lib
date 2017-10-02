@@ -1,4 +1,4 @@
-#id: 145
+#id: 124
 #name: A.thaliana - Pollen, SC, SC (Grobei,Genome_Research,2009)
 #score: 5.42
 #weight: 100%

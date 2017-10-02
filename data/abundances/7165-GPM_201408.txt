@@ -1,4 +1,4 @@
-#id: 248
+#id: 369
 #name: A.gambiae - Whole organism, SC (GPM,Aug,2014)
 #score: 14.34
 #weight: 100%

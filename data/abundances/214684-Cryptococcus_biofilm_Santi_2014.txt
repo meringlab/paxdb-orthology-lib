@@ -1,4 +1,4 @@
-#id: 92
+#id: 352
 #name: C.neoformans - Whole organism, Biofilm, SC (Santi,J_Proteome_Res,2014)
 #score: 3.41
 #weight: 100%

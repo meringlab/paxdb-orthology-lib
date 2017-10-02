@@ -1,4 +1,4 @@
-#id: 158
+#id: 153
 #name: A.thaliana - Root, SC (Baerenfaller,pep2pro,2012)
 #score: 6.81
 #weight: 100%

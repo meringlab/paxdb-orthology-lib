@@ -1,4 +1,4 @@
-#id: 65
+#id: 177
 #name: M.musculus - Lung, Protein peptide count (Kislinger,cell,2006)
 #score: 0.7
 #weight: 100%

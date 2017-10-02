@@ -1,4 +1,4 @@
-#id: 316
+#id: 83
 #name: H.sapiens - Heart, SC (PeptideAtlas,Aug,2014)
 #score: 14.58
 #weight: 100%

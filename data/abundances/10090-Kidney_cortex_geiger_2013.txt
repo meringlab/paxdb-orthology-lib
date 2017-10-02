@@ -1,4 +1,4 @@
-#id: 19
+#id: 427
 #name: M.musculus - Cortex of kidney,  Protein Intensity (Geiger,MCP,2013)
 #score: 13.25
 #weight: 100%

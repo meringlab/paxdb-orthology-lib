@@ -1,4 +1,4 @@
-#id: 426
+#id: 471
 #name: H.sapiens - Brain, SC (Peptideatlas,Jun,2011)
 #score: 5.88
 #weight: 100%

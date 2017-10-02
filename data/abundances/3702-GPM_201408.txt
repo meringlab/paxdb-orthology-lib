@@ -1,4 +1,4 @@
-#id: 134
+#id: 14
 #name: A.thaliana - Whole organism, SC (GPM,Aug,2014)
 #score: 12.57
 #weight: 100%

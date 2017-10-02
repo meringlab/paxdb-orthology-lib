@@ -1,4 +1,4 @@
-#id: 172
+#id: 326
 #name: M.aeruginosa - Whole organism, UWOCCCBS, SC (Alexova,MCP,2011)
 #score: 2.65
 #weight: 90%

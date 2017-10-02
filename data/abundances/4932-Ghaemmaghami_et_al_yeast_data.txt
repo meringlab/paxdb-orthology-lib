@@ -1,4 +1,4 @@
-#id: 194
+#id: 358
 #name: S.cerevisiae - Whole organism, Immunodetection of tagged proteins, normalized data (Ghaemmaghami,Nature,2003)
 #score: 3.81
 #weight: 50%

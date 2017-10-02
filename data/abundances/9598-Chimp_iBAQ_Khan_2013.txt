@@ -1,4 +1,4 @@
-#id: 302
+#id: 241
 #name: P.troglodytes - Whole organism, IBAQ (Khan,Science,2013)
 #score: 8.05
 #weight: 100%

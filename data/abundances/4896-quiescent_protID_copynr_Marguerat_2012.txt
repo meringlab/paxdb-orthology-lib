@@ -1,4 +1,4 @@
-#id: 189
+#id: 429
 #name: S.pombe - Whole organism, Quiescent (Marguerat,Cell,2012)
 #score: 10.34
 #weight: 70%

@@ -1,4 +1,4 @@
-#id: 420
+#id: 327
 #name: H.sapiens - Cell line, Hela, CPC normalized (Nagaraj,MSB,2011)
 #score: 5.67
 #weight: 100%

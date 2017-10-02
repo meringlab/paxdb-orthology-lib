@@ -1,4 +1,4 @@
-#id: 104
+#id: 460
 #name: L.interrogans - Whole organism, SC (Malmström,Nature,2009)
 #score: 10.04
 #weight: 20%

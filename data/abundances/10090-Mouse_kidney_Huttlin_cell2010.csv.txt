@@ -1,4 +1,4 @@
-#id: 34
+#id: 482
 #name: M.musculus - Kidney, SC (Huttlin,cell,2010)
 #score: 15.47
 #weight: 100%

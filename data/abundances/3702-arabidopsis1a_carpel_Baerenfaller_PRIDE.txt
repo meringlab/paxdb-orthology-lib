@@ -1,4 +1,4 @@
-#id: 151
+#id: 122
 #name: A.thaliana - Carpel, SC (Baerenfaller,pep2pro,2012)
 #score: 1.76
 #weight: 100%

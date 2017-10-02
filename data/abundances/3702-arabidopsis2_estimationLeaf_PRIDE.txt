@@ -1,4 +1,4 @@
-#id: 162
+#id: 89
 #name: A.thaliana - Leaf, SC (Piques,Mol_Syst_Biol,2009)
 #score: 7.09
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 262
+#id: 51
 #name: A.mellifera - Whole organism, SC (PeptideAtlas,March,2010)
 #score: 14.47
 #weight: 100%

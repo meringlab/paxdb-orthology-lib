@@ -1,4 +1,4 @@
-#id: 180
+#id: 487
 #name: Z.mays - Leaf, NSAF (Ponnala,Plant_J,2014)
 #score: 9.67
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 405
+#id: 479
 #name: H.sapiens - Cell line, Pancreatic metastatic, SC (Kim,MCP,2014)
 #score: 14.76
 #weight: 100%

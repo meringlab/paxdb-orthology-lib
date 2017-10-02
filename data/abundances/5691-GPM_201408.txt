@@ -1,4 +1,4 @@
-#id: 227
+#id: 198
 #name: T.brucei - Whole organism, SC (GPM,Aug,2014)
 #score: 18.52
 #weight: 100%

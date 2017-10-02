@@ -1,4 +1,4 @@
-#id: 427
+#id: 468
 #name: H.sapiens - Lung, Peptide Ion Intensity Values, SC (Abdul-Salam,Circulation,2010)
 #score: 3.47
 #weight: 100%

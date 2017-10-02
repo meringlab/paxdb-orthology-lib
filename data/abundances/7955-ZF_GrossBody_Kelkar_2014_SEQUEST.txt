@@ -1,4 +1,4 @@
-#id: 272
+#id: 469
 #name: D.rerio - Whole organism, Pepxml, SC (Kelkar,MCP,2014)
 #score: 10.96
 #weight: 30%

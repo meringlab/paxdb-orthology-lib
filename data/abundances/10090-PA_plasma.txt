@@ -1,4 +1,4 @@
-#id: 1
+#id: 266
 #name: M.musculus - Plasma, SC (PeptideAtlas,Sep,2012)
 #score: 2.79
 #weight: 100%

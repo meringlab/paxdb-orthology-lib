@@ -1,4 +1,4 @@
-#id: 130
+#id: 304
 #name: A.thaliana - Seed (Integrated)
 #score: 3.66
 #weight: 

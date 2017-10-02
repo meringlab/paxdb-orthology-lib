@@ -1,4 +1,4 @@
-#id: 141
+#id: 209
 #name: A.thaliana - Cotyledon, SC, SC (Baerenfaller,IntegrBiol,2011)
 #score: 3.22
 #weight: 100%

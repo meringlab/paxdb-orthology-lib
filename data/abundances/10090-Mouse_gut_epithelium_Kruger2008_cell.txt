@@ -1,4 +1,4 @@
-#id: 31
+#id: 76
 #name: M.musculus - Gut epithelium, SC (Kruger,Cell,2008)
 #score: 3.06
 #weight: 100%

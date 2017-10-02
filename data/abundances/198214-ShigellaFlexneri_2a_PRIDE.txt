@@ -1,4 +1,4 @@
-#id: 85
+#id: 458
 #name: S.flexneri 2457T - Whole organism, SC (PRIDE,PRD000545,2011)
 #score: 8.91
 #weight: 100%

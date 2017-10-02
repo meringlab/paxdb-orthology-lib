@@ -1,4 +1,4 @@
-#id: 337
+#id: 71
 #name: H.sapiens - Cell line, CD4, SC (Kim,Nature,2014)
 #score: 17.91
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 39
+#id: 405
 #name: M.musculus - Pancreas, SC (Huttlin,cell,2010)
 #score: 13.67
 #weight: 100%

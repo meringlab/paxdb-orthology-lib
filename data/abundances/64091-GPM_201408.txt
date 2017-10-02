@@ -1,4 +1,4 @@
-#id: 246
+#id: 478
 #name: H.salinarum(NRC-1) - Whole organism, SC (GPM,Aug,2014)
 #score: 7.68
 #weight: 30%

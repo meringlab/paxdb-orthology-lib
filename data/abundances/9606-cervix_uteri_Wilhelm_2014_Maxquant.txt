@@ -1,4 +1,4 @@
-#id: 413
+#id: 77
 #name: H.sapiens - Uterine cervix, SC (Wilhelm,Nature,2014)
 #score: 6.75
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 22
+#id: 339
 #name: M.musculus - Lung,  Protein Intensity (Geiger,MCP,2013)
 #score: 6.08
 #weight: 100%

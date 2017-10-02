@@ -1,4 +1,4 @@
-#id: 396
+#id: 24
 #name: H.sapiens - Liver, Fetal liver, SC (DLPEP,2005)
 #score: 7.79
 #weight: 100%

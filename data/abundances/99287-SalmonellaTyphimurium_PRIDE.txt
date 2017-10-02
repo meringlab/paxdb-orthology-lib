@@ -1,4 +1,4 @@
-#id: 483
+#id: 211
 #name: S.typhimurium - Whole organism, SC (Adkins,MCP,2006)
 #score: 11.98
 #weight: 10%

@@ -1,4 +1,4 @@
-#id: 55
+#id: 219
 #name: M.musculus - White adipose tissue,  Protein Intensity (Geiger,MCP,2013)
 #score: 8.26
 #weight: 100%

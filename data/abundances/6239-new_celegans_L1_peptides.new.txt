@@ -1,4 +1,4 @@
-#id: 242
+#id: 282
 #name: C.elegans - Whole organism, L1, SC (Schrimpf,PLoS_Biology,2009)
 #score: 6.49
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 75
+#id: 70
 #name: S.aureus Mu50 - Whole organism, SC (GPM,Aug,2014)
 #score: 12.84
 #weight: 100%

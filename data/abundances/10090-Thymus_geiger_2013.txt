@@ -1,4 +1,4 @@
-#id: 53
+#id: 373
 #name: M.musculus - Thymus,  Protein Intensity (Geiger,MCP,2013)
 #score: 5.04
 #weight: 100%

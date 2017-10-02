@@ -1,4 +1,4 @@
-#id: 267
+#id: 151
 #name: D.rerio - Whole organism, SC (GPM,Oct,2012)
 #score: 14.04
 #weight: 10%

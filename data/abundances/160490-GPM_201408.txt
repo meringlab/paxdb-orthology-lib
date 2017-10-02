@@ -1,4 +1,4 @@
-#id: 78
+#id: 415
 #name: S.pyogenes M1GAS - Whole organism, SC (GPM,Aug,2014)
 #score: 11.83
 #weight: 10%

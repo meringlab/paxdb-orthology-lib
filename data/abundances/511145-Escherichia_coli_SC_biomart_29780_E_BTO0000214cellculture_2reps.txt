@@ -1,4 +1,4 @@
-#id: 220
+#id: 379
 #name: E.coli - Whole organism, SC (Arike,J_Proteomics,2012)
 #score: 17.68
 #weight: 100%

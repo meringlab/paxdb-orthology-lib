@@ -1,4 +1,4 @@
-#id: 166
+#id: 192
 #name: S.lycopersicum - Whole organism, SC (Schilmiller,Plant_Physiol,2010)
 #score: 10.79
 #weight: 100%

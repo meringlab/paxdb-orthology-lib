@@ -1,4 +1,4 @@
-#id: 62
+#id: 144
 #name: M.musculus - Kidney, Protein peptide count (Kislinger,cell,2006)
 #score: 0.49
 #weight: 100%

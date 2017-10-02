@@ -1,4 +1,4 @@
-#id: 106
+#id: 354
 #name: L.interrogans - Whole organism, Original spectral counting data, control normalized data (Malmström,Nature,2009)
 #score: 3.3
 #weight: 10%

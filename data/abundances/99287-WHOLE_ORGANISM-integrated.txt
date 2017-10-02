@@ -1,4 +1,4 @@
-#id: 481
+#id: 248
 #name: S.typhimurium - Whole organism (Integrated)
 #score: 15.32
 #weight: 

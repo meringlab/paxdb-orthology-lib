@@ -1,4 +1,4 @@
-#id: 467
+#id: 491
 #name: H.sapiens - Thyroid gland, SC (Wilhelm,Nature,2014)
 #score: 8.85
 #weight: 100%

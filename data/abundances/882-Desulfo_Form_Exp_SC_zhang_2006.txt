@@ -1,4 +1,4 @@
-#id: 295
+#id: 97
 #name: D.vulgaris - Whole organism, Formate-Exponential (Zhang,Proteomics,2006)
 #score: 3.19
 #weight: 100%

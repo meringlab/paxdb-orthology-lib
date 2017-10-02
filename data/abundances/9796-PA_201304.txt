@@ -1,4 +1,4 @@
-#id: 474
+#id: 120
 #name: E.caballus - Whole organism, SC (PeptideAtlas,April,2013)
 #score: 11.63
 #weight: 100%

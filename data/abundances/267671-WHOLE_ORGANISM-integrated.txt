@@ -1,4 +1,4 @@
-#id: 103
+#id: 84
 #name: L.interrogans - Whole organism (Integrated)
 #score: 12.3
 #weight: 

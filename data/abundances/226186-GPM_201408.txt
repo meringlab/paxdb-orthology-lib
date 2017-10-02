@@ -1,4 +1,4 @@
-#id: 97
+#id: 347
 #name: B.thetaiotaomicron VPI-5482 - Whole organism, SC (GPM,Aug,2014)
 #score: 6.63
 #weight: 100%

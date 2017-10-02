@@ -1,4 +1,4 @@
-#id: 230
+#id: 388
 #name: P.falciparum - Whole organism, SC (GPM,Aug,2014)
 #score: 13.55
 #weight: 100%

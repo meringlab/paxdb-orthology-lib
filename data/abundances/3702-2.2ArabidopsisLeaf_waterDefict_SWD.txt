@@ -1,4 +1,4 @@
-#id: 120
+#id: 401
 #name: A.thaliana - Leaf, Short Day Mild Water Deficit, SC (Baerenfaller,Mol_Syst_Bio,2012)
 #score: 4.07
 #weight: 100%

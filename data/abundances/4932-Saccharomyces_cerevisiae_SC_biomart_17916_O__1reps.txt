@@ -1,4 +1,4 @@
-#id: 197
+#id: 331
 #name: S.cerevisiae - Whole organism, SC (Piening,J_Proteome_Res,2006)
 #score: 17.94
 #weight: 20%

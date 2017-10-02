@@ -1,4 +1,4 @@
-#id: 394
+#id: 193
 #name: H.sapiens - Cell line, Vitreous humor, SC (Murthy,Clin_Proteomics,2014)
 #score: 6.21
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 256
+#id: 296
 #name: D.melanogaster - Whole organism, SC (PeptideAtlas,July,2009)
 #score: 8.28
 #weight: 60%

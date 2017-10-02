@@ -1,4 +1,4 @@
-#id: 148
+#id: 213
 #name: A.thaliana - Silique, SC, SC (Baerenfaller,IntegrBiol,2011)
 #score: 4.97
 #weight: 100%

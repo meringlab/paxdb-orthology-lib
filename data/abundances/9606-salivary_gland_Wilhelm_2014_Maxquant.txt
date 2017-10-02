@@ -1,4 +1,4 @@
-#id: 461
+#id: 39
 #name: H.sapiens - Saliva secreting gland, SC (Wilhelm,Nature,2014)
 #score: 10.56
 #weight: 100%

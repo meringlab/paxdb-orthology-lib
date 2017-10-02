@@ -1,4 +1,4 @@
-#id: 233
+#id: 297
 #name: T.gammatolerans EJ3 - Whole organism, SC (Zivanovic,Genome_Biol,2009)
 #score: 6.99
 #weight: 100%

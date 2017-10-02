@@ -1,4 +1,4 @@
-#id: 211
+#id: 226
 #name: E.coli - Whole organism, APEX (Arike,J_Proteomics,2012)
 #score: 8.37
 #weight: 100%

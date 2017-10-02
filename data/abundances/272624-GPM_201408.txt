@@ -1,4 +1,4 @@
-#id: 110
+#id: 75
 #name: L.pneumophila - Whole organism, SC (GPM,Aug,2014)
 #score: 7.51
 #weight: 100%

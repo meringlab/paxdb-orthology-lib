@@ -1,4 +1,4 @@
-#id: 35
+#id: 125
 #name: M.musculus - Liver, SC (Huttlin,cell,2010)
 #score: 15.49
 #weight: 100%

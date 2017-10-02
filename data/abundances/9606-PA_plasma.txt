@@ -1,4 +1,4 @@
-#id: 319
+#id: 210
 #name: H.sapiens - Plasma, SC (PeptideAtlas,Aug,2013)
 #score: 10.96
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 290
+#id: 92
 #name: X.tropicalis - Whole organism, SC (GPM,Oct,2012)
 #score: 4.47
 #weight: 100%

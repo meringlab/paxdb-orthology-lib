@@ -1,4 +1,4 @@
-#id: 206
+#id: 184
 #name: S.cerevisiae - Whole organism, Intensity (Nagaraj,MCP,2012)
 #score: 8.75
 #weight: 90%

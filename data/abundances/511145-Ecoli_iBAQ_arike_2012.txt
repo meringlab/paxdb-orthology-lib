@@ -1,4 +1,4 @@
-#id: 215
+#id: 306
 #name: E.coli - Whole organism, IBAQ (Arike,J_Proteomics,2012)
 #score: 11.49
 #weight: 100%

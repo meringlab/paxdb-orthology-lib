@@ -1,4 +1,4 @@
-#id: 182
+#id: 250
 #name: S.pombe - Whole organism (Integrated)
 #score: 18.49
 #weight: 

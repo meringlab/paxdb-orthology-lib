@@ -1,4 +1,4 @@
-#id: 255
+#id: 252
 #name: D.melanogaster - Whole organism, SC (Brunner,Nat_Biotechnol,2007)
 #score: 10.43
 #weight: 10%

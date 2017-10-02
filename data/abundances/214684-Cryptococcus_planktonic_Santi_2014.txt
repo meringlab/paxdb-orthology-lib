@@ -1,4 +1,4 @@
-#id: 93
+#id: 111
 #name: C.neoformans - Whole organism, Planktonic, SC (Santi,J_Proteome_Res,2014)
 #score: 3.52
 #weight: 100%

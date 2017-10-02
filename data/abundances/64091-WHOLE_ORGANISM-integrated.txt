@@ -1,4 +1,4 @@
-#id: 245
+#id: 138
 #name: H.salinarum(NRC-1) - Whole organism (Integrated)
 #score: 10.71
 #weight: 

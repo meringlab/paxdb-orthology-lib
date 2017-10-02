@@ -1,4 +1,4 @@
-#id: 80
+#id: 280
 #name: S.pyogenes M1GAS - Whole organism, SC (PeptideAtlas,Feb,2007)
 #score: 8.61
 #weight: 100%

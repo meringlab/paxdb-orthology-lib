@@ -1,4 +1,4 @@
-#id: 95
+#id: 493
 #name: B.suptilis - Whole organism, SC (GPM,Aug,2014)
 #score: 12.62
 #weight: 100%

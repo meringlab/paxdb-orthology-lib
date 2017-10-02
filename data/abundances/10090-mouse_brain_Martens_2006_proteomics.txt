@@ -1,4 +1,4 @@
-#id: 56
+#id: 305
 #name: M.musculus - Brain, SC (Martens,Proteomics,2006)
 #score: 2.35
 #weight: 100%

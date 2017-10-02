@@ -1,4 +1,4 @@
-#id: 26
+#id: 346
 #name: M.musculus - Whole organism, SC (PeptideAtlas,June,2010)
 #score: 13.3
 #weight: 70%

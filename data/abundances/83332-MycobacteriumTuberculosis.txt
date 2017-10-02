@@ -1,4 +1,4 @@
-#id: 289
+#id: 392
 #name: M.tuberculosis - Whole organism, SC (Yun.Sang.Cho,Proteomics,2012)
 #score: 0.71
 #weight: 70%

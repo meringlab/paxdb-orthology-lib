@@ -1,4 +1,4 @@
-#id: 279
+#id: 54
 #name: D.rerio - Female gonad, SC (Kelkar,MCP,2014)
 #score: 13.36
 #weight: 100%

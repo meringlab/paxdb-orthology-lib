@@ -1,4 +1,4 @@
-#id: 100
+#id: 223
 #name: A.ferrooxidans - Whole organism, Planktonic (Vera,Proteomics,2013)
 #score: 6.33
 #weight: 100%

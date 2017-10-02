@@ -1,4 +1,4 @@
-#id: 209
+#id: 486
 #name: E.coli - Whole organism, SC (GPM,Aug,2014)
 #score: 18.06
 #weight: 40%

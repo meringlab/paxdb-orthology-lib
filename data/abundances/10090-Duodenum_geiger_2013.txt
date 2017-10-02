@@ -1,4 +1,4 @@
-#id: 12
+#id: 6
 #name: M.musculus - Duodenum,  Protein Intensity (Geiger,MCP,2013)
 #score: 9.27
 #weight: 100%

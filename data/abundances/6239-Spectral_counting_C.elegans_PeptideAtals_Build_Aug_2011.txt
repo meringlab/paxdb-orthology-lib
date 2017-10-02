@@ -1,4 +1,4 @@
-#id: 239
+#id: 204
 #name: C.elegans - Whole organism, SC (PeptideAtlas,Aug,2011)
 #score: 13.24
 #weight: 90%

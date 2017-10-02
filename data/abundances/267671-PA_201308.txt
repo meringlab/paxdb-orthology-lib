@@ -1,4 +1,4 @@
-#id: 102
+#id: 195
 #name: L.interrogans - Whole organism, SC (PeptideAtlas,Aug,2013)
 #score: 13.37
 #weight: 100%

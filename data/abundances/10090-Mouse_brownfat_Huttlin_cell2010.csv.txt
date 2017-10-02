@@ -1,4 +1,4 @@
-#id: 29
+#id: 18
 #name: M.musculus - Brown adipose tissue, SC (Huttlin,cell,2010)
 #score: 14.65
 #weight: 100%

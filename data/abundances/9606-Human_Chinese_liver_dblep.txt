@@ -1,4 +1,4 @@
-#id: 378
+#id: 330
 #name: H.sapiens - Liver, Chinese liver, SC (DLPEP,2006)
 #score: 2.82
 #weight: 100%

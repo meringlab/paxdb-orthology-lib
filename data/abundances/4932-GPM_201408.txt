@@ -1,4 +1,4 @@
-#id: 192
+#id: 243
 #name: S.cerevisiae - Whole organism, SC (GPM,Aug,2014)
 #score: 22.88
 #weight: 90%

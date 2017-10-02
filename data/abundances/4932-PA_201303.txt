@@ -1,4 +1,4 @@
-#id: 190
+#id: 242
 #name: S.cerevisiae - Whole organism, SC (PeptideAtlas,March,2013)
 #score: 21.86
 #weight: 40%

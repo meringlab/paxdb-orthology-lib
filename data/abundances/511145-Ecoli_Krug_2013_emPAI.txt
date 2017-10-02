@@ -1,4 +1,4 @@
-#id: 213
+#id: 43
 #name: E.coli - Whole organism, EmPAI (Krug,MCP,2013)
 #score: 5.37
 #weight: 100%

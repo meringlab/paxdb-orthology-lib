@@ -1,4 +1,4 @@
-#id: 249
+#id: 201
 #name: M.pneumoniae - Whole organism, Copy per cell, cpc normalized data (Kuhner,Science,2009)
 #score: 2.52
 #weight: 100%

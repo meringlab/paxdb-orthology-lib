@@ -1,4 +1,4 @@
-#id: 108
+#id: 35
 #name: L.lactis - Whole organism, SC (GPM,Aug,2014)
 #score: 11.91
 #weight: 100%

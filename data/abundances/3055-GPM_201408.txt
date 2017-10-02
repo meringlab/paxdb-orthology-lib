@@ -1,4 +1,4 @@
-#id: 112
+#id: 47
 #name: C.reinhardtii - Whole organism, SC (GPM,Aug,2014)
 #score: 16.46
 #weight: 100%

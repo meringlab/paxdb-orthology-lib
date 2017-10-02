@@ -1,4 +1,4 @@
-#id: 475
+#id: 30
 #name: S.scrofa - Whole organism, SC (PeptideAtlas,Aug,2011)
 #score: 8.76
 #weight: 100%

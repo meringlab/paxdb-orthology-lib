@@ -1,4 +1,4 @@
-#id: 40
+#id: 277
 #name: M.musculus - Platelet, SC (Kruger,Cell,2008)
 #score: 1.43
 #weight: 100%

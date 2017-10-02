@@ -1,4 +1,4 @@
-#id: 59
+#id: 273
 #name: M.musculus - Kidney, MaxQuant intensity (F.Waanders,PNAS,2009)
 #score: 3.49
 #weight: 100%

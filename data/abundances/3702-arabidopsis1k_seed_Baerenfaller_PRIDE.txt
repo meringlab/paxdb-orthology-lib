@@ -1,4 +1,4 @@
-#id: 159
+#id: 302
 #name: A.thaliana - Seed, SC (Baerenfaller,pep2pro,2012)
 #score: 2.31
 #weight: 100%

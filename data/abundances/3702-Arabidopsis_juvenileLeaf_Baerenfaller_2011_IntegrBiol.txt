@@ -1,4 +1,4 @@
-#id: 144
+#id: 283
 #name: A.thaliana - Juvenile leaf, SC, SC (Baerenfaller,IntegrBiol,2011)
 #score: 2.74
 #weight: 100%

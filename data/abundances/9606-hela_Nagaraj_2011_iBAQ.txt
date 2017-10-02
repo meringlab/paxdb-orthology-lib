@@ -1,4 +1,4 @@
-#id: 421
+#id: 455
 #name: H.sapiens - Cell line, Hela, IBAQ normalized (Nagaraj,MSB,2011)
 #score: 6.15
 #weight: 100%

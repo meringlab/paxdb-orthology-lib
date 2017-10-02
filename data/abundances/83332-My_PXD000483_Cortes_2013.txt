@@ -1,4 +1,4 @@
-#id: 288
+#id: 133
 #name: M.tuberculosis - Whole organism, Pepxml, SC (Cortes,Cell_Rep,2013)
 #score: 4.36
 #weight: 90%

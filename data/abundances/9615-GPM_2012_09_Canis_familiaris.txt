@@ -1,4 +1,4 @@
-#id: 473
+#id: 403
 #name: C.familiaris - Whole organism, SC (GPM,Oct,2012)
 #score: 6.0
 #weight: 100%

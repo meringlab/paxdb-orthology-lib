@@ -1,4 +1,4 @@
-#id: 73
+#id: 410
 #name: Synechocystis.sp. 6803 - Whole organism, SC (Wegener,MCP,2010)
 #score: 6.57
 #weight: 100%

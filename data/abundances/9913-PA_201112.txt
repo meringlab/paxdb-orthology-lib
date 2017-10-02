@@ -1,4 +1,4 @@
-#id: 476
+#id: 365
 #name: B.taurus - Whole organism, SC (PeptideAtlas,Dec,2011)
 #score: 5.22
 #weight: 100%

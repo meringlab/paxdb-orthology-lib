@@ -1,4 +1,4 @@
-#id: 20
+#id: 132
 #name: M.musculus - Renal medulla,  Protein Intensity (Geiger,MCP,2013)
 #score: 9.07
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 52
+#id: 80
 #name: M.musculus - Stomach,  Protein Intensity (Geiger,MCP,2013)
 #score: 5.79
 #weight: 100%

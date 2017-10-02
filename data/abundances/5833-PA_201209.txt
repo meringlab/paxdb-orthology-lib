@@ -1,4 +1,4 @@
-#id: 228
+#id: 246
 #name: P.falciparum - Whole organism, SC (PeptideAtlas,Sep,2012)
 #score: 13.9
 #weight: 60%

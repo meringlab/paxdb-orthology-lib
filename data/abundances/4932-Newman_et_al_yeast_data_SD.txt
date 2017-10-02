@@ -1,4 +1,4 @@
-#id: 195
+#id: 25
 #name: S.cerevisiae - Whole organism, Intensity of GFP-tagged proteins, SD normalized data (Newman,Nature,2006)
 #score: 5.05
 #weight: 80%

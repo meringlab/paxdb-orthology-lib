@@ -1,4 +1,4 @@
-#id: 67
+#id: 262
 #name: M.musculus - Placenta, Protein peptide count (Kislinger,cell,2006)
 #score: 1.17
 #weight: 100%

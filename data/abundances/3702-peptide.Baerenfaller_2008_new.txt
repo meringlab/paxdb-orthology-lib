@@ -1,4 +1,4 @@
-#id: 164
+#id: 412
 #name: A.thaliana - Whole organism, SC (Baerenfaller,Science,2008)
 #score: 9.38
 #weight: 50%

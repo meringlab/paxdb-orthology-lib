@@ -1,4 +1,4 @@
-#id: 66
+#id: 228
 #name: M.musculus - Pancreas, MaxQuant intensity (F.Waanders,PNAS,2009)
 #score: 8.08
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 300
+#id: 461
 #name: G.gallus - Whole organism, SC (GPM,Aug,2014)
 #score: 9.43
 #weight: 100%

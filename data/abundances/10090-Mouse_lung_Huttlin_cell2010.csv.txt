@@ -1,4 +1,4 @@
-#id: 38
+#id: 67
 #name: M.musculus - Lung, SC (Huttlin,cell,2010)
 #score: 11.67
 #weight: 100%

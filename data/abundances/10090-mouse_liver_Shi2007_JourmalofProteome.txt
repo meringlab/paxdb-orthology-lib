@@ -1,4 +1,4 @@
-#id: 63
+#id: 417
 #name: M.musculus - Liver, SC (Shi,Jofproteome,2007)
 #score: 8.48
 #weight: 100%

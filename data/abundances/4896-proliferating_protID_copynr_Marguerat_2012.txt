@@ -1,4 +1,4 @@
-#id: 188
+#id: 387
 #name: S.pombe - Whole organism, Proliferating (Marguerat,Cell,2012)
 #score: 9.18
 #weight: 20%

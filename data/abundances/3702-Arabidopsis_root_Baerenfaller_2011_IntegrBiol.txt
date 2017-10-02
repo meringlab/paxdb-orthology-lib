@@ -1,4 +1,4 @@
-#id: 146
+#id: 135
 #name: A.thaliana - Root, SC, SC (Baerenfaller,IntegrBiol,2011)
 #score: 6.01
 #weight: 100%

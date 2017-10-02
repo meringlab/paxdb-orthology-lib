@@ -1,4 +1,4 @@
-#id: 61
+#id: 109
 #name: M.musculus - Heart, Protein peptide count (Kislinger,cell,2006)
 #score: 1.66
 #weight: 100%

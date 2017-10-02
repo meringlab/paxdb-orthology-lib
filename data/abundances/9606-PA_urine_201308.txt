@@ -1,4 +1,4 @@
-#id: 320
+#id: 247
 #name: H.sapiens - Urine, SC (PeptideAtlas,Aug,2013)
 #score: 7.76
 #weight: 100%

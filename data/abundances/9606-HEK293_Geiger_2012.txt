@@ -1,4 +1,4 @@
-#id: 373
+#id: 485
 #name: H.sapiens - Cell line, HEK293, SC (Geiger,MCP,2012)
 #score: 8.03
 #weight: 100%

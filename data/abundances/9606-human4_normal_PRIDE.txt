@@ -1,4 +1,4 @@
-#id: 423
+#id: 185
 #name: H.sapiens - Skin, SC (L.Amon,FHCRC,ID18251-18264)
 #score: 3.38
 #weight: 100%

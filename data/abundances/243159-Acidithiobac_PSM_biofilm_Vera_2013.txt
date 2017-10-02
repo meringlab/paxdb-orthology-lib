@@ -1,4 +1,4 @@
-#id: 99
+#id: 422
 #name: A.ferrooxidans - Whole organism, Biofilm (Vera,Proteomics,2013)
 #score: 5.26
 #weight: 70%

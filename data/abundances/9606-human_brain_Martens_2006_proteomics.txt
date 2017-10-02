@@ -1,4 +1,4 @@
-#id: 425
+#id: 90
 #name: H.sapiens - Brain, SC (Martens,proteomics,2006)
 #score: 16.19
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 318
+#id: 325
 #name: H.sapiens - Liver, SC (PeptideAtlas,Aug,2013)
 #score: 8.6
 #weight: 100%

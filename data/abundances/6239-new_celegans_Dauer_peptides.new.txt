@@ -1,4 +1,4 @@
-#id: 241
+#id: 181
 #name: C.elegans - Whole organism, Dauer, SC (Schrimpf,PLoS_Biology,2009)
 #score: 6.11
 #weight: 80%

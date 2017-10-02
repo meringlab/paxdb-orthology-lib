@@ -1,4 +1,4 @@
-#id: 140
+#id: 163
 #name: A.thaliana - Carpel, SC, SC (Baerenfaller,IntegrBiol,2011)
 #score: 0.95
 #weight: 100%

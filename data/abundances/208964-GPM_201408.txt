@@ -1,4 +1,4 @@
-#id: 87
+#id: 88
 #name: P.aeruginosa - Whole organism, SC (GPM,Aug,2014)
 #score: 10.7
 #weight: 100%

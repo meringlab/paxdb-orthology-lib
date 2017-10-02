@@ -1,4 +1,4 @@
-#id: 216
+#id: 164
 #name: E.coli - Whole organism, SC (Wright,MCP,2012)
 #score: 10.55
 #weight: 10%

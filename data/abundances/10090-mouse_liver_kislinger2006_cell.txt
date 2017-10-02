@@ -1,4 +1,4 @@
-#id: 64
+#id: 34
 #name: M.musculus - Liver, Protein peptide count (Kislinger,cell,2006)
 #score: 2.69
 #weight: 100%

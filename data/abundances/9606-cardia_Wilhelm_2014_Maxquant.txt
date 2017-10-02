@@ -1,4 +1,4 @@
-#id: 411
+#id: 189
 #name: H.sapiens - Cardia of stomach, SC (Wilhelm,Nature,2014)
 #score: 5.4
 #weight: 100%

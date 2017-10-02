@@ -1,4 +1,4 @@
-#id: 297
+#id: 23
 #name: D.vulgaris - Whole organism, Lactose-Exponential (Zhang,Proteomics,2006)
 #score: 1.47
 #weight: 20%

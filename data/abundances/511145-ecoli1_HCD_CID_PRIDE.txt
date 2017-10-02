@@ -1,4 +1,4 @@
-#id: 224
+#id: 101
 #name: E.coli - Whole organism, HCD,CID, SC (Mancuso,J-Proteomics,2012)
 #score: 10.37
 #weight: 100%

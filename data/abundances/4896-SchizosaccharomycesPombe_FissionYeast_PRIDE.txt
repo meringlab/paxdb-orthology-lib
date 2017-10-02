@@ -1,4 +1,4 @@
-#id: 184
+#id: 48
 #name: S.pombe - Whole organism, SC (Mancuso,J-Proteomics,2012)
 #score: 14.61
 #weight: 20%

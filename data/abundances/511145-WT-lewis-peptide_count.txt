@@ -1,4 +1,4 @@
-#id: 223
+#id: 301
 #name: E.coli - Whole organism, Gly and Lac substrate, SC (Lewis,Mol_Syst_Biol,2010)
 #score: 8.33
 #weight: 40%

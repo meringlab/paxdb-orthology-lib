@@ -1,4 +1,4 @@
-#id: 222
+#id: 351
 #name: E.coli - Whole organism, YFP fusion library, YFP normalized data (Taniguchi,Science,2010)
 #score: 6.17
 #weight: 10%

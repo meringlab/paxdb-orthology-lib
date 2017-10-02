@@ -1,4 +1,4 @@
-#id: 119
+#id: 298
 #name: A.thaliana - Leaf, Short Day Optimal Water, SC (Baerenfaller,Mol_Syst_Bio,2012)
 #score: 5.34
 #weight: 100%

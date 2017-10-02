@@ -1,4 +1,4 @@
-#id: 139
+#id: 2
 #name: A.thaliana - Shoot, SC (Reiland,PNAS,2011)
 #score: 6.78
 #weight: 100%

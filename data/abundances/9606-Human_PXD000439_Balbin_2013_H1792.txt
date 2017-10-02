@@ -1,4 +1,4 @@
-#id: 386
+#id: 287
 #name: H.sapiens - Cell line, H1792, SC (Balbin,Nat_Commun,2013)
 #score: 8.6
 #weight: 100%

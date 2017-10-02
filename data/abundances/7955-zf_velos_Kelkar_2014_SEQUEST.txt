@@ -1,4 +1,4 @@
-#id: 282
+#id: 255
 #name: D.rerio - Whole organism, SC (Kelkar,MCP,2014)
 #score: 12.12
 #weight: 100%

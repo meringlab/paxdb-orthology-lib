@@ -1,4 +1,4 @@
-#id: 465
+#id: 457
 #name: H.sapiens - Stomach, SC (Wilhelm,Nature,2014)
 #score: 7.29
 #weight: 100%

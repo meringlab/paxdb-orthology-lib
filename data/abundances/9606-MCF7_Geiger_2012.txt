@@ -1,4 +1,4 @@
-#id: 404
+#id: 382
 #name: H.sapiens - Cell line, MCF7, SC (Geiger,MCP,2012)
 #score: 8.0
 #weight: 100%

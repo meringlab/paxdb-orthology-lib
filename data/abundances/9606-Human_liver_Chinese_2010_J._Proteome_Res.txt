@@ -1,4 +1,4 @@
-#id: 400
+#id: 87
 #name: H.sapiens - Liver, normalized data SCIN (CHLPPC,J.Proteome_Res,2010)
 #score: 4.82
 #weight: 100%

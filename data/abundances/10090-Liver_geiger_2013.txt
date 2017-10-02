@@ -1,4 +1,4 @@
-#id: 21
+#id: 488
 #name: M.musculus - Liver,  Protein Intensity (Geiger,MCP,2013)
 #score: 13.17
 #weight: 100%

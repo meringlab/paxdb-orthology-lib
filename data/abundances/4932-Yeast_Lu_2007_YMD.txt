@@ -1,4 +1,4 @@
-#id: 201
+#id: 203
 #name: S.cerevisiae - Whole organism, YMD normalized data (Lu,Nat_Biotechnol,2007)
 #score: 8.04
 #weight: 30%

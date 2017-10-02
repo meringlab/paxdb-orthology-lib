@@ -1,4 +1,4 @@
-#id: 196
+#id: 300
 #name: S.cerevisiae - Whole organism, Intensity of GFP-tagged proteins, YEPD normalized data (Newman,Nature,2006)
 #score: 6.41
 #weight: 90%

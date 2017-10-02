@@ -1,4 +1,4 @@
-#id: 84
+#id: 19
 #name: C.jejuni - Whole organism, SC (PRIDE,PRD000441,2011)
 #score: 7.3
 #weight: 100%

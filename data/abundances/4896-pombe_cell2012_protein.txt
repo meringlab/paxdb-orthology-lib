@@ -1,4 +1,4 @@
-#id: 187
+#id: 442
 #name: S.pombe - Whole organism, Copy per cell, cpc normalized data (Marguerat,Cell,2012)
 #score: 8.59
 #weight: 20%

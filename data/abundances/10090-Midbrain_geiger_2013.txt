@@ -1,4 +1,4 @@
-#id: 25
+#id: 400
 #name: M.musculus - Midbrain,  Protein Intensity (Geiger,MCP,2013)
 #score: 6.98
 #weight: 100%

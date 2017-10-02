@@ -1,4 +1,4 @@
-#id: 217
+#id: 432
 #name: E.coli - Whole organism, SC (Valgepea,BMC_Syst_Biol,2010)
 #score: 15.45
 #weight: 20%

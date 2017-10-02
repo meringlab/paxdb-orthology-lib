@@ -1,4 +1,4 @@
-#id: 89
+#id: 166
 #name: S.oneidensis MR-1 - Whole organism, SC (GPM,Aug,2014)
 #score: 7.5
 #weight: 100%

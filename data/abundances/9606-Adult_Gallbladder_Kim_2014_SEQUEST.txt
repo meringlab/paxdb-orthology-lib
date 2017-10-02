@@ -1,4 +1,4 @@
-#id: 342
+#id: 45
 #name: H.sapiens - Gall bladder, SC (Kim,Nature,2014)
 #score: 8.58
 #weight: 100%

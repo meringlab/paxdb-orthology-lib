@@ -1,4 +1,4 @@
-#id: 203
+#id: 61
 #name: S.cerevisiae - Whole organism, SC (Denervaud,PNAS,2013)
 #score: 14.02
 #weight: 10%

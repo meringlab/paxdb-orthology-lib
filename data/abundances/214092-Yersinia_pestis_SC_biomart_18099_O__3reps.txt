@@ -1,4 +1,4 @@
-#id: 90
+#id: 454
 #name: Y.pestis - Whole organism, SC (PRIDE,PRD000484,2012)
 #score: 6.55
 #weight: 100%

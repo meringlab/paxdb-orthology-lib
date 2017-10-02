@@ -1,4 +1,4 @@
-#id: 105
+#id: 349
 #name: L.interrogans - Whole organism, MS1 quantification data, MS1 normalized data (Malmström,Nature,2009)
 #score: 2.51
 #weight: 10%

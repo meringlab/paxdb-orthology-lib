@@ -1,4 +1,4 @@
-#id: 219
+#id: 146
 #name: E.coli - Whole organism, SC (PRIDE,PRD000485,2012)
 #score: 12.58
 #weight: 90%

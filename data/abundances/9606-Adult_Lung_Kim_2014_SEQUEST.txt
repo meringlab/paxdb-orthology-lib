@@ -1,4 +1,4 @@
-#id: 346
+#id: 267
 #name: H.sapiens - Lung, SC (Kim,Nature,2014)
 #score: 14.13
 #weight: 100%

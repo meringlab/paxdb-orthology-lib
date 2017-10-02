@@ -1,4 +1,4 @@
-#id: 212
+#id: 236
 #name: E.coli - Whole organism, SC (Krug,MCP,2013)
 #score: 14.33
 #weight: 40%

@@ -1,4 +1,4 @@
-#id: 214
+#id: 474
 #name: E.coli - Whole organism, EmPAI (Arike,J_Proteomics,2012)
 #score: 4.43
 #weight: 80%

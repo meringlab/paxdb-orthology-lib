@@ -1,4 +1,4 @@
-#id: 13
+#id: 78
 #name: M.musculus - Embryonic tissue,  Protein Intensity (Geiger,MCP,2013)
 #score: 8.76
 #weight: 100%

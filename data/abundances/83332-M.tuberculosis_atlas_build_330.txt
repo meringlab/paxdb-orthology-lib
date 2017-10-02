@@ -1,4 +1,4 @@
-#id: 286
+#id: 147
 #name: M.tuberculosis - Whole organism, SC (PeptideAtlas,Feb,2012)
 #score: 11.08
 #weight: 20%

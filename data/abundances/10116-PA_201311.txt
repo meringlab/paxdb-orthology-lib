@@ -1,4 +1,4 @@
-#id: 68
+#id: 462
 #name: R.norvegicus - Whole organism, SC (PeptideAtlas,Nov,2013)
 #score: 13.43
 #weight: 70%

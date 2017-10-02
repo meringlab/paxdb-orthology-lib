@@ -1,4 +1,4 @@
-#id: 70
+#id: 408
 #name: R.norvegicus - Whole organism, SC (GPM,Aug,2014)
 #score: 14.91
 #weight: 100%

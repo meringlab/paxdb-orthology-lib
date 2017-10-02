@@ -1,4 +1,4 @@
-#id: 285
+#id: 62
 #name: M.tuberculosis - Whole organism, SC (GPM,Aug,2014)
 #score: 11.48
 #weight: 100%

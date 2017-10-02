@@ -1,4 +1,4 @@
-#id: 54
+#id: 320
 #name: M.musculus - Uterus,  Protein Intensity (Geiger,MCP,2013)
 #score: 5.13
 #weight: 100%

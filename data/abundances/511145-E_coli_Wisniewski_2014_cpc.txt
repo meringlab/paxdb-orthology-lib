@@ -1,4 +1,4 @@
-#id: 210
+#id: 179
 #name: E.coli - Whole organism, Cpc (Wisniewski,J_Proteomics,2014)
 #score: 12.96
 #weight: 100%

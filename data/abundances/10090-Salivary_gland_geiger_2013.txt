@@ -1,4 +1,4 @@
-#id: 50
+#id: 102
 #name: M.musculus - Saliva secreting gland,  Protein Intensity (Geiger,MCP,2013)
 #score: 6.77
 #weight: 100%

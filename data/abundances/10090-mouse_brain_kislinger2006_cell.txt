@@ -1,4 +1,4 @@
-#id: 58
+#id: 489
 #name: M.musculus - Brain, Protein peptide count (Kislinger,cell,2006)
 #score: 0.6
 #weight: 100%

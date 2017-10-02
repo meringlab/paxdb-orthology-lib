@@ -1,4 +1,4 @@
-#id: 49
+#id: 319
 #name: M.musculus - Pancreas,  Protein Intensity (Geiger,MCP,2013)
 #score: 7.51
 #weight: 100%

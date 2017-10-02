@@ -1,4 +1,4 @@
-#id: 336
+#id: 293
 #name: H.sapiens - B cell, SC (Kim,Nature,2014)
 #score: 21.46
 #weight: 100%

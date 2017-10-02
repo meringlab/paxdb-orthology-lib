@@ -1,4 +1,4 @@
-#id: 258
+#id: 384
 #name: D.melanogaster - Whole organism, Normal embyro, SC (PRIDE,PRD00007,2009)
 #score: 12.96
 #weight: 50%

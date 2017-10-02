@@ -1,4 +1,4 @@
-#id: 156
+#id: 173
 #name: A.thaliana - Leaf, SC (Baerenfaller,pep2pro,2012)
 #score: 5.35
 #weight: 100%

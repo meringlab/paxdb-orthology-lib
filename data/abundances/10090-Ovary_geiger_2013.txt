@@ -1,4 +1,4 @@
-#id: 48
+#id: 328
 #name: M.musculus - Female gonad,  Protein Intensity (Geiger,MCP,2013)
 #score: 4.65
 #weight: 100%

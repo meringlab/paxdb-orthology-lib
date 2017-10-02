@@ -1,4 +1,4 @@
-#id: 30
+#id: 459
 #name: M.musculus - Erythrocyte, SC (Kruger,Cell,2008)
 #score: 2.68
 #weight: 100%

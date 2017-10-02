@@ -1,4 +1,4 @@
-#id: 296
+#id: 263
 #name: D.vulgaris - Whole organism, Formate-Stationary (Zhang,Proteomics,2006)
 #score: 0.61
 #weight: 20%

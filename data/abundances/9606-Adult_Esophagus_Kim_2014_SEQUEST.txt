@@ -1,4 +1,4 @@
-#id: 340
+#id: 108
 #name: H.sapiens - Esophagus, SC (Kim,Nature,2014)
 #score: 12.63
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 10
+#id: 378
 #name: M.musculus - Colon,  Protein Intensity (Geiger,MCP,2013)
 #score: 10.88
 #weight: 100%

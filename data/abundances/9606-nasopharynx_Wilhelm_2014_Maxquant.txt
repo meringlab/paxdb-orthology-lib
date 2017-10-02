@@ -1,4 +1,4 @@
-#id: 452
+#id: 406
 #name: H.sapiens - Nasopharynx, SC (Wilhelm,Nature,2014)
 #score: 6.44
 #weight: 100%

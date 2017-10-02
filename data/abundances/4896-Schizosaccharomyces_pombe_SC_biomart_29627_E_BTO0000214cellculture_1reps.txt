@@ -1,4 +1,4 @@
-#id: 185
+#id: 473
 #name: S.pombe - Whole organism, SC (Marguerat,Cell,2012)
 #score: 22.72
 #weight: 100%

@@ -1,4 +1,4 @@
-#id: 60
+#id: 309
 #name: M.musculus - Sperm, SC (Guo,J.Proteome,2010)
 #score: 3.85
 #weight: 100%

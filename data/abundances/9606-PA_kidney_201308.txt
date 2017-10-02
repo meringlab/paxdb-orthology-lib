@@ -1,4 +1,4 @@
-#id: 317
+#id: 139
 #name: H.sapiens - Kidney, SC (PeptideAtlas,Aug,2013)
 #score: 8.35
 #weight: 100%

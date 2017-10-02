@@ -1,4 +1,4 @@
-#id: 101
+#id: 272
 #name: B.anthracis - Whole organism, SC (GPM,Aug,2014)
 #score: 5.99
 #weight: 100%

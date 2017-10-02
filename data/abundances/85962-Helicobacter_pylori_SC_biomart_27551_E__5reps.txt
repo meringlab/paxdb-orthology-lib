@@ -1,4 +1,4 @@
-#id: 293
+#id: 107
 #name: H.pylori - Whole organism, SC (Müller,J_Proteomics,2013)
 #score: 10.83
 #weight: 20%

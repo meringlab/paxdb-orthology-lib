@@ -1,4 +1,4 @@
-#id: 238
+#id: 425
 #name: C.elegans - Whole organism, SC (GPM,Oct,2012)
 #score: 7.2
 #weight: 10%

@@ -1,4 +1,4 @@
-#id: 259
+#id: 20
 #name: D.melanogaster - Whole organism, Earlier embyro, SC (PRIDE,PRD000083,2013)
 #score: 3.01
 #weight: 10%

@@ -1,4 +1,4 @@
-#id: 372
+#id: 150
 #name: H.sapiens - Cell line, HCT116 (Koch,Proteomics,2014)
 #score: 3.18
 #weight: 100%

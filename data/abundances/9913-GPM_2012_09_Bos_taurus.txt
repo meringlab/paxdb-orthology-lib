@@ -1,4 +1,4 @@
-#id: 479
+#id: 21
 #name: B.taurus - Whole organism, SC (GPM,Oct,2012)
 #score: 5.9
 #weight: 10%

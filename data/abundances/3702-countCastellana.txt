@@ -1,4 +1,4 @@
-#id: 163
+#id: 116
 #name: A.thaliana - Whole organism,  MS/MS data, SC (Castellana,PNAS,2008)
 #score: 11.4
 #weight: 10%

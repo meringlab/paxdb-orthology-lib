@@ -1,4 +1,4 @@
-#id: 98
+#id: 113
 #name: A.ferrooxidans - Whole organism (Integrated)
 #score: 8.48
 #weight: 

@@ -1,4 +1,4 @@
-#id: 335
+#id: 299
 #name: H.sapiens - Adrenal gland, SC (Kim,Nature,2014)
 #score: 18.02
 #weight: 100%

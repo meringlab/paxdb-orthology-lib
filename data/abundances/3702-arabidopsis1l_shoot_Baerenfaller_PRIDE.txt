@@ -1,4 +1,4 @@
-#id: 160
+#id: 28
 #name: A.thaliana - Shoot, SC (Baerenfaller,pep2pro,2012)
 #score: 6.82
 #weight: 100%

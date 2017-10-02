@@ -1,4 +1,4 @@
-#id: 237
+#id: 49
 #name: C.elegans - Whole organism, SC (Merrihew,Genome_Res,2008)
 #score: 5.65
 #weight: 10%

@@ -1,4 +1,4 @@
-#id: 186
+#id: 286
 #name: S.pombe - Whole organism, EmPAI (Gunaratne,MCP,2013)
 #score: 4.28
 #weight: 10%

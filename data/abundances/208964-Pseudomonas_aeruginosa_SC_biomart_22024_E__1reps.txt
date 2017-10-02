@@ -1,4 +1,4 @@
-#id: 88
+#id: 103
 #name: P.aeruginosa - Whole organism, Biofilm, SC (Toyofuku,J_Proteome_Res,2012)
 #score: 7.63
 #weight: 100%

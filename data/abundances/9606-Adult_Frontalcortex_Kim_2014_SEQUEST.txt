@@ -1,4 +1,4 @@
-#id: 341
+#id: 480
 #name: H.sapiens - Frontal cortex, SC (Kim,Nature,2014)
 #score: 18.77
 #weight: 100%
