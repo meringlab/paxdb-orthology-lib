@@ -1,9 +1,14 @@
+# to run: docker service create --limit-memory 2g --limit-cpu 1.0 --detach \
+#              --with-registry-auth --name paxdb-orthology-storage_4_1 \
+#              --mount type=bind,source=/tmp/paxdb-neo4j_database-v4.1.0,destination=/data \
+#             -p 13006:7474 orthology-storage:4.1.0
 # see http://neo4j.com/docs/operations-manual/current/installation/docker/
-
+#
 FROM        neo4j:3.1.6
 MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
-ADD neo4j /data
+# mount data instead of adding into the image:
+# ADD neo4j /data
 # https://github.com/neo4j/docker-neo4j/issues/50
 #RUN adduser -D -s /bin/bash neo4j
 #RUN chown -R neo4j /var/lib/neo4j/logs /var/lib/neo4j/conf

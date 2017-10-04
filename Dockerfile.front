@@ -1,4 +1,10 @@
 # Version: 0.3
+# to run:
+# docker service create --limit-memory 1g --limit-cpu 1.0 --detach \
+#      --with-registry-auth --env NEO4J_URL=http://localhost:13006 \
+#      --env NEO4J_PASS=ssssecret --name paxdb-orthology-api_4  \
+#      -p 13007:3000 paxdb/orthology-api:4.1.0
+#
 FROM node:6-alpine
 MAINTAINER Milan Simonovic <milan.simonovic@imls.uzh.ch>
 

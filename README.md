@@ -36,7 +36,7 @@ docker run -d --name paxdb_tmp_neo --log-driver=json-file \
     --env=NEO4J_dbms_memory_pagecache_size=1024M \
     --env=NEO4J_dbms_memory_heap_maxSize=2048M \
     -p 27474:7474 \
-    -v neo4j:/data  \
+    -v /tmp/paxdb-orthology-neo4j:/data  \
     neo4j:3.1.6
 ```
 
@@ -51,13 +51,24 @@ Once it's done, stop neo4j and create the other image with the neo4j data:
 
 ```
 docker stop paxdb_tmp_neo
-docker build -t paxdb/orthology-storage -f Dockerfile.storage .
+mv /tmp/paxdb-orthology-neo4j neo4j
+docker build -t paxdb/orthology-storage:4.1.0 -f Dockerfile.storage .
 docker rm -v paxdb_tmp_neo
+docker service create --limit-memory 2g --limit-cpu 1.0 --detach \
+    --with-registry-auth --name paxdb-orthology-storage_4_1 \
+    --mount type=bind,source=/tmp/paxdb-neo4j_database-v4.1.0,destination=/data \   
+    -p 13006:7474 orthology-storage:4.1.0
 ```
 
 # API Frontend
 
-
+```
+docker build -t paxdb/orthology-api:4.1.0 -f Dockerfile.front .
+docker service create --limit-memory 1g --limit-cpu 1.0 --detach \
+    --with-registry-auth --env NEO4J_URL=http://localhost:13006 \
+    --env NEO4J_PASS=ssssecret --name paxdb-orthology-api_4  \
+    -p 13007:3000 paxdb/orthology-api:4.1.0
+```
 
 # Versioning
 
