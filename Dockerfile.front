@@ -5,7 +5,7 @@
 #      --env NEO4J_PASS=ssssecret --name paxdb-orthology-api_4  \
 #      -p 13007:3000 paxdb/orthology-api:4.1.0
 #
-FROM node:6-alpine
+FROM node:8-alpine
 MAINTAINER Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
 ENV WD /var/www/paxdb

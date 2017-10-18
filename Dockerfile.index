@@ -1,4 +1,4 @@
-FROM        node:6-alpine
+FROM        node:8-alpine
 MAINTAINER  Milan Simonovic <milan.simonovic@imls.uzh.ch>
 
 ADD . /scripts/
