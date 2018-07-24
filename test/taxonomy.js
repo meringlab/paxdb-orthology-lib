@@ -6,7 +6,7 @@ var should = require('chai').should(),
   assert = require('assert');
 
 
-var taxonomy = require('../lib/taxonomy')
+var taxonomy = require('../lib/taxonomy');
 
 describe('taxonomy', function() {
   it('should return all taxonomic levels in ascending order for a species', function() {
@@ -16,7 +16,7 @@ describe('taxonomy', function() {
       'PROTEOBACTERIA',
       'GAMMAPROTEOBACTERIA',
       'ENTEROBACTERIACEAE'
-    ])
+    ]);
     taxonomy.taxonomicLevels(9606).should.deep.equal([
       'LUCA',
       'EUKARYOTES',
@@ -30,24 +30,24 @@ describe('taxonomy', function() {
       'EUARCHONTOGLIRES',
       'PRIMATES'
     ])
-  })
+  });
   it('should return all species under a taxonomic level', function() {
     taxonomy.allSpeciesUnder('PRIMATES').should.deep.equal([9598, 9606])
     taxonomy.allSpeciesUnder('RODENTS').should.deep.equal([10090, 10116])
     taxonomy.allSpeciesUnder('EUARCHONTOGLIRES').should.deep.equal([9598, 9606, 10090, 10116])
-  })
+  });
   it('should return all tissues under a taxonomic level', function() {
     taxonomy.availableTissuesAtTaxonomicLevel('BACTERIA').should.deep.equal(['WHOLE_ORGANISM'])
     taxonomy.availableTissuesAtTaxonomicLevel('PRIMATES')[0].should.equal('ADRENAL_GLAND')
     taxonomy.availableTissuesAtTaxonomicLevel('RODENTS')[0].should.equal('ADRENAL_GLAND')
-  })
+  });
   describe('family tree', function() {
     it('root should be at the requested level', function() {
       var tree = taxonomy.proteinFamilyTree([
         {'id': '4932.YHR174W'}
       ], 'SACCHAROMYCETA');
       tree.name.should.equal('SACCHAROMYCETA');
-    })
+    });
 
     it('should only have the requested species', function() {
       var tree = taxonomy.proteinFamilyTree([
@@ -70,7 +70,7 @@ describe('taxonomy', function() {
       tree.children.length.should.equal(2);
       tree.children[0].id.should.equal(4932);
       tree.children[1].id.should.equal(5061);
-    })
+    });
 
     it('should recognise when species is at the same level as orthgroup', function() {
       var tree = taxonomy.proteinFamilyTree([
@@ -82,14 +82,14 @@ describe('taxonomy', function() {
       var ascomycetes = tree.children[0];
       ascomycetes.id.should.equal(4890);
       ascomycetes.children[0].id.should.equal(716545);
-    })
+    });
 
     it('should remove empty groups', function() {
       var tree = taxonomy.proteinFamilyTree([
         {'id': '9606.ENSP00000229277'}
       ], 'MAMMALS');
       tree.children.length.should.equal(1);
-    })
+    });
 
     it('should have proteins assigned to species', function() {
       var tree = taxonomy.proteinFamilyTree([
@@ -102,4 +102,4 @@ describe('taxonomy', function() {
 
 
   })
-})
+});
