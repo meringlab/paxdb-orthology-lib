@@ -23,7 +23,7 @@
   "scripts": {
     "index": "node ./bin/index",
     "start": "node ./bin/www",
-    "lint": "./node_modules/eslint/bin/eslint.js lib/ bin/*",
+    "lint": "./node_modules/eslint/bin/eslint.js lib/ bin/* routes/*",
     "test": "mocha test/*.js",
     "integration-test-storage": "mocha integration_test/storage.js",
     "integration-test-front": "mocha integration_test/app.js"
@@ -43,10 +43,11 @@
   "devDependencies": {
     "chai": "*",
     "disposable-seraph": "~0.5",
-    "eslint": "~4.8",
-    "eslint-config-airbnb-base": "latest",
-    "eslint-plugin-import": "~2.7",
-    "eslint-plugin-jsx-a11y": "~6.0",
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb": "^17.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.10.0",
     "mocha": "*",
     "superagent": "~1.2"
   },

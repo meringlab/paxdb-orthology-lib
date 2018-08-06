@@ -1,7 +1,7 @@
 // Use this file as a starting point for your project's .eslintrc.
 // Copy this file, and add rule overrides as needed.
 {
-  "extends": "airbnb-base",
+  "extends": "airbnb",
   "parserOptions": {
     "ecmaVersion": 6,
     "ecmaFeatures": {
@@ -11,7 +11,8 @@
   },
   "env": {
     "node": true,
-    "mocha": true
+    "mocha": true,
+    "es6": true
   },
   "rules": {
     // disable requiring trailing commas because it might be nice to revert to
@@ -22,11 +23,11 @@
     "spaced-comment": 0,
     "no-var": 1,
     "indent": [
-      1,
+      2,
       4,
       {
-        "SwitchCase": 2,
-        "VariableDeclarator": 4
+          "SwitchCase": 1,
+          "VariableDeclarator": 2
       }
     ],
     "no-param-reassign": [

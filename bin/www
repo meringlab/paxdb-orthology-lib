@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-const app = require('../app');
 const debug = require('debug')('orthology:server');
 const http = require('http');
-const backend = require('../lib/storage');
 const bunyan = require('bunyan');
+const backend = require('../lib/storage');
+const app = require('../app');
 
 const log = bunyan.createLogger({
     name: 'paxdb-API-orthologs',
@@ -19,12 +19,12 @@ function normalizePort(val) {
     const port = parseInt(val, 10);
 
     if (isNaN(port)) { //eslint-disable-line no-restricted-globals
-        // named pipe
+    // named pipe
         return val;
     }
 
     if (port >= 0) {
-        // port number
+    // port number
         return port;
     }
 
@@ -152,4 +152,3 @@ if (require.main === module) {
     exports.shutdown = shutdown;
     exports.port = app.get('port');
 }
-
