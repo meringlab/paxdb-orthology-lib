@@ -1,0 +1,18 @@
+pipeline:
+  build:
+    image: node:8-alpine
+    commands:
+      - npm install
+      - npm run lint
+
+  publish:
+    image: plugins/docker
+    registry: docker-registry.meringlab.org:5443
+    repo: docker-registry.meringlab.org:5443/paxdb/api
+#    when:
+#      event: deployment
+#      environment: staging
+
+
+# stable-master pattern
+branches: master
