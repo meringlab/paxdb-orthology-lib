@@ -1,11 +1,11 @@
 {
-  "name": "paxdb-orthology",
-  "version": "4.1.0",
+  "name": "paxdb-orthology-lib",
+  "version": "4.1.3",
   "private": false,
-  "description": "pax-db.org orthology service",
+  "description": "pax-db.org orthology API library",
   "author": "Milan Simonovic <milan.simonovic@imls.uzh.ch>",
   "license": "MIT",
-  "main": "lib/storage.js",
+  "main": "src/storage.js",
   "keywords": [
     "paxdb",
     "pax-db",
@@ -13,43 +13,27 @@
     "protein",
     "orthologs"
   ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/meringlab/paxdb-orthology"
-  },
-  "bugs": {
-    "url": "https://github.com/meringlab/paxdb-orthology/issues"
-  },
   "scripts": {
-    "index": "node ./bin/index",
-    "start": "node ./bin/www",
-    "lint": "./node_modules/eslint/bin/eslint.js lib/ bin/* routes/*",
+    "lint": "./node_modules/.bin/eslint lib/*",
     "test": "mocha test/*.js",
-    "integration-test-storage": "mocha integration_test/storage.js",
-    "integration-test-front": "mocha integration_test/app.js"
+    "integration-test": "mocha integration_test/storage.js"
   },
   "dependencies": {
     "bunyan": "~1.8",
-    "debug": "~2.6",
-    "ejs": "~2.6.1",
-    "express": "~4.13.0",
-    "express-negotiate": "0.0.5",
-    "glob": "~7.1",
     "seraph": "~0.15",
-    "serve-favicon": "~2.5.0",
     "underscore": "~1.8",
     "when": "~3.7"
   },
   "devDependencies": {
     "chai": "*",
     "disposable-seraph": "~0.5",
-    "eslint": "^5.2.0",
+    "eslint": "~4.19",
     "eslint-config-airbnb": "^17.0.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.1.1",
     "eslint-plugin-react": "^7.10.0",
     "mocha": "*",
-    "superagent": "~1.2"
+    "superagent": "~3.8"
   },
   "engines": {
     "node": "8.x"

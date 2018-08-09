@@ -2,7 +2,7 @@
  * Created by milans on 07/07/15.
  */
 const seraph = require("disposable-seraph");
-const storageModule = require('../lib/storage');
+const storageModule = require('../src/storage');
 const should = require('chai').should(),
     expect = require('chai').expect,
     assert = require('assert');
@@ -53,7 +53,7 @@ describe('orthology service', function() {
         // allow 10 minutes for initial disposable-seraph startup.
         this.timeout(600000);
         this.slow(300000);
-        seraph({ version: '3.1.1' /*,clean: true */}, function(err, _seraph, _supervisor) {
+        seraph({ version: '3.4.5' /*,clean: true */}, function(err, _seraph, _supervisor) {
             if (err) return done(err);
             supervisor = _supervisor;
             db = _seraph;

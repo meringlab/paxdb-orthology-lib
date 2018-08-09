@@ -1,9 +1,8 @@
-# paxdb-service-orthology-storage Changelog
+# paxdb-orthology-library Changelog
 
 Known issues:
 
--
-
+- in some cases, the levels don't go all the way down (example: 7955.ENSDARG00000060911, CHORDATES).
 
 ## v 4.1.0
 

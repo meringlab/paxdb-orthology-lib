@@ -4,11 +4,12 @@ pipeline:
     commands:
       - npm install
       - npm run lint
+      - npm test
 
   publish:
     image: plugins/docker
     registry: docker-registry.meringlab.org:5443
-    repo: docker-registry.meringlab.org:5443/paxdb/api
+    repo: docker-registry.meringlab.org:5443/paxdb/orthology-lib
 #    when:
 #      event: deployment
 #      environment: staging
