@@ -24,9 +24,9 @@ pipeline:
     secrets: [ slack_token ]
     channel: paxdb-build-bot
     success_template: |
-      The build is green :) Thanks @{{slack.name}}
+      paxdb/orthology-lib build is green :) Thanks @{{slack.name}}
     failure_template: |
-      The build is broken! Blame {{slack.name}}
+      paxdb/orthology-lib build is broken :( Blame {{slack.name}}
 
 
 branches: master
