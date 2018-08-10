@@ -6,11 +6,18 @@ pipeline:
       - npm run lint
       - npm test
 
-  publish:
-    image: plugins/docker
-    registry: docker-registry.meringlab.org:5443
-    repo: docker-registry.meringlab.org:5443/paxdb/orthology-lib
-    tags: 4.1.3
-    auto_tag: false
+  npm_auth:
+    image: robertstettner/drone-npm-auth
+    secrets: [ npm_username, npm_password, npm_email ]
+    when:
+      event: deployment
+      environment: production
+
+  publish_npm:
+    image: plugins/npm
+    when:
+      event: deployment
+      environment: production
+
 
 branches: master
