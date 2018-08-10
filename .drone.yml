@@ -19,5 +19,14 @@ pipeline:
       event: deployment
       environment: production
 
+  slack_blame:
+    image: plugins/slack-blame
+    secrets: [ slack_token ]
+    channel: paxdb-build-bot
+    success_template: |
+      The build is green :) Thanks @{{slack.name}}
+    failure_template: |
+      The build is broken! Blame {{slack.name}}
+
 
 branches: master
