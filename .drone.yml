@@ -19,14 +19,18 @@ pipeline:
       event: deployment
       environment: production
 
+  # TODO publish npm
+
   slack_blame:
     image: plugins/slack-blame
     secrets: [ slack_token ]
     channel: paxdb-build-bot
     success_template: |
-      paxdb/orthology-lib build is green :) Thanks @{{slack.name}}
+      paxdb/orthology-lib build is green :) Thanks {{user.name}}
     failure_template: |
-      paxdb/orthology-lib build is broken :( Blame {{slack.name}}
+      paxdb/orthology-lib build is broken :( Blame {{user.name}}
+    when:
+      status:  [ failure, success ]
 
 
 branches: master
