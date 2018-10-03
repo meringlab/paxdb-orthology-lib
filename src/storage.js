@@ -51,7 +51,8 @@ function Storage(_db) {
                     taxonomicLevel,
                     query
                 );
-                d.reject(Error(`findOrthologsAtTaxonomicLevel FAILED: ${err.message}`));
+                err.message = `findOrthologsAtTaxonomicLevel FAILED: ${err.message}`;
+                d.reject(err);
                 return;
             }
             const response = { proteinId, taxonomicLevel, members: results.map(row => row['m.eid']) };
@@ -77,7 +78,8 @@ function Storage(_db) {
                     taxonomicLevel,
                     query
                 );
-                d.reject(Error(`findTissuesForOrthologsAtTaxonomicLevel FAILED: ${err.message}`));
+                err.message = `findTissuesForOrthologsAtTaxonomicLevel FAILED: ${err.message}`;
+                d.reject(err);
                 return;
             }
             const singleTissue = ('tissue.tissue' in results);
@@ -95,6 +97,7 @@ function Storage(_db) {
         db.queryRaw(cypher, (err, result) => {
             if (err) {
                 log.error(err, 'neo4j - failed to count %s', label);
+                err.message = `count FAILED: ${err.message}`;
                 d.reject(err);
                 return;
             }
@@ -247,7 +250,8 @@ function Storage(_db) {
         db.query(query, (err, results) => {
             if (err) {
                 log.error(err, 'loadOrthologs(%s,%s,%s) FAILED, query:[%s]', proteinId, taxonomicLevel, tissue, query);
-                d.reject(Error(`loadOrthologs FAILED: ${err.message}`));
+                err.message = `loadOrthologs FAILED: ${err.message}`;
+                d.reject(err);
                 return;
             }
             const members = results.map(row => ({
@@ -306,7 +310,8 @@ function Storage(_db) {
         const deferred = when.defer();
         db.query('MATCH (p:Protein) RETURN p.iid, id(p)', (err, results) => {
             if (err) {
-                deferred.reject(`failed to load protein ids: ${err}`);
+                err.message = `failed to load protein ids: ${err}`;
+                deferred.reject(err);
                 return;
             }
             const proteinIds = {};
