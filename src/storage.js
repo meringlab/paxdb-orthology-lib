@@ -244,6 +244,8 @@ function Storage(_db) {
         const d = when.defer();
         const id = proteinIdAsQueryParameter(proteinId);
 
+        // FIXME this query doesn't handle multiple abundances for the same level/tissue
+        // example /protein/272624.lpg2043/ortholog_groups/PROTEOBACTERIA/WHOLE_ORGANISM
         const query = `MATCH (:Protein {${id}})-[:${taxonomicLevel}]->(n:NOG) 
            WITH n MATCH (n)<-[:${taxonomicLevel}]-(m:Protein)-[:${tissue}]->(a:Abundance) return m,a`;
 

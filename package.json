@@ -14,7 +14,7 @@
     "orthologs"
   ],
   "scripts": {
-    "lint": "./node_modules/.bin/eslint lib/*",
+    "lint": "./node_modules/.bin/eslint src/*",
     "test": "mocha test/*.js",
     "integration-test": "mocha integration_test/storage.js"
   },
@@ -27,11 +27,11 @@
   "devDependencies": {
     "chai": "*",
     "disposable-seraph": "~0.5",
-    "eslint": "~4.19",
-    "eslint-config-airbnb": "^17.0.0",
-    "eslint-plugin-import": "^2.13.0",
-    "eslint-plugin-jsx-a11y": "^6.1.1",
-    "eslint-plugin-react": "^7.10.0",
+    "eslint": "^6.0.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-react": "^7.14.2",
     "mocha": "*",
     "superagent": "~3.8"
   },
