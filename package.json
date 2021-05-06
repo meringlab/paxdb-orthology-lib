@@ -21,7 +21,7 @@
   "dependencies": {
     "bunyan": "~1.8",
     "seraph": "~0.15",
-    "underscore": "~1.9",
+    "underscore": "~1.12",
     "when": "~3.7"
   },
   "devDependencies": {
