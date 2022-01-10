@@ -1,92 +1,91 @@
-## created: 2022-01-10T14:27:14.421090
+## created: 2022-01-11T15:24:23.568436
 ## script: /mnt/mnemo6/qingyao/paxDB/data-pipeline/src/update_api_inputs/create_taxonomy_tree.py
-2759	1	Eukaryota	luca
 170187	1313	Streptococcus pneumoniae TIGR4	streptococcus pneumoniae
-44689	2759	Dictyostelium discoideum	eukaryota
-4891	4751	Saccharomycetes	fungi
-169963	1239	Listeria monocytogenes EGD-e	firmicutes
-4447	35493	Liliopsida	streptophyta
-9606	9443	Homo sapiens	primates
-1313	1239	Streptococcus pneumoniae	firmicutes
-1224	2	Proteobacteria	bacteria
-882	68525	Desulfovibrio vulgaris str. Hildenborough	delta/epsilon subdivisions
-198214	1236	Shigella flexneri 2a str. 301	gammaproteobacteria
-5691	5653	Trypanosoma brucei	kinetoplastida
-9615	40674	Canis lupus familiaris	mammalia
-9796	40674	Equus caballus	mammalia
-189518	2	Leptospira interrogans serovar Lai str. 56601	bacteria
-4577	4447	Zea mays	liliopsida
-73239	5794	Plasmodium yoelii yoelii	apicomplexa
-4896	4751	Schizosaccharomyces pombe	fungi
-9823	91561	Sus scrofa	cetartiodactyla
-33154	2759	Opisthokonta	eukaryota
-9031	7711	Gallus gallus	chordata
-192222	29547	Campylobacter jejuni subsp. jejuni NCTC 11168 = ATCC 700819	epsilonproteobacteria
-91561	40674	Cetartiodactyla	mammalia
-449447	1117	Microcystis aeruginosa NIES-843	cyanobacteria
-214684	4751	Cryptococcus neoformans var. neoformans JEC21	fungi
-7460	6656	Apis mellifera	arthropoda
+4932	4891	Saccharomyces cerevisiae	saccharomycetes
+224326	2	Borrelia burgdorferi B31	bacteria
+122586	1224	Neisseria meningitidis MC58	proteobacteria
 6656	33208	Arthropoda	metazoa
-214092	1236	Yersinia pestis CO92	gammaproteobacteria
-593117	2157	Thermococcus gammatolerans EJ3	archaea
-1236	1224	Gammaproteobacteria	proteobacteria
-2	1	Bacteria	luca
-39947	4447	Oryza sativa Japonica Group	liliopsida
-2157	1	Archaea	luca
-243159	1236	Acidithiobacillus ferrooxidans ATCC 23270	gammaproteobacteria
-4751	33154	Fungi	opisthokonta
-226186	2	Bacteroides thetaiotaomicron VPI-5482	bacteria
+192222	29547	Campylobacter jejuni subsp. jejuni NCTC 11168 = ATCC 700819	epsilonproteobacteria
+9598	9443	Pan troglodytes	primates
+10116	9989	Rattus norvegicus	rodentia
 272624	1236	Legionella pneumophila subsp. pneumophila str. Philadelphia 1	gammaproteobacteria
 85962	29547	Helicobacter pylori 26695	epsilonproteobacteria
-1280	1239	Staphylococcus aureus	firmicutes
-4932	4891	Saccharomyces cerevisiae	saccharomycetes
-7147	6656	Diptera	arthropoda
-272623	1239	Lactococcus lactis subsp. lactis Il1403	firmicutes
-1117	2	Cyanobacteria	bacteria
-64091	2157	Halobacterium sp. NRC-1	archaea
-122586	1224	Neisseria meningitidis MC58	proteobacteria
-7165	7147	Anopheles gambiae	diptera
-83332	2	Mycobacterium tuberculosis H37Rv	bacteria
+9796	40674	Equus caballus	mammalia
 99287	1236	Salmonella enterica subsp. enterica serovar Typhimurium str. LT2	gammaproteobacteria
-40674	7711	Mammalia	chordata
-10090	9989	Mus musculus	rodentia
-353153	5653	Trypanosoma cruzi strain CL Brener	kinetoplastida
-35493	33090	Streptophyta	viridiplantae
-1314	1239	Streptococcus pyogenes	firmicutes
-5653	2759	Kinetoplastida	eukaryota
-1148	1117	Synechocystis sp. PCC 6803	cyanobacteria
-33090	2759	Viridiplantae	eukaryota
-33208	33154	Metazoa	opisthokonta
-1239	2	Firmicutes	bacteria
-9989	314146	Rodentia	euarchontoglires
 283166	1224	Bartonella henselae str. Houston-1	proteobacteria
-7955	7711	Danio rerio	chordata
-722438	2	Mycoplasma pneumoniae FH	bacteria
-5061	4751	Aspergillus niger	fungi
-4081	35493	Solanum lycopersicum	streptophyta
-9598	9443	Pan troglodytes	primates
-7227	7147	Drosophila melanogaster	diptera
-5833	5794	Plasmodium falciparum	apicomplexa
-208964	1236	Pseudomonas aeruginosa PAO1	gammaproteobacteria
-1386	1239	Bacillus	firmicutes
-1	1	luca	luca
-511145	1236	Escherichia coli str. K-12 substr. MG1655	gammaproteobacteria
-546414	2	Deinococcus deserti VCD115	bacteria
-8364	7711	Xenopus (Silurana) tropicalis	chordata
-3702	35493	Arabidopsis thaliana	streptophyta
-3055	33090	Chlamydomonas reinhardtii	viridiplantae
-260799	1386	Bacillus anthracis str. Sterne	bacillus
-373153	1313	Streptococcus pneumoniae D39	streptococcus pneumoniae
+9615	40674	Canis lupus familiaris	mammalia
+882	68525	Desulfovibrio vulgaris str. Hildenborough	delta/epsilon subdivisions
+9823	91561	Sus scrofa	cetartiodactyla
+10090	9989	Mus musculus	rodentia
 5794	2759	Apicomplexa	eukaryota
-9443	314146	Primates	euarchontoglires
-224326	2	Borrelia burgdorferi B31	bacteria
-68525	1224	delta/epsilon subdivisions	proteobacteria
-314146	40674	Euarchontoglires	mammalia
-211586	1236	Shewanella oneidensis MR-1	gammaproteobacteria
-10116	9989	Rattus norvegicus	rodentia
+5061	4751	Aspergillus niger	fungi
+4577	4447	Zea mays	liliopsida
+7460	6656	Apis mellifera	arthropoda
+3055	33090	Chlamydomonas reinhardtii	viridiplantae
+33208	33154	Metazoa	opisthokonta
+4751	33154	Fungi	opisthokonta
+1314	1239	Streptococcus pyogenes	firmicutes
+243159	1236	Acidithiobacillus ferrooxidans ATCC 23270	gammaproteobacteria
+226186	2	Bacteroides thetaiotaomicron VPI-5482	bacteria
+198214	1236	Shigella flexneri 2a str. 301	gammaproteobacteria
+511145	1236	Escherichia coli str. K-12 substr. MG1655	gammaproteobacteria
+91561	40674	Cetartiodactyla	mammalia
+4891	4751	Saccharomycetes	fungi
+4896	4751	Schizosaccharomyces pombe	fungi
+214092	1236	Yersinia pestis CO92	gammaproteobacteria
+35493	33090	Streptophyta	viridiplantae
 224308	1386	Bacillus subtilis subsp. subtilis str. 168	bacillus
-29547	68525	Epsilonproteobacteria	delta/epsilon subdivisions
+211586	1236	Shewanella oneidensis MR-1	gammaproteobacteria
+7955	7711	Danio rerio	chordata
+7165	7147	Anopheles gambiae	diptera
 7711	33208	Chordata	metazoa
-6239	33208	Caenorhabditis elegans	metazoa
-9913	91561	Bos taurus	cetartiodactyla
+5833	5794	Plasmodium falciparum	apicomplexa
+9606	9443	Homo sapiens	primates
+1313	1239	Streptococcus pneumoniae	firmicutes
+3702	35493	Arabidopsis thaliana	streptophyta
+189518	2	Leptospira interrogans serovar Lai str. 56601	bacteria
+33154	2759	Opisthokonta	eukaryota
+7227	7147	Drosophila melanogaster	diptera
+214684	4751	Cryptococcus neoformans var. neoformans JEC21	fungi
+1224	2	Proteobacteria	bacteria
+1117	2	Cyanobacteria	bacteria
+2759	1	Eukaryota	luca
+33090	2759	Viridiplantae	eukaryota
+5653	2759	Kinetoplastida	eukaryota
+272623	1239	Lactococcus lactis subsp. lactis Il1403	firmicutes
+722438	2	Mycoplasma pneumoniae FH	bacteria
+4081	35493	Solanum lycopersicum	streptophyta
+2	1	Bacteria	luca
+44689	2759	Dictyostelium discoideum	eukaryota
+83332	2	Mycobacterium tuberculosis H37Rv	bacteria
+1148	1117	Synechocystis sp. PCC 6803	cyanobacteria
+546414	2	Deinococcus deserti VCD115	bacteria
+169963	1239	Listeria monocytogenes EGD-e	firmicutes
+73239	5794	Plasmodium yoelii yoelii	apicomplexa
+314146	40674	Euarchontoglires	mammalia
+1280	1239	Staphylococcus aureus	firmicutes
+353153	5653	Trypanosoma cruzi strain CL Brener	kinetoplastida
+9443	314146	Primates	euarchontoglires
+593117	2157	Thermococcus gammatolerans EJ3	archaea
+4447	35493	Liliopsida	streptophyta
 5476	4891	Candida albicans	saccharomycetes
+29547	68525	Epsilonproteobacteria	delta/epsilon subdivisions
+9031	7711	Gallus gallus	chordata
+68525	1224	delta/epsilon subdivisions	proteobacteria
+1386	1239	Bacillus	firmicutes
+449447	1117	Microcystis aeruginosa NIES-843	cyanobacteria
+39947	4447	Oryza sativa Japonica Group	liliopsida
+64091	2157	Halobacterium sp. NRC-1	archaea
+8364	7711	Xenopus (Silurana) tropicalis	chordata
+208964	1236	Pseudomonas aeruginosa PAO1	gammaproteobacteria
+5691	5653	Trypanosoma brucei	kinetoplastida
+7147	6656	Diptera	arthropoda
+1239	2	Firmicutes	bacteria
+40674	7711	Mammalia	chordata
+9913	91561	Bos taurus	cetartiodactyla
+260799	1386	Bacillus anthracis str. Sterne	bacillus
+2157	1	Archaea	luca
+9989	314146	Rodentia	euarchontoglires
+373153	1313	Streptococcus pneumoniae D39	streptococcus pneumoniae
+6239	33208	Caenorhabditis elegans	metazoa
+1236	1224	Gammaproteobacteria	proteobacteria

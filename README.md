@@ -6,7 +6,7 @@ Example usage:
     const orth = require('paxdb-orthology-lib')(opts);
     orth.count('Protein').then(numProteins => console.log(`num proteins: ${numProteins}`);
     orth.loadOrthologs('9606.ENSP00000356969', 'PRIMATES', 'BRAIN').
-        then(cogs => console.log(`orthologs: ${JSON.stringify(cogs)}));
+        then(cogs => console.log(`orthologs: ${JSON.stringify(cogs)}`));
 
 ## Installation
 
