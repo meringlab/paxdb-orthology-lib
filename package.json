@@ -1,6 +1,6 @@
 {
   "name": "paxdb-orthology-lib",
-  "version": "4.1.4",
+  "version": "4.2.0",
   "private": false,
   "description": "pax-db.org orthology API library",
   "author": "Milan Simonovic <milan.simonovic@imls.uzh.ch>",
