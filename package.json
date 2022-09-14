@@ -1,11 +1,15 @@
 {
   "name": "paxdb-orthology-lib",
-  "version": "4.2.1",
+  "version": "5.0.0",
   "private": false,
   "description": "pax-db.org orthology API library",
   "author": "Milan Simonovic <milan.simonovic@imls.uzh.ch>",
   "license": "MIT",
   "main": "src/storage.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/meringlab/paxdb-orthology-lib/"
+  },
   "keywords": [
     "paxdb",
     "pax-db",
@@ -21,7 +25,7 @@
   "dependencies": {
     "bunyan": "~1.8",
     "seraph": "~0.15",
-    "underscore": "~1.9",
+    "underscore": "~1.13",
     "when": "~3.7"
   },
   "devDependencies": {
@@ -32,8 +36,8 @@
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.14.2",
-    "mocha": "*",
-    "superagent": "~3.8"
+    "mocha": "~8",
+    "superagent": "~7.0"
   },
   "engines": {
     "node": "10.x"
